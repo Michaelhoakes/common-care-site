@@ -1,0 +1,377 @@
+@import "tailwindcss";
+
+@theme {
+  --color-light-green: #FCFFEE;
+  --color-pistachio: #8FA85C;
+  --color-pistachio-light: #D0DBAE;
+  --color-matcha: #5B7944;
+  --color-sticky: #FDE777;
+  --color-marigold: #D4AE33;
+  --color-light-blue: #EDFFFD;
+  --color-dusty-blue: #89ADAF;
+  --color-darkgreen: #1F3414;
+  --color-forest: #2D4A2E;
+  --color-light-yellow: #FEFCEF;
+  --color-bone: #F5F3EE;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --hero-base: #D4DDD4;
+  /* Soft green gradient tints — low contrast, no sharp transitions */
+  --gradient-warm: #F8FAF0;
+  --gradient-cream: #FAFAF5;
+  --gradient-sage: #F2F6F0;
+  --gradient-cool: #EEF4F2;
+  --gradient-dust: #E8EDE6;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-bone: #F5F3EE;
+  --font-sans: "neue-haas-grotesk-text", var(--font-inter), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono);
+}
+
+/* Hero: Display Pro (headlines); body: Text Pro via --font-sans and body below */
+.font-hero-display {
+  font-family: "neue-haas-grotesk-display", var(--font-inter), system-ui, sans-serif;
+  letter-spacing: normal;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "neue-haas-grotesk-text", var(--font-inter), system-ui, sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 500;
+}
+
+/* Soft, diffused page gradient — green-tinted, atmospheric */
+.gradient-page {
+  background: linear-gradient(
+    165deg,
+    var(--gradient-warm) 0%,
+    var(--gradient-cream) 18%,
+    var(--gradient-sage) 38%,
+    var(--gradient-cool) 58%,
+    var(--gradient-dust) 78%,
+    var(--gradient-warm) 100%
+  );
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* Sticky nav scroll state — white to match site light background */
+.nav-scroll-bg {
+  background: var(--background);
+}
+
+/* Hero: slow-moving radial gradient — matcha, dusty-blue, faint marigold edge */
+@property --hero-gx {
+  syntax: "<percentage>";
+  initial-value: 50%;
+  inherits: false;
+}
+@property --hero-gy {
+  syntax: "<percentage>";
+  initial-value: 50%;
+  inherits: false;
+}
+
+.hero-gradient-bg {
+  --hero-gx: 50%;
+  --hero-gy: 50%;
+  background: var(--hero-base);
+  background-image: radial-gradient(
+    ellipse 140% 120% at var(--hero-gx) var(--hero-gy),
+    rgba(91, 121, 68, 0.22) 0%,
+    rgba(91, 121, 68, 0.14) 25%,
+    rgba(137, 173, 175, 0.24) 50%,
+    rgba(137, 173, 175, 0.12) 75%,
+    rgba(212, 174, 51, 0.10) 100%
+  );
+  animation: hero-gradient-drift 38s ease-in-out infinite;
+}
+
+@keyframes hero-gradient-drift {
+  0%, 100% { --hero-gx: 48%; --hero-gy: 52%; }
+  25%      { --hero-gx: 52%; --hero-gy: 48%; }
+  50%      { --hero-gx: 51%; --hero-gy: 51%; }
+  75%      { --hero-gx: 49%; --hero-gy: 49%; }
+}
+
+/* Home hero: animatable light radial positions */
+@property --hr1-x { syntax: "<percentage>"; initial-value: 15%; inherits: false; }
+@property --hr1-y { syntax: "<percentage>"; initial-value: 50%; inherits: false; }
+@property --hr2-x { syntax: "<percentage>"; initial-value: 75%; inherits: false; }
+@property --hr2-y { syntax: "<percentage>"; initial-value: 30%; inherits: false; }
+@property --hr3-x { syntax: "<percentage>"; initial-value: 50%; inherits: false; }
+@property --hr3-y { syntax: "<percentage>"; initial-value: 80%; inherits: false; }
+@property --hr4-x { syntax: "<percentage>"; initial-value: 30%; inherits: false; }
+@property --hr4-y { syntax: "<percentage>"; initial-value: 25%; inherits: false; }
+@property --hr5-x { syntax: "<percentage>"; initial-value: 85%; inherits: false; }
+@property --hr5-y { syntax: "<percentage>"; initial-value: 70%; inherits: false; }
+
+.hero-radials-drift {
+  background:
+    radial-gradient(ellipse 80% 70% at var(--hr1-x) var(--hr1-y), rgba(200, 190, 120, 0.45) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at var(--hr2-x) var(--hr2-y), rgba(91, 121, 68, 0.7) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 60% at var(--hr3-x) var(--hr3-y), rgba(60, 90, 50, 0.6) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 50% at var(--hr4-x) var(--hr4-y), rgba(160, 170, 100, 0.35) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 90% at var(--hr5-x) var(--hr5-y), rgba(40, 70, 40, 0.5) 0%, transparent 60%),
+    linear-gradient(145deg, #6b7f4a 0%, #4a6b3a 30%, #3d5c34 60%, #2f4a28 100%);
+  animation: hero-radials-drift 42s ease-in-out infinite;
+}
+
+@keyframes hero-radials-drift {
+  0%, 100% {
+    --hr1-x: 12%; --hr1-y: 48%;
+    --hr2-x: 78%; --hr2-y: 28%;
+    --hr3-x: 48%; --hr3-y: 82%;
+    --hr4-x: 28%; --hr4-y: 22%;
+    --hr5-x: 88%; --hr5-y: 72%;
+  }
+  25% {
+    --hr1-x: 22%; --hr1-y: 42%;
+    --hr2-x: 72%; --hr2-y: 38%;
+    --hr3-x: 55%; --hr3-y: 75%;
+    --hr4-x: 35%; --hr4-y: 28%;
+    --hr5-x: 82%; --hr5-y: 65%;
+  }
+  50% {
+    --hr1-x: 18%; --hr1-y: 55%;
+    --hr2-x: 80%; --hr2-y: 35%;
+    --hr3-x: 45%; --hr3-y: 78%;
+    --hr4-x: 32%; --hr4-y: 20%;
+    --hr5-x: 85%; --hr5-y: 68%;
+  }
+  75% {
+    --hr1-x: 10%; --hr1-y: 52%;
+    --hr2-x: 74%; --hr2-y: 32%;
+    --hr3-x: 52%; --hr3-y: 80%;
+    --hr4-x: 26%; --hr4-y: 26%;
+    --hr5-x: 86%; --hr5-y: 72%;
+  }
+}
+
+.hero-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* Nav dropdown: elegant fade + gentle slide (opacity + translate), smooth ease-out */
+@keyframes nav-dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .nav-dropdown-panel {
+    animation: nav-dropdown-in 0.38s cubic-bezier(0.22, 0, 0.2, 1) forwards;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-dropdown-panel {
+    animation: none;
+  }
+}
+
+/* Hero: fixed height in pixels so layout doesn't shift with viewport height */
+.hero-full-viewport {
+  height: 900px;
+  min-height: 900px;
+  max-height: 900px;
+}
+
+/* Hero subhead line: draw from left to right on load */
+@keyframes hero-line-draw {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.hero-subhead-line {
+  width: 0;
+  animation: hero-line-draw 0.7s ease-out 0.2s forwards;
+}
+
+/* Hero text: subtle float-in (opacity + translateY), no scale */
+@keyframes hero-text-float {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-text-float-subhead {
+  opacity: 0;
+  animation: hero-text-float 0.9s ease-out 0.35s both !important;
+}
+
+.hero-text-float-headline {
+  opacity: 0;
+  animation: hero-text-float 0.9s ease-out 0.5s both !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-text-float-subhead,
+  .hero-text-float-headline {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Hero scroll indicator: visible by default, subtle slide-up after short delay */
+@keyframes hero-scroll-in {
+  from {
+    transform: translate(-50%, 6px);
+  }
+  to {
+    transform: translate(-50%, 0);
+  }
+}
+
+.hero-scroll-indicator {
+  transform: translate(-50%, 6px);
+  animation: hero-scroll-in 0.5s ease-out 0.5s forwards;
+}
+
+/* Scroll reveal: subtle fade + translate, gradual reveal as sections enter view */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-reveal-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Care page: section enter animation (once), disabled when user prefers reduced motion */
+@media (prefers-reduced-motion: no-preference) {
+  .care-section-animate {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .care-section-animate.care-section-revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* First visit: disable FAQ accordion transition when user prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .first-visit-faq-content {
+    transition: none;
+  }
+}
+
+/* Sidebar nav: line draws top-to-bottom when section enters view */
+@media (prefers-reduced-motion: no-preference) {
+  .sidebar-nav-line {
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.4s ease-out;
+  }
+  .sidebar-nav-line.sidebar-nav-line-drawn {
+    transform: scaleY(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-nav-line {
+    transform: scaleY(1);
+  }
+}
+
+.is-for-me-dot-pulse {
+  animation: is-for-me-dot-pulse 0.5s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .is-for-me-dot-pulse {
+    animation: none;
+  }
+}
+
+
+/* Is this for me: dot pulse in sync with line draw */
+@keyframes is-for-me-dot-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.35);
+    opacity: 0.85;
+  }
+}
+
+/* Subtle pulsing dot — opacity only, refined and calm */
+@keyframes pulse-dot-subtle {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-dot-halo {
+  0%, 100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.pulse-dot-animate {
+  animation: pulse-dot-subtle 3.5s ease-in-out infinite;
+}
+
+.pulse-dot-halo-animate {
+  animation: pulse-dot-halo 3.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse-dot-animate,
+  .pulse-dot-halo-animate {
+    animation: none;
+  }
+  .pulse-dot-animate {
+    opacity: 0.85;
+  }
+  .pulse-dot-halo-animate {
+    opacity: 0.25;
+  }
+}
+
