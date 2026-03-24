@@ -213,6 +213,17 @@ export default function FirstVisitClient() {
               your history, run through the evaluation, and make sure you leave
               with clear next steps.
             </p>
+            <div className="mt-8 w-full max-w-none overflow-hidden rounded-xl border border-forest/10 bg-forest/[0.03]">
+              <div className="relative aspect-[21/9] min-h-[220px] w-full sm:aspect-[2/1] md:min-h-[280px]">
+                <img
+                  src="/images/treatmenttable1.jpg"
+                  alt="Clinic treatment room and arrival environment"
+                  className="absolute inset-0 h-full w-full object-cover object-center scale-[1.06]"
+                  loading="lazy"
+                  sizes="(min-width: 1400px) 1400px, 100vw"
+                />
+              </div>
+            </div>
             <ol className="care-list text-forest/90 mt-6">
               <li className="flex gap-4">
                 <span className="text-matcha font-medium shrink-0">1.</span>
@@ -270,7 +281,7 @@ export default function FirstVisitClient() {
           </section>
 
           <div
-            className="mt-24 md:mt-32 pt-16 md:pt-20 border-t border-forest/10"
+            className="mt-20 pt-20 border-t border-forest/10"
             aria-hidden
           />
 
@@ -314,7 +325,7 @@ export default function FirstVisitClient() {
           </section>
 
           <div
-            className="mt-24 md:mt-32 pt-16 md:pt-20 border-t border-forest/10"
+            className="mt-20 pt-20 border-t border-forest/10"
             aria-hidden
           />
 
@@ -338,7 +349,7 @@ export default function FirstVisitClient() {
           </section>
 
           <div
-            className="mt-24 md:mt-32 pt-16 md:pt-20 border-t border-forest/10"
+            className="mt-20 pt-20 border-t border-forest/10"
             aria-hidden
           />
 
@@ -365,7 +376,7 @@ export default function FirstVisitClient() {
           </section>
 
           <div
-            className="mt-24 md:mt-32 pt-16 md:pt-20 border-t border-forest/10"
+            className="mt-20 pt-20 border-t border-forest/10"
             aria-hidden
           />
 
@@ -382,7 +393,6 @@ export default function FirstVisitClient() {
                 Quick answers on timing, preparation, and what happens after
                 your visit.
               </p>
-              <p className="care-label text-forest/60">Common questions</p>
               <div className="care-included-grid text-forest/90 !grid-cols-1">
                 {FAQ_ITEMS.map((item, idx) => {
                   const isOpen = openFaqs.has(idx);

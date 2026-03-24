@@ -6,7 +6,7 @@ import {
   ChevronRightIcon,
 } from "@heroicons/react/24/outline";
 
-const SLIDES = [
+const DEFAULT_SLIDES = [
   {
     src: "/images/exbody.jpg",
     alt: "InBody-style body composition readout and analysis context",
@@ -21,7 +21,18 @@ const SLIDES = [
   },
 ] as const;
 
-export default function CareEvaluationCarousel() {
+type CarouselSlide = {
+  src: string;
+  alt: string;
+};
+
+export default function CareEvaluationCarousel({
+  slides = DEFAULT_SLIDES,
+  ariaLabel = "Evaluation imagery",
+}: {
+  slides?: readonly CarouselSlide[];
+  ariaLabel?: string;
+}) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
   const reduceMotionRef = useRef(false);
@@ -35,7 +46,7 @@ export default function CareEvaluationCarousel() {
   const scrollToIndex = useCallback((next: number) => {
     const el = scrollerRef.current;
     if (!el) return;
-    const len = SLIDES.length;
+    const len = slides.length;
     const clamped = ((next % len) + len) % len;
     const w = el.offsetWidth;
     el.scrollTo({
@@ -43,7 +54,7 @@ export default function CareEvaluationCarousel() {
       behavior: reduceMotionRef.current ? "auto" : "smooth",
     });
     setIndex(clamped);
-  }, []);
+  }, [slides.length]);
 
   const goPrev = useCallback(() => {
     const el = scrollerRef.current;
@@ -72,7 +83,7 @@ export default function CareEvaluationCarousel() {
         const w = el.offsetWidth;
         if (w <= 0) return;
         const i = Math.round(el.scrollLeft / w);
-        if (i >= 0 && i < SLIDES.length) {
+        if (i >= 0 && i < slides.length) {
           setIndex((prev) => (prev !== i ? i : prev));
         }
       }, 80);
@@ -83,7 +94,7 @@ export default function CareEvaluationCarousel() {
       if (t) clearTimeout(t);
       el.removeEventListener("scroll", debounced);
     };
-  }, []);
+  }, [slides.length]);
 
   useEffect(() => {
     const el = scrollerRef.current;
@@ -112,7 +123,7 @@ export default function CareEvaluationCarousel() {
       className="relative mt-10 mb-10 w-full max-w-none"
       role="region"
       aria-roledescription="carousel"
-      aria-label="Evaluation imagery"
+      aria-label={ariaLabel}
       tabIndex={0}
       onKeyDown={onKeyDown}
     >
@@ -121,7 +132,7 @@ export default function CareEvaluationCarousel() {
         className="flex w-full snap-x snap-mandatory overflow-x-auto scroll-smooth rounded-xl border border-forest/10 bg-forest/[0.03] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         aria-live="polite"
       >
-        {SLIDES.map((slide, i) => (
+        {slides.map((slide, i) => (
           <div
             key={slide.src}
             className="w-full min-w-full shrink-0 snap-center"
@@ -139,8 +150,8 @@ export default function CareEvaluationCarousel() {
         ))}
       </div>
 
-      <div className="pointer-events-none absolute inset-y-0 right-0 top-0 z-10 flex w-14 flex-col items-center justify-center gap-2 pr-1 sm:w-16 sm:pr-2">
-        <div className="pointer-events-auto flex flex-col gap-2 rounded-lg bg-white/90 p-1.5 shadow-sm ring-1 ring-forest/10 backdrop-blur-sm">
+      <div className="pointer-events-none absolute right-2 top-2 z-10 sm:right-3 sm:top-3">
+        <div className="pointer-events-auto flex flex-row items-center gap-1 rounded-lg bg-white/70 p-1.5 shadow-sm ring-1 ring-forest/10 backdrop-blur-sm">
           <button
             type="button"
             onClick={goPrev}

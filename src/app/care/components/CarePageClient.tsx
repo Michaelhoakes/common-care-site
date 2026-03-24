@@ -28,6 +28,11 @@ type IncludedItem = {
   imageAlt?: string;
 };
 
+type ServiceItem = {
+  title: string;
+  description: string;
+};
+
 const INCLUDED_ITEMS: IncludedItem[] = [
   {
     title: "Movement + gait analysis",
@@ -61,6 +66,53 @@ const INCLUDED_ITEMS: IncludedItem[] = [
   },
 ];
 
+const WELLNESS_SLIDES = [
+  {
+    src: "/images/_DSF8789.jpeg",
+    alt: "Calming wellness room environment at Common Care",
+  },
+  {
+    src: "/images/Soundbed.jpg",
+    alt: "Sound bed setup used for recovery and restorative wellness work",
+  },
+] as const;
+
+const CARE_SESSION_SERVICES: ServiceItem[] = [
+  {
+    title: "Manual therapy",
+    description:
+      "Hands-on treatment to improve mobility, reduce discomfort, and support how your body moves day to day.",
+  },
+  {
+    title: "Injury treatment",
+    description:
+      "Targeted care for acute or persistent injuries, paired with clear progression so recovery is steady and measurable.",
+  },
+];
+
+const EVERYDAY_WELLNESS_SERVICES: ServiceItem[] = [
+  {
+    title: "Red light therapy",
+    description:
+      "Light-based recovery support used to complement tissue healing and reduce post-session soreness.",
+  },
+  {
+    title: "Sound bed",
+    description:
+      "A restorative session designed to downshift your nervous system and support recovery through guided sound.",
+  },
+  {
+    title: "PEMF",
+    description:
+      "Pulsed electromagnetic field sessions to support circulation and recovery as part of your broader wellness plan.",
+  },
+  {
+    title: "Compression",
+    description:
+      "Compression-based recovery work to help with circulation, swelling management, and post-load reset.",
+  },
+];
+
 export default function CarePageClient() {
   const isDesktopNav = useMediaQuery("(min-width: 1024px)");
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -82,6 +134,12 @@ export default function CarePageClient() {
   const revealedRef = useRef<Set<string>>(new Set());
   // Multiple "What's included" rows can be open at once.
   const [openIncluded, setOpenIncluded] = useState<Set<number>>(() => new Set());
+  const [openSessionServices, setOpenSessionServices] = useState<Set<number>>(
+    () => new Set()
+  );
+  const [openWellnessServices, setOpenWellnessServices] = useState<Set<number>>(
+    () => new Set()
+  );
   const mobileScrollSpyRef = useRef<IntersectionObserver | null>(null);
   useCareParallaxScrollY();
 
@@ -151,6 +209,24 @@ export default function CarePageClient() {
 
   const toggleIncluded = (idx: number) => {
     setOpenIncluded((prev) => {
+      const next = new Set(prev);
+      if (next.has(idx)) next.delete(idx);
+      else next.add(idx);
+      return next;
+    });
+  };
+
+  const toggleSessionService = (idx: number) => {
+    setOpenSessionServices((prev) => {
+      const next = new Set(prev);
+      if (next.has(idx)) next.delete(idx);
+      else next.add(idx);
+      return next;
+    });
+  };
+
+  const toggleWellnessService = (idx: number) => {
+    setOpenWellnessServices((prev) => {
       const next = new Set(prev);
       if (next.has(idx)) next.delete(idx);
       else next.add(idx);
@@ -240,12 +316,9 @@ export default function CarePageClient() {
             <p className="cc-eyebrow text-darkgreen">
               Our care approach
             </p>
-            <h3 className="text-darkgreen">
-              Care begins with understanding you as a whole — not just a symptom.
-            </h3>
-            <p className="care-body text-forest/90">
-              We take a whole-person lens: how you move, how much stress and load you carry, and how you live day to day. That context shapes everything that follows. Care here is unhurried, one-on-one, and oriented toward long-term health — not quick fixes.
-            </p>
+            <h4 className="max-w-4xl">
+              Care begins with understanding you as a whole. We consider how you move, your stress and load, and daily life. That context guides unhurried, one-on-one care built for long-term health.
+            </h4>
             <ul className="care-list text-forest/90">
               <li className="flex gap-3">
                 <span className="text-matcha shrink-0" aria-hidden>—</span>
@@ -262,7 +335,7 @@ export default function CarePageClient() {
             </ul>
           </section>
 
-          <div className="mt-24 md:mt-32 pt-16 md:pt-20 border-t border-forest/10" aria-hidden />
+          <div className="mt-20 pt-20 border-t border-forest/10" aria-hidden />
 
           {/* The 360° Evaluation */}
           <section
@@ -358,48 +431,96 @@ export default function CarePageClient() {
             </div>
           </section>
 
-          <div className="mt-24 md:mt-32 pt-16 md:pt-20 border-t border-forest/10" aria-hidden />
+          <div className="mt-20 pt-20 border-t border-forest/10" aria-hidden />
 
           {/* Section 3 — The Care Sessions */}
           <section
             id="the-care-sessions"
             ref={(el) => { sectionRefs.current["the-care-sessions"] = el; }}
-            className="care-section care-section-animate scroll-mt-28 mt-20 md:mt-28"
+            className="care-section care-section-animate scroll-mt-28"
           >
             <div className="flex flex-col">
               <h3 className="text-darkgreen">The care sessions</h3>
               <p className="care-body text-forest/90">
                 Follow-up care is delivered in one-on-one sessions that put the evaluation into action. We re-test and reassess as you go, so the plan stays aligned with your progress. Sessions are 60–90 minutes by design — an intentional pace so we’re not rushing.
               </p>
-              <ul className="care-list text-forest/90">
-                <li className="flex gap-3">
-                  <span className="text-matcha shrink-0" aria-hidden>—</span>
-                  <span>Targeted hands-on care + movement guidance</span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="text-matcha shrink-0" aria-hidden>—</span>
-                  <span>Ongoing reassessment</span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="text-matcha shrink-0" aria-hidden>—</span>
-                  <span>Clear communication of progress</span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="text-matcha shrink-0" aria-hidden>—</span>
-                  <span>Structured progression</span>
-                </li>
-              </ul>
+              <div className="mt-10 w-full max-w-none overflow-hidden rounded-xl border border-forest/10 bg-forest/[0.03]">
+                <div className="relative aspect-[21/9] min-h-[220px] w-full sm:aspect-[2/1] md:min-h-[280px]">
+                  <img
+                    src="/images/Treatment-hands.JPG"
+                    alt="Hands-on treatment session at Common Care"
+                    className="absolute inset-0 h-full w-full object-cover object-center"
+                    loading="lazy"
+                    sizes="(min-width: 1400px) 1400px, 100vw"
+                  />
+                </div>
+              </div>
+              <p className="care-label text-forest/60 mt-10 md:mt-12">
+                Services
+              </p>
+              <div className="care-included-grid text-forest/90 !grid-cols-1">
+                {CARE_SESSION_SERVICES.map((item, idx) => {
+                  const isOpen = openSessionServices.has(idx);
+                  const buttonId = `session-service-toggle-${idx}`;
+                  const panelId = `session-service-panel-${idx}`;
+                  return (
+                    <div key={item.title} className="relative">
+                      <button
+                        id={buttonId}
+                        type="button"
+                        onClick={() => toggleSessionService(idx)}
+                        aria-expanded={isOpen}
+                        aria-controls={panelId}
+                        className="w-full flex items-start justify-between gap-3 text-left text-[16px] leading-relaxed text-darkgreen transition-colors group"
+                      >
+                        <span className="font-medium transition-colors group-hover:text-forest/70">
+                          {item.title}
+                        </span>
+                        <span
+                          aria-hidden
+                          className="relative shrink-0 inline-flex items-center justify-center h-6 w-6 overflow-visible origin-center transition-colors duration-200 ease-out"
+                        >
+                          <span className="absolute left-1/2 top-1/2 h-px w-3.5 -translate-x-1/2 -translate-y-1/2 bg-forest/70 transition-colors group-hover:bg-forest/50" />
+                          <span
+                            className={`absolute left-1/2 top-1/2 w-px h-3.5 -translate-x-1/2 -translate-y-1/2 bg-forest/70 transition-colors transition-opacity transition-transform duration-200 group-hover:bg-forest/50 ${
+                              isOpen ? "opacity-0 rotate-90" : "opacity-100 rotate-0"
+                            }`}
+                          />
+                        </span>
+                      </button>
+                      <div
+                        id={panelId}
+                        role="region"
+                        aria-labelledby={buttonId}
+                        aria-hidden={!isOpen}
+                        className={`mt-2 grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
+                          isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                        }`}
+                      >
+                        <div className="overflow-hidden">
+                          <p className="text-[15px] leading-relaxed text-forest/90">
+                            {item.description}
+                          </p>
+                        </div>
+                      </div>
+                      {idx < CARE_SESSION_SERVICES.length - 1 && (
+                        <div aria-hidden className="h-px bg-forest/10 mt-2 mb-2" />
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
               {/* (removed) Extra closing paragraph for care sessions */}
             </div>
           </section>
 
-          <div className="mt-24 md:mt-32 pt-16 md:pt-20 border-t border-forest/10" aria-hidden />
+          <div className="mt-20 pt-20 border-t border-forest/10" aria-hidden />
 
           {/* Section 4 — Everyday Wellness */}
           <section
             id="everyday-wellness"
             ref={(el) => { sectionRefs.current["everyday-wellness"] = el; }}
-            className="care-section care-section-animate scroll-mt-28 mt-20 md:mt-28"
+            className="care-section care-section-animate scroll-mt-28"
           >
             <h3 className="text-darkgreen">Everyday wellness</h3>
             <p className="care-body text-forest/90">
@@ -408,32 +529,62 @@ export default function CarePageClient() {
             <p className="care-label text-forest/60">
               Pillars
             </p>
-            <ul className="care-list-compact text-forest/90">
-              <li className="flex gap-3">
-                <span className="text-matcha shrink-0" aria-hidden>—</span>
-                <span>Recovery rhythms</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="text-matcha shrink-0" aria-hidden>—</span>
-                <span>Sustainable mobility + strength</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="text-matcha shrink-0" aria-hidden>—</span>
-                <span>Stress-load awareness</span>
-              </li>
-            </ul>
-            {/* (removed) Example topics paragraph */}
-            <div
-              className="mt-12 w-full min-h-[40vh] rounded-2xl overflow-hidden bg-gradient-to-br from-dusty-blue/20 via-pistachio/15 to-matcha/10 relative"
-              aria-hidden
-            >
-              <div
-                className="absolute inset-0 opacity-[0.12] mix-blend-overlay"
-                style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")`,
-                }}
-              />
+            <div className="care-included-grid text-forest/90 !grid-cols-1">
+              {EVERYDAY_WELLNESS_SERVICES.map((item, idx) => {
+                const isOpen = openWellnessServices.has(idx);
+                const buttonId = `wellness-service-toggle-${idx}`;
+                const panelId = `wellness-service-panel-${idx}`;
+                return (
+                  <div key={item.title} className="relative">
+                    <button
+                      id={buttonId}
+                      type="button"
+                      onClick={() => toggleWellnessService(idx)}
+                      aria-expanded={isOpen}
+                      aria-controls={panelId}
+                      className="w-full flex items-start justify-between gap-3 text-left text-[16px] leading-relaxed text-darkgreen transition-colors group"
+                    >
+                      <span className="font-medium transition-colors group-hover:text-forest/70">
+                        {item.title}
+                      </span>
+                      <span
+                        aria-hidden
+                        className="relative shrink-0 inline-flex items-center justify-center h-6 w-6 overflow-visible origin-center transition-colors duration-200 ease-out"
+                      >
+                        <span className="absolute left-1/2 top-1/2 h-px w-3.5 -translate-x-1/2 -translate-y-1/2 bg-forest/70 transition-colors group-hover:bg-forest/50" />
+                        <span
+                          className={`absolute left-1/2 top-1/2 w-px h-3.5 -translate-x-1/2 -translate-y-1/2 bg-forest/70 transition-colors transition-opacity transition-transform duration-200 group-hover:bg-forest/50 ${
+                            isOpen ? "opacity-0 rotate-90" : "opacity-100 rotate-0"
+                          }`}
+                        />
+                      </span>
+                    </button>
+                    <div
+                      id={panelId}
+                      role="region"
+                      aria-labelledby={buttonId}
+                      aria-hidden={!isOpen}
+                      className={`mt-2 grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
+                        isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                      }`}
+                    >
+                      <div className="overflow-hidden">
+                        <p className="text-[15px] leading-relaxed text-forest/90">
+                          {item.description}
+                        </p>
+                      </div>
+                    </div>
+                    {idx < EVERYDAY_WELLNESS_SERVICES.length - 1 && (
+                      <div aria-hidden className="h-px bg-forest/10 mt-2 mb-2" />
+                    )}
+                  </div>
+                );
+              })}
             </div>
+            <CareEvaluationCarousel
+              slides={WELLNESS_SLIDES}
+              ariaLabel="Everyday wellness imagery"
+            />
           </section>
         </div>
       </div>

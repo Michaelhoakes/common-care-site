@@ -29,7 +29,7 @@ export default function CarePage() {
             aria-hidden
           />
           <div className="absolute inset-x-0 bottom-0 z-10 px-6 md:px-16 pb-14 md:pb-16">
-            <div className="w-full max-w-[1400px]">
+            <div className="mx-auto w-full max-w-[1400px]">
               <h1 className="font-hero-display text-4xl sm:text-5xl md:text-6xl text-white font-semibold max-w-3xl pb-6 md:pb-8">
                 How care unfolds here.
               </h1>
