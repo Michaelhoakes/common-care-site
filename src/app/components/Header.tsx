@@ -80,7 +80,8 @@ export default function Header() {
   // Default to home style until pathname is known (avoids white bar flash on load)
   const isHome = pathname === "/" || pathname === null;
 
-  const isDropdownItem = (id: DropdownId) => (id === "care" || id === "first-visit" || id === "about" || id === "insurance");
+  const isDropdownItem = (id: DropdownId) =>
+    id === "care" || id === "about" || id === "insurance";
 
   const handleEnter = (id: DropdownId) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -114,19 +115,17 @@ export default function Header() {
   const onLightBg = !isHome || (isHome && scrolled);
   const navClass = onLightBg ? "text-darkgreen" : "text-white";
   const ctaClass = onLightBg
-    ? "bg-matcha text-light-green hover:opacity-95"
-    : "bg-white/15 backdrop-blur-sm border border-white/20 text-white hover:bg-white/25";
+    ? "cc-btn-primary"
+    : "cc-btn-inverse";
 
   const renderMegaPanel = (id: DropdownId) => {
     if (!id) return null;
     const config =
       id === "care"
         ? MEGA_CARE
-        : id === "first-visit"
-          ? MEGA_FIRST_VISIT
-          : id === "about"
-            ? MEGA_ABOUT
-            : MEGA_INSURANCE;
+        : id === "about"
+          ? MEGA_ABOUT
+          : MEGA_INSURANCE;
     const onHero = isHome && !scrolled;
     const dropdownText = onHero ? "text-[#8A976F]" : "text-forest";
     const linkBase = "font-medium inline-block w-fit border-b border-transparent hover:border-current transition-colors";
@@ -141,7 +140,7 @@ export default function Header() {
       >
         <div className="w-full flex-1 px-16 py-8 flex flex-col min-h-0">
           {/* Section title: Geist Mono, 14px, olive */}
-          <p className="font-mono text-[14px] font-medium tracking-[0.22em] uppercase text-[#8A976F]">
+          <p className="cc-mega-section-title">
             {config.sectionTitle}
           </p>
           {/* Horizontal rule: full width; vertical line below connects to this */}
@@ -251,17 +250,12 @@ export default function Header() {
                     Care
                   </Link>
                 </div>
-                <div
-                  className="relative"
-                  onMouseEnter={() => handleEnter("first-visit")}
+                <Link
+                  href="/first-visit"
+                  className={`flex items-center px-4 py-2 h-9 text-base leading-6 ${navClass} opacity-90 hover:opacity-100 rounded-md`}
                 >
-                  <Link
-                    href="/first-visit"
-                    className={`flex items-center px-4 py-2 h-9 text-base leading-6 ${navClass} opacity-90 hover:opacity-100 rounded-md`}
-                  >
-                    First Visit
-                  </Link>
-                </div>
+                  First Visit
+                </Link>
                 <div
                   className="relative"
                   onMouseEnter={() => handleEnter("about")}
@@ -289,7 +283,7 @@ export default function Header() {
 
             <Link
               href="/book"
-              className={`hidden md:inline-flex rounded-full px-4 py-2 text-base font-medium ${ctaClass}`}
+              className={`hidden md:inline-flex ${ctaClass}`}
             >
 Book an evaluation
               </Link>
@@ -298,7 +292,7 @@ Book an evaluation
             <div className="flex items-center gap-3 md:hidden">
               <Link
                 href="/book"
-                className={`rounded-full px-4 py-2 text-base font-medium ${ctaClass}`}
+                className={ctaClass}
               >
                 Book an evaluation
               </Link>

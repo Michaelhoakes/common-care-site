@@ -51,7 +51,7 @@ export default function IsThisForMeSection() {
     <section
       id="is-this-for-me"
       ref={sectionRef}
-      className="relative py-32 md:py-40 bg-pistachio-light overflow-hidden"
+      className="relative py-[80px] bg-pistachio-light overflow-hidden"
     >
       {/* Gradient overlay — same family, overlapping and dramatic */}
       <div
@@ -75,24 +75,24 @@ export default function IsThisForMeSection() {
         }}
         aria-hidden
       />
-      <div className="relative z-10 w-full px-6 md:px-16">
+      <div className="relative z-10 w-full px-6 md:px-16 flex flex-col gap-4">
         <p
-          className={`text-sm font-mono font-medium tracking-widest uppercase text-darkgreen ${
+          className={`text-sm font-mono font-medium tracking-widest uppercase ${
             show ? "opacity-60 translate-y-0" : "opacity-0 translate-y-[10px]"
           } ${!reducedMotion ? "transition-all duration-[1100ms] ease-out" : ""}`}
         >
           Is this for me?
         </p>
-        <h2
-          className={`font-hero-display tracking-normal mt-4 text-4xl md:text-5xl text-darkgreen max-w-2xl ${
+        <h4
+          className={`max-w-2xl ${
             show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[12px]"
           } ${!reducedMotion ? "transition-all duration-[1100ms] ease-out" : ""}`}
           style={!reducedMotion ? { transitionDelay: visible ? "200ms" : "0ms" } : undefined}
         >
           Wherever you are, we meet you there.
-        </h2>
+        </h4>
 
-        <div className="mt-16 relative">
+        <div className="pt-16 relative">
           <div
             className={`absolute top-0 left-0 h-px bg-darkgreen/50 -ml-6 md:-ml-16 ${show ? "w-[calc(100%+1.5rem)] md:w-[calc(100%+128px)]" : "w-0"} ${
               !reducedMotion ? "transition-[width] ease-out" : ""
@@ -123,23 +123,37 @@ export default function IsThisForMeSection() {
               },
             ].map((item, i) => (
               <div key={item.title} className="relative">
+                {/* Line sits at top:0 of pt-16 wrapper; grid starts after pt-16 + pt-8 = 6rem — center dot on line */}
                 <GreenDotLottie
                   active={false}
                   visible={show}
                   reducedMotion={!!reducedMotion}
                   className={!reducedMotion && visible ? "transition-opacity duration-300 ease-out" : ""}
-                  style={!reducedMotion && visible ? { transitionDelay: `${LINE_DELAY_MS}ms` } : undefined}
+                  style={
+                    !reducedMotion && visible
+                      ? {
+                          top: "calc(-4rem - 2rem)",
+                          left: 0,
+                          transform: "translateY(-50%)",
+                          transitionDelay: `${LINE_DELAY_MS}ms`,
+                        }
+                      : {
+                          top: "calc(-4rem - 2rem)",
+                          left: 0,
+                          transform: "translateY(-50%)",
+                        }
+                  }
                 />
                 <div
                   className={`${
                     show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[10px]"
-                  } ${!reducedMotion ? "transition-all duration-[1100ms] ease-out" : ""}`}
+                  } ${!reducedMotion ? "transition-all duration-[1100ms] ease-out" : ""} flex flex-col gap-3`}
                   style={!reducedMotion && visible ? { transitionDelay: `${200 + 200 * i}ms` } : undefined}
                 >
-                  <h3 className="font-hero-display text-[24px] font-medium text-darkgreen">
+                  <h5>
                     {item.title}
-                  </h3>
-                  <p className="mt-3 text-[16px] opacity-80 leading-relaxed">{item.body}</p>
+                  </h5>
+                  <p>{item.body}</p>
                 </div>
               </div>
             ))}

@@ -9,37 +9,41 @@ export const metadata = {
 
 export default function FirstVisitPage() {
   return (
-    <div className="min-h-screen gradient-page relative">
-      <svg className="absolute w-0 h-0" aria-hidden="true">
-        <filter id="grain-first-visit">
-          <feTurbulence
-            type="fractalNoise"
-            baseFrequency="0.8"
-            numOctaves="3"
-            stitchTiles="stitch"
-          />
-          <feColorMatrix type="saturate" values="0" />
-        </filter>
-      </svg>
-      <div
-        className="absolute inset-0 pointer-events-none opacity-[0.15] mix-blend-overlay"
-        style={{ filter: "url(#grain-first-visit)" }}
-        aria-hidden
-      />
-
+    <div className="min-h-screen gradient-page relative care-page">
       <main className="relative z-10">
-        <header className="w-full px-16 pt-14 md:pt-16 pb-10 md:pb-12 min-h-[35vh] max-h-[45vh] flex flex-col justify-center">
-          <div className="w-full max-w-[1400px]">
-            <h1 className="font-hero-display text-4xl sm:text-5xl md:text-5xl text-darkgreen font-normal tracking-normal max-w-3xl">
-              Your first visit
-            </h1>
-            <p className="mt-5 md:mt-6 text-lg md:text-xl text-forest/90 leading-relaxed max-w-2xl">
-              What to expect, how to prepare, and everything you need to know before you arrive.
-            </p>
+        {/* Hero: same structure, parallax, and overlay as /care */}
+        <section className="relative h-[56vh] min-h-[460px] max-h-[720px] w-full overflow-hidden">
+          <div
+            className="absolute inset-0 bg-cover care-parallax-media care-parallax-hero"
+            style={{
+              backgroundImage: "url('/images/consult1.jpg')",
+              backgroundPosition: "center 42%",
+            }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.1) 100%)",
+            }}
+            aria-hidden
+          />
+          <div className="absolute inset-x-0 bottom-0 z-10 px-6 md:px-16 pb-14 md:pb-16">
+            <div className="mx-auto w-full max-w-[1400px]">
+              <h1 className="font-hero-display text-4xl sm:text-5xl md:text-6xl text-white font-semibold max-w-3xl">
+                Your first visit
+              </h1>
+              <p className="mt-4 md:mt-5 max-w-2xl text-lg md:text-xl text-white/85 leading-relaxed">
+                What to expect, how to prepare, and everything you need to know
+                before you arrive.
+              </p>
+            </div>
           </div>
-        </header>
+        </section>
 
-        <FirstVisitClient />
+        <section className="care-stacked-panel relative z-20">
+          <FirstVisitClient />
+        </section>
         <Footer />
       </main>
     </div>

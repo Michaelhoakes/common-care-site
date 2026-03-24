@@ -19,7 +19,7 @@ export default function Footer() {
           </div>
 
           <div className="md:col-start-7 md:col-span-2">
-            <p className="text-xs font-mono font-medium tracking-widest uppercase opacity-60 mb-4" style={{ fontWeight: 500 }}>Navigate</p>
+            <p className="cc-footer-nav-label">Navigate</p>
             <div className="flex flex-col gap-2 text-sm">
               <Link className="opacity-80 hover:opacity-100" href="/care">Care</Link>
               <Link className="opacity-80 hover:opacity-100" href="/first-visit">First Visit</Link>
@@ -30,7 +30,7 @@ export default function Footer() {
           </div>
 
           <div className="md:col-span-2">
-            <p className="text-xs font-mono font-medium tracking-widest uppercase opacity-60 mb-4" style={{ fontWeight: 500 }}>Details</p>
+            <p className="cc-footer-nav-label">Details</p>
             <div className="flex flex-col gap-2 text-sm opacity-80">
               <p>Los Angeles area</p>
               <p>In-person sessions</p>
@@ -39,7 +39,7 @@ export default function Footer() {
           </div>
 
           <div className="md:col-span-2 flex flex-col">
-            <p className="text-xs font-mono font-medium tracking-widest uppercase opacity-60 mb-4" style={{ fontWeight: 500 }}>Contact</p>
+            <p className="cc-footer-nav-label">Contact</p>
             <div className="flex flex-col gap-2 text-sm opacity-80">
               <a className="hover:opacity-100" href="mailto:hello@commoncare.co">hello@commoncare.co</a>
               <a className="hover:opacity-100" href="tel:+13105551234">(310) 555-1234</a>

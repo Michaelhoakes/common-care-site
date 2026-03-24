@@ -19,6 +19,15 @@
   --background: #ffffff;
   --foreground: #171717;
   --hero-base: #D4DDD4;
+  /* Semantic vertical rhythm tiers */
+  --cc-tight: 12px;
+  --cc-standard: 16px;
+  --cc-block: 24px;
+
+  /* Section-level layout breaks (larger than text spacing) */
+  --cc-section-gap: 3rem; /* 48px */
+  --cc-section-gap-sm: 2rem; /* 32px */
+  --cc-cta-font-weight: 500;
   /* Soft green gradient tints — low contrast, no sharp transitions */
   --gradient-warm: #F8FAF0;
   --gradient-cream: #FAFAF5;
@@ -38,19 +47,471 @@
 /* Hero: Display Pro (headlines); body: Text Pro via --font-sans and body below */
 .font-hero-display {
   font-family: "neue-haas-grotesk-display", var(--font-inter), system-ui, sans-serif;
-  letter-spacing: normal;
+}
+
+/* Reusable typography variants (intentional, used across multiple components) */
+.cc-eyebrow {
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.875rem; /* text-sm */
+  line-height: 1.25rem; /* matches Tailwind text-sm */
+  font-weight: 500;
+  letter-spacing: 0.1em; /* tracking-widest */
+  text-transform: uppercase;
+  color: #1F3414; /* text-darkgreen */
+  opacity: 0.6; /* opacity-60 */
+}
+
+.cc-footer-nav-label {
+  font-family: var(--font-mono), system-ui, sans-serif;
+  font-size: 0.75rem; /* text-xs */
+  font-weight: 500;
+  letter-spacing: 0.1em; /* tracking-widest */
+  text-transform: uppercase;
+  opacity: 0.6; /* opacity-60 */
+  margin-bottom: 1rem; /* mb-4 */
+}
+
+.cc-mega-section-title {
+  font-family: var(--font-mono), system-ui, sans-serif;
+  font-size: 0.875rem; /* 14px */
+  font-weight: 500;
+  letter-spacing: 0.22em; /* tracking-[0.22em] */
+  text-transform: uppercase;
+  color: #8A976F;
+}
+
+.cc-btn-primary {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  align-items: center;
+  justify-content: center;
+  font-family: "neue-haas-grotesk-text", var(--font-inter), system-ui, sans-serif;
+  border-radius: 9999px;
+  padding: 0.5rem 1rem; /* py-2 px-4 */
+  font-size: 1rem; /* text-base */
+  line-height: 1.5rem;
+  font-weight: var(--cc-cta-font-weight);
+  background: var(--color-matcha); /* solid brand matcha */
+  color: #FFFFFF; /* white text for primary CTA */
+  transition: opacity 150ms ease;
+}
+
+.cc-btn-primary:hover {
+  opacity: 0.95;
+}
+
+.cc-btn-inverse {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "neue-haas-grotesk-text", var(--font-inter), system-ui, sans-serif;
+  border-radius: 9999px;
+  padding: 0.5rem 1rem; /* py-2 px-4 */
+  font-size: 1rem; /* text-base */
+  line-height: 1.5rem;
+  font-weight: var(--cc-cta-font-weight);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  transition: background-color 150ms ease;
+}
+
+.cc-btn-inverse:hover {
+  background: rgba(255, 255, 255, 0.25);
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
+  color: var(--color-darkgreen);
   font-family: "neue-haas-grotesk-text", var(--font-inter), system-ui, sans-serif;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 16px;
+  line-height: 24px;
 }
 
 h1, h2, h3, h4, h5, h6 {
+  font-family: "neue-haas-grotesk-display", var(--font-inter), system-ui, sans-serif;
+  letter-spacing: 0.02rem;
+}
+
+h1 {
+  font-weight: 600;
+  letter-spacing: 0.2rem;
+}
+
+h2,
+h6 {
+  font-weight: 600;
+}
+
+h4 {
+  font-weight: 600;
+  letter-spacing: 0.06rem;
+}
+
+h5 {
   font-weight: 500;
+}
+
+/* Match homepage h3 typography (ServicesPanels “34px” headline) */
+h3 {
+  font-weight: 500;
+  letter-spacing: normal;
+}
+
+/* Baseline heading sizing (semantic defaults) */
+@layer base {
+  /* h1 matches homepage hero scale */
+  h1 {
+    font-size: 3rem; /* 48px */
+    line-height: 1.05;
+  }
+
+  @media (min-width: 640px) {
+    h1 {
+      font-size: 3.5rem; /* 56px */
+    }
+  }
+
+  @media (min-width: 768px) {
+    h1 {
+      font-size: 4.5rem; /* 72px */
+    }
+  }
+
+  @media (min-width: 1024px) {
+    h1 {
+      font-size: 5.625rem; /* 90px */
+    }
+  }
+
+  h2 {
+    font-size: 2.25rem; /* 36px? */
+    line-height: 1.1;
+  }
+
+  @media (min-width: 768px) {
+    h2 {
+      font-size: 3rem; /* 48px */
+    }
+  }
+
+  /* Homepage h3 pattern ("34px" at md) */
+  h3 {
+    font-size: 1.875rem; /* 30px */
+    line-height: 1.25; /* leading-tight */
+  }
+
+  @media (min-width: 768px) {
+    h3 {
+      font-size: 2.125rem; /* 34px */
+    }
+  }
+
+  h4 {
+    font-size: 1.5rem; /* 24px */
+    line-height: 1.1;
+  }
+
+  @media (min-width: 768px) {
+    h4 {
+      font-size: 2.5rem; /* 40px */
+    }
+  }
+
+  h5 {
+    font-size: 1.5rem; /* 24px */
+    line-height: 2rem; /* 32px */
+    font-weight: 500;
+  }
+
+  h6 {
+    font-size: 1rem; /* 16px */
+    line-height: 1.2;
+  }
+}
+
+/* Core text semantics (semantic tags baseline) */
+p {
+  margin-top: 0;
+  margin-bottom: 1.25rem; /* 20px */
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+li {
+  margin: 0;
+}
+
+/* Default vertical rhythm for stacked semantic text blocks (editorial feel).
+   Uses explicit selectors (no :where) so these reliably override `p { margin: 0; }`.
+   Spacing is controlled by adjacency in the DOM. */
+
+/* Paragraph -> paragraph (and blockquote) */
+p + p,
+p + blockquote,
+blockquote + p,
+blockquote + blockquote {
+  margin-bottom: var(--cc-standard);
+}
+
+/* Paragraph -> list */
+p + ul,
+p + ol,
+blockquote + ul,
+blockquote + ol {
+  margin-bottom: var(--cc-block);
+}
+
+/* List -> paragraph (and blockquote) */
+ul + p,
+ul + blockquote,
+ol + p,
+ol + blockquote {
+  margin-bottom: var(--cc-block);
+}
+
+/* Paragraph -> heading */
+p + h1,
+p + h2,
+p + h3,
+p + h4,
+p + h5,
+p + h6,
+blockquote + h1,
+blockquote + h2,
+blockquote + h3,
+blockquote + h4,
+blockquote + h5,
+blockquote + h6 {
+  margin-bottom: var(--cc-block);
+}
+
+/* Heading -> blockquote */
+h1 + blockquote,
+h2 + blockquote,
+h3 + blockquote,
+h4 + blockquote,
+h5 + blockquote,
+h6 + blockquote {
+  margin-top: var(--cc-standard);
+}
+
+/* Heading -> heading (rare, but keep editorial rhythm) */
+h1 + h1,
+h1 + h2,
+h1 + h3,
+h1 + h4,
+h1 + h5,
+h1 + h6,
+h2 + h1,
+h2 + h2,
+h2 + h3,
+h2 + h4,
+h2 + h5,
+h2 + h6,
+h3 + h1,
+h3 + h2,
+h3 + h3,
+h3 + h4,
+h3 + h5,
+h3 + h6,
+h4 + h1,
+h4 + h2,
+h4 + h3,
+h4 + h4,
+h4 + h5,
+h4 + h6,
+h5 + h1,
+h5 + h2,
+h5 + h3,
+h5 + h4,
+h5 + h5,
+h5 + h6,
+h6 + h1,
+h6 + h2,
+h6 + h3,
+h6 + h4,
+h6 + h5,
+h6 + h6 {
+  margin-bottom: var(--cc-block);
+}
+
+/* List items -> list items */
+li + li {
+  margin-bottom: var(--cc-tight);
+}
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+strong {
+  font-weight: 600;
+}
+
+em {
+  font-style: italic;
+}
+
+small,
+caption {
+  font-size: 0.75rem; /* 12px */
+  line-height: 1.4;
+}
+
+figure {
+  margin: 0;
+}
+
+figcaption {
+  margin: 0;
+  font-size: 0.75rem; /* 12px */
+  line-height: 1.4;
+  opacity: 0.7;
+}
+
+blockquote {
+  margin: 0;
+  padding: 0;
+  font-style: italic;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid currentColor;
+  opacity: 0.15;
+}
+
+code,
+kbd,
+pre {
+  font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+code {
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.4;
+}
+
+pre {
+  margin: 0;
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+kbd {
+  font-size: 0.75rem; /* 12px */
+  line-height: 1.2;
+}
+
+/* Section-level breaks: add spacing only when the following section
+   doesn't already specify mt/pt/py utilities. */
+:where(main)
+  > section
+  + section:not([class*="mt-"]):not([class*="pt-"]):not([class*="py-"]):not(.care-stacked-panel) {
+  margin-top: var(--cc-section-gap-sm);
+}
+
+@media (min-width: 768px) {
+  :where(main)
+    > section
+    + section:not([class*="mt-"]):not([class*="pt-"]):not([class*="py-"]):not(.care-stacked-panel) {
+    margin-top: var(--cc-section-gap);
+  }
+}
+
+/* /care typography primitives (scoped globally to this page) */
+.care-page .care-lead {
+  font-size: 1.25rem; /* text-xl */
+  line-height: 1.45;
+  max-width: 42rem; /* max-w-2xl */
+}
+
+@media (min-width: 768px) {
+  .care-page .care-lead {
+    font-size: 1.5rem; /* md:text-2xl */
+  }
+}
+
+.care-page .care-body {
+  font-size: 17px;
+  line-height: 1.65;
+  max-width: 42rem; /* max-w-2xl */
+}
+
+.care-page .care-list,
+.care-page .care-list-compact {
+  font-size: 17px;
+  line-height: 1.6;
+  max-width: 42rem; /* max-w-2xl */
+  padding-left: 0;
+}
+
+.care-page .care-list > li + li {
+  margin-top: 0.75rem; /* space-y-3 */
+}
+
+.care-page .care-list-compact > li + li {
+  margin-top: 0.5rem; /* space-y-2 */
+}
+
+.care-page .care-label {
+  font-family: var(--font-mono), system-ui, sans-serif;
+  font-size: 0.75rem; /* text-xs */
+  font-weight: 500;
+  letter-spacing: 0.1em; /* tracking-widest */
+  text-transform: uppercase;
+}
+
+.care-page p.care-body + p.care-label {
+  /* Increase space above section labels like "What’s included" */
+  margin-top: 2rem !important; /* 32px */
+}
+
+.care-page .care-included-grid {
+  /* Editorial separation before the "What's included" list */
+  margin-top: 1.5rem; /* 24px */
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: 2rem; /* gap-x-8 */
+  row-gap: 0.75rem; /* gap-y-3 */
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+@media (min-width: 640px) {
+  .care-page .care-included-grid {
+    grid-template-columns: 1fr 1fr; /* sm:grid-cols-2 */
+  }
+}
+
+.care-page .care-link {
+  display: inline-block;
+  font-weight: 500;
+  font-size: 17px;
+  transition: border-color 200ms ease;
+}
+
+/* Space from section h3 to first body paragraph (care-page editorial rhythm) */
+.care-section h3 + p.care-body,
+#the-360-evaluation h3 + div > p.care-body:first-of-type {
+  margin-top: var(--cc-block);
 }
 
 /* Soft, diffused page gradient — green-tinted, atmospheric */
@@ -288,9 +749,13 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* First visit: disable FAQ accordion transition when user prefers reduced motion */
+/* /care sidebar: per-section progress fill (scaleY), calm linear interpolation */
+.care-nav-progress-fill {
+  transition: transform 100ms linear;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .first-visit-faq-content {
+  .care-nav-progress-fill {
     transition: none;
   }
 }
@@ -372,6 +837,86 @@ h1, h2, h3, h4, h5, h6 {
   }
   .pulse-dot-halo-animate {
     opacity: 0.25;
+  }
+}
+
+@keyframes services-panel-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.services-panel-detail-reveal {
+  animation: services-panel-reveal 0.35s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .services-panel-detail-reveal {
+    animation: none;
+  }
+}
+
+/* /care: restrained stacked-overlap + cinematic micro-parallax */
+:root {
+  --care-scroll-y: 0px;
+}
+
+.care-stacked-panel {
+  padding-top: 64px;
+  border-top-left-radius: 26px;
+  border-top-right-radius: 26px;
+  /* Solid fill so fixed page gradient + upward shadow don’t read as a dark band above content */
+  background: var(--background);
+  box-shadow: none;
+}
+
+@media (min-width: 768px) {
+  .care-stacked-panel {
+    margin-top: -36px;
+  }
+}
+
+.care-parallax-media {
+  will-change: transform;
+  transform: translateY(calc(var(--care-scroll-y) * 0.055));
+}
+
+.care-parallax-hero {
+  transform: translateY(calc(var(--care-scroll-y) * 0.06)) scale(1.055);
+}
+
+.care-parallax-eval {
+  transform: translateY(calc(var(--care-scroll-y) * 0.04));
+}
+
+@media (max-width: 767px) {
+  .care-stacked-panel {
+    margin-top: -10px;
+    padding-top: 24px;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    box-shadow: none;
+  }
+
+  .care-parallax-media,
+  .care-parallax-hero,
+  .care-parallax-eval {
+    transform: none;
+    will-change: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .care-parallax-media,
+  .care-parallax-hero,
+  .care-parallax-eval {
+    transform: none;
+    will-change: auto;
   }
 }
 

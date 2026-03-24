@@ -1,54 +1,125 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useCareParallaxScrollY } from "../../hooks/useCareParallaxScrollY";
+import CareEvaluationCarousel from "./CareEvaluationCarousel";
+import {
+  useCareSidebarProgress,
+  useMediaQuery,
+  usePrefersReducedMotion,
+} from "../hooks/useCareSidebarProgress";
 
-const SECTIONS = [
-  { id: "care-approach", label: "Care approach" },
+/** Sidebar + scrollspy: overview first, then each care chapter (Seed-style persistent nav). */
+const CARE_NAV_SECTIONS = [
+  { id: "care-approach", label: "Overview" },
   { id: "the-360-evaluation", label: "The 360° evaluation" },
   { id: "the-care-sessions", label: "The care sessions" },
   { id: "everyday-wellness", label: "Everyday wellness" },
 ] as const;
 
+const CARE_SECTION_IDS: readonly string[] = CARE_NAV_SECTIONS.map((s) => s.id);
+
+const REVEAL_SECTION_IDS = CARE_NAV_SECTIONS.map((s) => s.id);
+
+type IncludedItem = {
+  title: string;
+  description: string;
+  imageSrc?: string;
+  imageAlt?: string;
+};
+
+const INCLUDED_ITEMS: IncludedItem[] = [
+  {
+    title: "Movement + gait analysis",
+    description:
+      "We observe how your body moves and how weight travels through your stride, then translate it into actionable insights.",
+  },
+  {
+    title: "Postural + mobility assessment",
+    description:
+      "We evaluate alignment and available range so you understand constraints and opportunities before next steps.",
+  },
+  {
+    title: "Strength + asymmetry testing",
+    description:
+      "We check strength and side-to-side differences to understand load capacity and where targeted support is needed.",
+  },
+  {
+    title: "Body composition analysis (InBody)",
+    description:
+      "We track body composition to complement the clinical picture and support progress monitoring over time.",
+  },
+  {
+    title: "Recovery + stress-load context",
+    description:
+      "We consider recovery patterns and daily stress so your plan is built for long-term sustainability.",
+  },
+  {
+    title: "Goals + health history",
+    description:
+      "We align on outcomes that matter to you and map how your history informs pacing, priorities, and risk.",
+  },
+];
+
 export default function CarePageClient() {
-  const [activeId, setActiveId] = useState<string>(SECTIONS[0].id);
-  const [lineDrawn, setLineDrawn] = useState(false);
+  const isDesktopNav = useMediaQuery("(min-width: 1024px)");
+  const prefersReducedMotion = usePrefersReducedMotion();
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
+  const getSectionEl = useCallback(
+    (id: string) => sectionRefs.current[id] ?? null,
+    []
+  );
+  const sidebarProgress = useCareSidebarProgress(CARE_SECTION_IDS, getSectionEl, {
+    enabled: isDesktopNav,
+    readingLineRatio: 0.36,
+    reduceMotion: prefersReducedMotion,
+  });
+
+  const [mobileActiveId, setMobileActiveId] = useState<string>(
+    CARE_NAV_SECTIONS[0].id
+  );
+  const activeId = isDesktopNav ? sidebarProgress.activeId : mobileActiveId;
   const revealedRef = useRef<Set<string>>(new Set());
-  const sidebarRef = useRef<HTMLDivElement | null>(null);
+  // Multiple "What's included" rows can be open at once.
+  const [openIncluded, setOpenIncluded] = useState<Set<number>>(() => new Set());
+  const mobileScrollSpyRef = useRef<IntersectionObserver | null>(null);
+  useCareParallaxScrollY();
 
-  // Draw sidebar line when two-column section enters viewport
+  // Mobile / narrow: lightweight scrollspy (desktop uses geometry-based progress)
   useEffect(() => {
-    const el = sidebarRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) setLineDrawn(true);
-      },
-      { rootMargin: "0px 0px -20% 0px", threshold: 0 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+    if (isDesktopNav) {
+      mobileScrollSpyRef.current?.disconnect();
+      mobileScrollSpyRef.current = null;
+      return;
+    }
 
-  // Scrollspy: set active section based on scroll position
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          const id = entry.target.id;
-          if (id && SECTIONS.some((s) => s.id === id)) setActiveId(id);
-        });
-      },
-      { rootMargin: "-20% 0px -60% 0px", threshold: 0 }
-    );
-
-    SECTIONS.forEach(({ id }) => {
-      const el = sectionRefs.current[id];
-      if (el) observer.observe(el);
+    const raf = requestAnimationFrame(() => {
+      mobileScrollSpyRef.current?.disconnect();
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const sid = entry.target.id;
+            if (sid && CARE_NAV_SECTIONS.some((s) => s.id === sid)) {
+              setMobileActiveId(sid);
+            }
+          });
+        },
+        { rootMargin: "-20% 0px -60% 0px", threshold: 0 }
+      );
+      CARE_NAV_SECTIONS.forEach(({ id }) => {
+        const el = sectionRefs.current[id];
+        if (el) observer.observe(el);
+      });
+      mobileScrollSpyRef.current = observer;
     });
-    return () => observer.disconnect();
-  }, []);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      mobileScrollSpyRef.current?.disconnect();
+      mobileScrollSpyRef.current = null;
+    };
+  }, [isDesktopNav]);
 
   // Section enter animation (once): fade + translate when in view; CSS respects prefers-reduced-motion
   useEffect(() => {
@@ -66,7 +137,7 @@ export default function CarePageClient() {
       { rootMargin: "0px 0px -80px 0px", threshold: 0 }
     );
 
-    SECTIONS.forEach(({ id }) => {
+    REVEAL_SECTION_IDS.forEach((id) => {
       const el = sectionRefs.current[id];
       if (el) observer.observe(el);
     });
@@ -78,67 +149,104 @@ export default function CarePageClient() {
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  const toggleIncluded = (idx: number) => {
+    setOpenIncluded((prev) => {
+      const next = new Set(prev);
+      if (next.has(idx)) next.delete(idx);
+      else next.add(idx);
+      return next;
+    });
+  };
+
   return (
-    <div ref={sidebarRef} className="w-full px-16">
-      <div className="max-w-[1400px] flex flex-col lg:flex-row lg:gap-16 xl:gap-24">
-        {/* Sidebar: line draws on scroll in; dot centered on line */}
+    <div className="w-full px-6 md:px-16">
+      <div className="mx-auto max-w-[1400px] mt-14 md:mt-18 lg:mt-20 flex flex-col lg:flex-row lg:gap-20 xl:gap-24 lg:items-stretch">
+        {/* Sidebar: sequential vertical progress (desktop); sticky within content column */}
         <nav
-          className="care-sidebar w-full lg:w-[200px] xl:w-[220px] shrink-0"
+          className="care-sidebar w-full lg:w-[260px] xl:w-[280px] shrink-0"
           aria-label="On this page"
         >
-          <div className="sticky top-24 relative">
-            <span
-              className={`sidebar-nav-line absolute left-0 top-[10px] bottom-[10px] w-px bg-forest/20 ${lineDrawn ? "sidebar-nav-line-drawn" : ""}`}
-              aria-hidden
-            />
-            <ul className="flex flex-wrap gap-x-6 gap-y-1 lg:flex-col lg:gap-x-0 lg:gap-y-0 pl-6 w-fit">
-              {SECTIONS.map(({ id, label }) => {
-                const isActive = activeId === id;
-                return (
-                  <li key={id}>
-                    <button
-                      type="button"
-                      onClick={() => scrollTo(id)}
-                      className={`
-                        care-nav-link group relative flex items-center gap-3 py-2.5 pl-3 text-left text-base font-normal
-                        transition-colors duration-200
-                        ${isActive ? "text-forest" : "text-forest/70 hover:text-forest"}
-                      `}
-                    >
-                      <span
-                        className={`
-                          absolute left-[-23.5px] top-1/2 h-1.5 w-1.5 -translate-x-1/2 -translate-y-1/2 rounded-full transition-colors duration-200
-                          ${isActive ? "bg-marigold" : "bg-transparent group-hover:bg-forest/30"}
-                        `}
+          <div className="relative lg:h-full">
+            <div className="sticky top-24 lg:top-28">
+              {/* Mobile: flex chips. Desktop: 2-col grid + li:contents so row-gap is identical between every row. */}
+              <ul className="flex w-full max-w-full flex-wrap gap-x-6 gap-y-0.5 lg:grid lg:max-w-none lg:grid-cols-[0.75rem_minmax(0,1fr)] lg:gap-x-3 lg:gap-y-2">
+                {CARE_NAV_SECTIONS.map(({ id, label }, index) => {
+                  const fill = isDesktopNav
+                    ? (sidebarProgress.fills[index] ?? 0)
+                    : 0;
+                  const done = isDesktopNav && fill >= 0.998;
+                  const reading =
+                    isDesktopNav &&
+                    index === sidebarProgress.activeIndex &&
+                    !done;
+                  const upcoming =
+                    isDesktopNav && !done && index > sidebarProgress.activeIndex;
+
+                  const isActive = activeId === id;
+                  const labelTone = isDesktopNav
+                    ? done
+                      ? "text-forest/80"
+                      : reading
+                        ? "text-forest font-medium"
+                        : upcoming
+                          ? "text-forest/45 hover:text-forest/65"
+                          : "text-forest/70"
+                    : isActive
+                      ? "text-forest font-medium"
+                      : "text-forest/65 hover:text-forest/85";
+
+                  return (
+                    <li key={id} className="contents">
+                      <div
+                        className="hidden h-full min-h-0 w-full flex-col items-center lg:flex"
                         aria-hidden
-                      />
-                      <span>{label}</span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
+                      >
+                        <div className="relative mx-auto min-h-0 w-[2px] flex-1 overflow-hidden rounded-full bg-forest/15">
+                          <span
+                            className="care-nav-progress-fill pointer-events-none absolute inset-x-0 top-0 h-full w-full origin-top rounded-full bg-marigold/85"
+                            style={{
+                              transform: `scaleY(${fill})`,
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => scrollTo(id)}
+                        aria-current={isActive ? "location" : undefined}
+                        className={`
+                          care-nav-link group flex min-h-0 min-w-0 items-start self-stretch py-1.5 text-left text-base font-normal leading-tight
+                          transition-colors duration-200 ease-out
+                          ${labelTone}
+                        `}
+                      >
+                        <span className="block w-full">{label}</span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
           </div>
         </nav>
 
-        {/* Content column */}
-        <div className="min-w-0 flex-1 pb-24 md:pb-32 pt-8 lg:pt-0">
-          {/* Section 1 — Care approach */}
+        {/* Main column: overview + all chapters (single column beside sidebar) */}
+        <div className="min-w-0 flex-1 pb-24 md:pb-32 pt-8 md:pt-10 lg:pt-0">
           <section
             id="care-approach"
             ref={(el) => { sectionRefs.current["care-approach"] = el; }}
             className="care-section care-section-animate scroll-mt-28"
           >
-            <h2 className="font-hero-display text-2xl md:text-3xl text-darkgreen font-medium tracking-normal">
-              Care approach
-            </h2>
-            <p className="mt-6 text-xl md:text-2xl text-forest/95 leading-snug max-w-2xl">
-              Care begins with understanding you as a whole — not just a symptom.
+            <p className="cc-eyebrow text-darkgreen">
+              Our care approach
             </p>
-            <p className="mt-6 text-forest/90 text-[17px] leading-[1.65] max-w-2xl">
+            <h3 className="text-darkgreen">
+              Care begins with understanding you as a whole — not just a symptom.
+            </h3>
+            <p className="care-body text-forest/90">
               We take a whole-person lens: how you move, how much stress and load you carry, and how you live day to day. That context shapes everything that follows. Care here is unhurried, one-on-one, and oriented toward long-term health — not quick fixes.
             </p>
-            <ul className="mt-8 space-y-3 text-forest/90 text-[17px] leading-[1.6] max-w-2xl">
+            <ul className="care-list text-forest/90">
               <li className="flex gap-3">
                 <span className="text-matcha shrink-0" aria-hidden>—</span>
                 <span>Whole-person lens — movement, stress load, daily patterns</span>
@@ -152,89 +260,101 @@ export default function CarePageClient() {
                 <span>Long-term orientation over quick fixes</span>
               </li>
             </ul>
-            <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2 text-[15px] font-medium tracking-wide text-forest/80">
-              <span>Listen</span>
-              <span className="text-forest/50" aria-hidden>→</span>
-              <span>Evaluate</span>
-              <span className="text-forest/50" aria-hidden>→</span>
-              <span>Guide</span>
-            </div>
           </section>
 
           <div className="mt-24 md:mt-32 pt-16 md:pt-20 border-t border-forest/10" aria-hidden />
 
-          {/* Section 2 — The 360° Evaluation */}
+          {/* The 360° Evaluation */}
           <section
             id="the-360-evaluation"
             ref={(el) => { sectionRefs.current["the-360-evaluation"] = el; }}
-            className="care-section care-section-animate scroll-mt-28 mt-20 md:mt-28"
+            className="care-section care-section-animate scroll-mt-28"
           >
-            <h2 className="font-hero-display text-2xl md:text-3xl text-darkgreen font-medium tracking-normal">
-              The 360° evaluation
-            </h2>
-            <div className="mt-8 lg:mt-10 lg:flex lg:gap-16 xl:gap-20 lg:items-start">
-              <div className="min-w-0 flex-1">
-                <p className="text-xl md:text-2xl text-forest/95 leading-snug max-w-2xl">
-                  A comprehensive baseline informed by clinical insight and objective measurement.
-                </p>
-                <p className="mt-6 text-forest/90 text-[17px] leading-[1.65] max-w-2xl">
-                  Before we recommend treatment or next steps, we build a clear picture. The 360° evaluation is that baseline: it combines conversation, hands-on assessment, and measured data so we’re not guessing — we’re deciding from clarity.
-                </p>
-                <p className="mt-6 text-xs font-mono font-medium tracking-widest uppercase text-forest/60">
-                  What’s included
-                </p>
-                <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 text-forest/90 text-[17px] leading-[1.5]">
-                  <div>Movement + gait analysis</div>
-                  <div>Postural + mobility assessment</div>
-                  <div>Strength + asymmetry testing</div>
-                  <div>Body composition analysis (InBody)</div>
-                  <div>Recovery + stress-load context</div>
-                  <div>Goals + health history</div>
-                </div>
-                <p className="mt-8 text-forest/90 text-[17px] leading-[1.65] max-w-2xl">
-                  Technology supports clinical judgment and reduces guesswork. We use it to see what the eye can’t fully capture — then we interpret it in the context of your life and goals.
-                </p>
-                <div className="mt-10 p-6 rounded-lg border border-forest/10 bg-pistachio/5">
-                  <p className="text-xs font-mono font-medium tracking-widest uppercase text-forest/60 mb-3">
-                    You’ll leave with
-                  </p>
-                  <ul className="space-y-2 text-forest/90 text-[17px]">
-                    <li>Clear priorities</li>
-                    <li>Focused next-step plan</li>
-                    <li>Practical guidance</li>
-                  </ul>
-                </div>
-                <a
-                  href="/technology"
-                  className="mt-8 inline-block text-forest font-medium text-[17px] border-b border-forest/30 hover:border-forest transition-colors"
-                >
-                  Explore how we measure →
-                </a>
+            <h3 className="text-darkgreen">The 360° evaluation</h3>
+            <div className="min-w-0">
+              <p className="care-body text-forest/90">
+                Before we recommend treatment or next steps, we build a clear picture. The 360° evaluation is that baseline: it combines conversation, hands-on assessment, and measured data so we’re not guessing — we’re deciding from clarity.
+              </p>
+              <CareEvaluationCarousel />
+              <p className="care-label text-forest/60 mt-10 md:mt-12">
+                What’s included
+              </p>
+              <div className="care-included-grid text-forest/90 !grid-cols-1">
+                {INCLUDED_ITEMS.map((item, idx) => {
+                  const isOpen = openIncluded.has(idx);
+                  const buttonId = `included-toggle-${idx}`;
+                  const panelId = `included-panel-${idx}`;
+
+                  return (
+                    <div key={item.title} className="relative">
+                      <button
+                        id={buttonId}
+                        type="button"
+                        onClick={() => toggleIncluded(idx)}
+                        aria-expanded={isOpen}
+                        aria-controls={panelId}
+                        className="w-full flex items-start justify-between gap-3 text-left text-[16px] leading-relaxed text-darkgreen transition-colors group"
+                      >
+                        <span className="font-medium transition-colors group-hover:text-forest/70">
+                          {item.title}
+                        </span>
+                        <span
+                          aria-hidden
+                          className="relative shrink-0 inline-flex items-center justify-center h-6 w-6 overflow-visible origin-center transition-colors duration-200 ease-out"
+                        >
+                          <span
+                            className="absolute left-1/2 top-1/2 h-px w-3.5 -translate-x-1/2 -translate-y-1/2 bg-forest/70 transition-colors group-hover:bg-forest/50"
+                          />
+                          <span
+                            className={`absolute left-1/2 top-1/2 w-px h-3.5 -translate-x-1/2 -translate-y-1/2 bg-forest/70 transition-colors transition-opacity transition-transform duration-200 group-hover:bg-forest/50 ${
+                              isOpen ? "opacity-0 rotate-90" : "opacity-100 rotate-0"
+                            }`}
+                          />
+                        </span>
+                      </button>
+
+                      <div
+                        id={panelId}
+                        role="region"
+                        aria-labelledby={buttonId}
+                        aria-hidden={!isOpen}
+                        className={`mt-2 grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
+                          isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                        }`}
+                      >
+                        <div className="overflow-hidden">
+                          <div className="flex flex-col gap-2">
+                            <p className="text-[15px] leading-relaxed text-forest/90">
+                              {item.description}
+                            </p>
+                            {item.imageSrc && (
+                              <img
+                                src={item.imageSrc}
+                                alt={item.imageAlt ?? ""}
+                                loading="lazy"
+                                className="w-full max-w-[26rem] rounded-lg border border-forest/10"
+                              />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {idx < INCLUDED_ITEMS.length - 1 && (
+                        <div
+                          aria-hidden
+                          className="h-px bg-forest/10 mt-2 mb-2"
+                        />
+                      )}
+                    </div>
+                  );
+                })}
               </div>
-              <div className="mt-12 lg:mt-0 lg:w-[320px] xl:w-[380px] shrink-0">
-                <div
-                  className="w-full aspect-[4/5] rounded-2xl overflow-hidden relative bg-forest/5"
-                >
-                  <img
-                    src="/images/_DSF8105.jpeg"
-                    alt="Body composition and movement analysis on a screen"
-                    className="absolute inset-0 h-full w-full object-cover"
-                    style={{ filter: "saturate(0.9) contrast(1.05)" }}
-                    loading="lazy"
-                  />
-                  <div
-                    className="absolute inset-0 bg-gradient-to-t from-black/20 via-black/0 to-black/10"
-                    aria-hidden
-                  />
-                  <div
-                    className="absolute inset-0 opacity-[0.10] mix-blend-soft-light"
-                    style={{
-                      backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")`,
-                    }}
-                    aria-hidden
-                  />
-                </div>
-              </div>
+              <a
+                href="/technology"
+                className="mt-8 care-link text-forest font-medium border-b border-forest/30 hover:border-forest transition-colors"
+              >
+                Explore how we measure →
+              </a>
             </div>
           </section>
 
@@ -246,36 +366,31 @@ export default function CarePageClient() {
             ref={(el) => { sectionRefs.current["the-care-sessions"] = el; }}
             className="care-section care-section-animate scroll-mt-28 mt-20 md:mt-28"
           >
-            <h2 className="font-hero-display text-2xl md:text-3xl text-darkgreen font-medium tracking-normal">
-              The care sessions
-            </h2>
-            <p className="mt-6 text-xl md:text-2xl text-forest/95 leading-snug max-w-2xl">
-              This is where the plan becomes practice.
-            </p>
-            <p className="mt-6 text-forest/90 text-[17px] leading-[1.65] max-w-2xl">
-              Follow-up care is delivered in one-on-one sessions that put the evaluation into action. We re-test and reassess as you go, so the plan stays aligned with your progress. Sessions are 60–90 minutes by design — an intentional pace so we’re not rushing.
-            </p>
-            <ul className="mt-8 space-y-3 text-forest/90 text-[17px] leading-[1.6] max-w-2xl">
-              <li className="flex gap-3">
-                <span className="text-matcha shrink-0" aria-hidden>—</span>
-                <span>Targeted hands-on care + movement guidance</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="text-matcha shrink-0" aria-hidden>—</span>
-                <span>Ongoing reassessment</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="text-matcha shrink-0" aria-hidden>—</span>
-                <span>Clear communication of progress</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="text-matcha shrink-0" aria-hidden>—</span>
-                <span>Structured progression</span>
-              </li>
-            </ul>
-            <p className="mt-10 text-forest/80 text-[17px] leading-[1.65] max-w-2xl">
-              60–90 minute sessions. Same clinician when possible. Clear takeaways between visits.
-            </p>
+            <div className="flex flex-col">
+              <h3 className="text-darkgreen">The care sessions</h3>
+              <p className="care-body text-forest/90">
+                Follow-up care is delivered in one-on-one sessions that put the evaluation into action. We re-test and reassess as you go, so the plan stays aligned with your progress. Sessions are 60–90 minutes by design — an intentional pace so we’re not rushing.
+              </p>
+              <ul className="care-list text-forest/90">
+                <li className="flex gap-3">
+                  <span className="text-matcha shrink-0" aria-hidden>—</span>
+                  <span>Targeted hands-on care + movement guidance</span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-matcha shrink-0" aria-hidden>—</span>
+                  <span>Ongoing reassessment</span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-matcha shrink-0" aria-hidden>—</span>
+                  <span>Clear communication of progress</span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-matcha shrink-0" aria-hidden>—</span>
+                  <span>Structured progression</span>
+                </li>
+              </ul>
+              {/* (removed) Extra closing paragraph for care sessions */}
+            </div>
           </section>
 
           <div className="mt-24 md:mt-32 pt-16 md:pt-20 border-t border-forest/10" aria-hidden />
@@ -286,19 +401,14 @@ export default function CarePageClient() {
             ref={(el) => { sectionRefs.current["everyday-wellness"] = el; }}
             className="care-section care-section-animate scroll-mt-28 mt-20 md:mt-28"
           >
-            <h2 className="font-hero-display text-2xl md:text-3xl text-darkgreen font-medium tracking-normal">
-              Everyday wellness
-            </h2>
-            <p className="mt-6 text-xl md:text-2xl text-forest/95 leading-snug max-w-2xl">
-              Support that holds up outside the clinic.
-            </p>
-            <p className="mt-6 text-forest/90 text-[17px] leading-[1.65] max-w-2xl">
+            <h3 className="text-darkgreen">Everyday wellness</h3>
+            <p className="care-body text-forest/90">
               What you do between visits — recovery, movement, and how you manage load — matters as much as what we do in the room. We help you build habits and awareness that fit your life so the benefits of care extend into your week.
             </p>
-            <p className="mt-8 text-xs font-mono font-medium tracking-widest uppercase text-forest/60">
+            <p className="care-label text-forest/60">
               Pillars
             </p>
-            <ul className="mt-3 space-y-2 text-forest/90 text-[17px] leading-[1.6] max-w-2xl">
+            <ul className="care-list-compact text-forest/90">
               <li className="flex gap-3">
                 <span className="text-matcha shrink-0" aria-hidden>—</span>
                 <span>Recovery rhythms</span>
@@ -312,9 +422,7 @@ export default function CarePageClient() {
                 <span>Stress-load awareness</span>
               </li>
             </ul>
-            <p className="mt-6 text-forest/80 text-[17px] leading-[1.65] max-w-2xl">
-              Example topics: sleep, breath, desk setup, travel routines, walking volume.
-            </p>
+            {/* (removed) Example topics paragraph */}
             <div
               className="mt-12 w-full min-h-[40vh] rounded-2xl overflow-hidden bg-gradient-to-br from-dusty-blue/20 via-pistachio/15 to-matcha/10 relative"
               aria-hidden
