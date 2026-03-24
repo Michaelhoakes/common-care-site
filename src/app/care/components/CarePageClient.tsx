@@ -405,7 +405,7 @@ export default function CarePageClient() {
                                 src={item.imageSrc}
                                 alt={item.imageAlt ?? ""}
                                 loading="lazy"
-                                className="w-full max-w-[26rem] rounded-lg border border-forest/10"
+                                className="w-full max-w-[26rem] rounded-lg"
                               />
                             )}
                           </div>
@@ -444,7 +444,7 @@ export default function CarePageClient() {
               <p className="care-body text-forest/90">
                 Follow-up care is delivered in one-on-one sessions that put the evaluation into action. We re-test and reassess as you go, so the plan stays aligned with your progress. Sessions are 60–90 minutes by design — an intentional pace so we’re not rushing.
               </p>
-              <div className="mt-10 w-full max-w-none overflow-hidden rounded-xl border border-forest/10 bg-forest/[0.03]">
+              <div className="mt-10 w-full max-w-none overflow-hidden rounded-xl bg-forest/[0.03]">
                 <div className="relative aspect-[21/9] min-h-[220px] w-full sm:aspect-[2/1] md:min-h-[280px]">
                   <img
                     src="/images/Treatment-hands.JPG"

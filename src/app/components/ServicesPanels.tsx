@@ -260,7 +260,7 @@ export default function ServicesPanels() {
   }, [reducedMotion]);
 
   return (
-    <section id="services" className="py-[80px]">
+    <section id="services" className="py-[120px]">
       <div className="w-full px-6 md:px-16">
         <div className="flex flex-col gap-4">
           <p className="cc-eyebrow">

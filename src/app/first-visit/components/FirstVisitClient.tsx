@@ -213,18 +213,18 @@ export default function FirstVisitClient() {
               your history, run through the evaluation, and make sure you leave
               with clear next steps.
             </p>
-            <div className="mt-8 w-full max-w-none overflow-hidden rounded-xl border border-forest/10 bg-forest/[0.03]">
+            <div className="mt-8 mb-8 w-full max-w-none overflow-hidden rounded-xl bg-forest/[0.03]">
               <div className="relative aspect-[21/9] min-h-[220px] w-full sm:aspect-[2/1] md:min-h-[280px]">
                 <img
-                  src="/images/treatmenttable1.jpg"
-                  alt="Clinic treatment room and arrival environment"
-                  className="absolute inset-0 h-full w-full object-cover object-center scale-[1.16]"
+                  src="/images/consult1a-nog.jpg"
+                  alt="Care team consultation in the clinic treatment room"
+                  className="absolute inset-0 h-full w-full object-cover object-center scale-[1.26]"
                   loading="lazy"
                   sizes="(min-width: 1400px) 1400px, 100vw"
                 />
               </div>
             </div>
-            <ol className="care-list text-forest/90 mt-6">
+            <ol className="care-list text-forest/90 mt-0">
               <li className="flex gap-4">
                 <span className="text-matcha font-medium shrink-0">1.</span>
                 <div>

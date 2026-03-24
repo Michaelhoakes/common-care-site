@@ -229,6 +229,7 @@ export default function AboutTabs() {
   const teamBtnRef = useRef<HTMLButtonElement>(null);
   const [indicator, setIndicator] = useState({ left: 0, width: 0 });
   const [reduceMotion, setReduceMotion] = useState(false);
+  const panelStartRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -286,7 +287,11 @@ export default function AboutTabs() {
   const selectTab = useCallback((next: AboutTab) => {
     setTab(next);
     syncHash(next);
-  }, [syncHash]);
+    panelStartRef.current?.scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "start",
+    });
+  }, [reduceMotion, syncHash]);
 
   const onKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
@@ -386,7 +391,7 @@ export default function AboutTabs() {
           </div>
         </div>
 
-        <div className="mt-[80px]">
+        <div ref={panelStartRef} className="mt-[80px] scroll-mt-32">
           {tab === "approach" ? (
             <ApproachPanel
               id={approachPanelId}

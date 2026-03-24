@@ -11,21 +11,21 @@ export default function EverydayWellnessPage() {
           Movement and habits that support how you live day to day.
         </p>
 
-        <section className="mt-24 pt-16 border-t border-matcha/10">
+        <section className="mt-[120px] pt-[120px] border-t border-matcha/10">
           <h2 className="text-2xl md:text-3xl text-darkgreen">What we mean by everyday wellness</h2>
           <p className="mt-4 text-lg opacity-90 leading-relaxed max-w-2xl">
             Placeholder: Posture, stress, sleep, and sustainable performance — integrated into your routine.
           </p>
         </section>
 
-        <section className="mt-20">
+        <section className="mt-[120px]">
           <h2 className="text-2xl md:text-3xl text-darkgreen">Who it’s for</h2>
           <p className="mt-4 text-lg opacity-90 leading-relaxed max-w-2xl">
             Placeholder: Anyone who wants to feel better in their body without a specific injury — prevention and longevity.
           </p>
         </section>
 
-        <section className="mt-24 pt-16 border-t border-matcha/10">
+        <section className="mt-[120px] pt-[120px] border-t border-matcha/10">
           <p className="text-lg text-darkgreen font-medium">Ready to begin?</p>
           <Link
             href="/book"

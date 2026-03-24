@@ -11,21 +11,21 @@ export default function CareTeamPage() {
           The people behind your care — experienced, attentive, and aligned with how you want to move.
         </p>
 
-        <section className="mt-24 pt-16 border-t border-matcha/10">
+        <section className="mt-[120px] pt-[120px] border-t border-matcha/10">
           <h2 className="text-2xl md:text-3xl text-darkgreen">Who you’ll work with</h2>
           <p className="mt-4 text-lg opacity-90 leading-relaxed max-w-2xl">
             Placeholder: Our clinicians and their backgrounds — credentials, approach, and what they care about.
           </p>
         </section>
 
-        <section className="mt-20">
+        <section className="mt-[120px]">
           <h2 className="text-2xl md:text-3xl text-darkgreen">Continuity of care</h2>
           <p className="mt-4 text-lg opacity-90 leading-relaxed max-w-2xl">
             Placeholder: Same faces, consistent relationship — we prioritize continuity so your care feels coherent.
           </p>
         </section>
 
-        <section className="mt-24 pt-16 border-t border-matcha/10">
+        <section className="mt-[120px] pt-[120px] border-t border-matcha/10">
           <p className="text-lg text-darkgreen font-medium">Ready to begin?</p>
           <Link
             href="/book"

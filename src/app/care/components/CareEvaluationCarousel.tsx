@@ -129,7 +129,7 @@ export default function CareEvaluationCarousel({
     >
       <div
         ref={scrollerRef}
-        className="flex w-full snap-x snap-mandatory overflow-x-auto scroll-smooth rounded-xl border border-forest/10 bg-forest/[0.03] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex w-full snap-x snap-mandatory overflow-x-auto scroll-smooth rounded-xl bg-forest/[0.03] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         aria-live="polite"
       >
         {slides.map((slide, i) => (

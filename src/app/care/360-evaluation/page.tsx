@@ -11,21 +11,21 @@ export default function Evaluation360Page() {
           A comprehensive look at how you move and how we can help.
         </p>
 
-        <section className="mt-24 pt-16 border-t border-matcha/10">
+        <section className="mt-[120px] pt-[120px] border-t border-matcha/10">
           <h2 className="text-2xl md:text-3xl text-darkgreen">What we evaluate</h2>
           <p className="mt-4 text-lg opacity-90 leading-relaxed max-w-2xl">
             Placeholder: Movement, posture, lifestyle factors, and goals — the full picture before we recommend next steps.
           </p>
         </section>
 
-        <section className="mt-20">
+        <section className="mt-[120px]">
           <h2 className="text-2xl md:text-3xl text-darkgreen">What to expect</h2>
           <p className="mt-4 text-lg opacity-90 leading-relaxed max-w-2xl">
             Placeholder: Unhurried, thorough, and built around your priorities.
           </p>
         </section>
 
-        <section className="mt-24 pt-16 border-t border-matcha/10">
+        <section className="mt-[120px] pt-[120px] border-t border-matcha/10">
           <p className="text-lg text-darkgreen font-medium">Ready to begin?</p>
           <Link
             href="/book"

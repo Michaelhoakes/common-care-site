@@ -50,9 +50,12 @@ export default function Home() {
             <div className="w-full md:w-[calc(100%+4rem)] mb-6 overflow-hidden">
               <div className="hero-subhead-line h-px bg-white/40 origin-left" aria-hidden />
             </div>
-            <p className="hero-text-float-subhead text-white/80">
+            <h5
+              className="hero-text-float-subhead text-white/80"
+              style={{ fontWeight: 500 }}
+            >
               Comprehensive one-on-one physical therapy and wellness care in Los Angeles — without the rush or the shortcuts.
-            </p>
+            </h5>
           </div>
 
           <div className="absolute bottom-0 left-0 px-6 md:px-16 pb-20 md:pb-24 max-w-[min(48rem,92vw)] md:max-w-[52rem] lg:max-w-[56rem] hero-text-float-headline">
@@ -84,30 +87,33 @@ export default function Home() {
       {/* Services — scroll-pinned parallax (no ScrollReveal: transform breaks sticky) */}
       <ServicesPanels />
 
-      {/* Value Props — right column aligned with "Your first visit" */}
-      <section id="approach" className="py-[80px]">
+      {/* Value Props — understated editorial panel */}
+      <section id="approach" className="py-[120px]">
         <ScrollReveal>
         <div className="w-full px-6 md:px-16">
-          <div className="flex flex-col md:grid md:grid-cols-12 md:gap-3 md:items-start">
-            <h4 className="max-w-md shrink-0 md:col-span-7">
+          <div
+            className="mx-auto max-w-[1400px] rounded-2xl border border-forest/[0.08] bg-bone/55 px-8 py-14 shadow-[0_1px_0_rgba(31,52,20,0.04),0_24px_48px_-32px_rgba(31,52,20,0.08)] md:px-14 md:py-16"
+          >
+            <p className="cc-eyebrow text-darkgreen mb-5 md:mb-6">
+              Approach
+            </p>
+            <h4 className="max-w-3xl text-balance">
               The way we practice care
             </h4>
-            <div className="pt-6 md:pt-0 flex flex-col md:col-span-5 md:col-start-8">
+            <div className="mt-10 md:mt-12 grid grid-cols-1 gap-10 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-12 md:gap-x-12 md:gap-y-14">
               {[
                 { title: "Unhurried sessions", body: "60–90 minutes of focused, one-on-one attention every visit." },
                 { title: "Whole-picture view", body: "Posture, movement, stress, lifestyle — not just the site of pain." },
                 { title: "Practical guidance", body: "Clear steps that fit into real life, not overwhelming protocols." },
                 { title: "Built to last", body: "Steady progress you can sustain — not quick fixes that fade." },
-              ].map((item, i, arr) => (
-                <div key={item.title} className={i < arr.length - 1 ? "pb-6 md:pb-5" : ""}>
-                  <h5>{item.title}</h5>
-                  <p>{item.body}</p>
-                  {i < arr.length - 1 && (
-                    <div
-                      className="pt-6 md:pt-5 h-px bg-darkgreen/20 -mr-6 md:-mr-16 w-[calc(100%+1.5rem)] md:w-[calc(100%+4rem)]"
-                      aria-hidden
-                    />
-                  )}
+              ].map((item) => (
+                <div key={item.title} className="min-w-0">
+                  <h5 className="m-0 text-[1.125rem] leading-snug font-medium tracking-tight text-darkgreen md:text-[1.1875rem]">
+                    {item.title}
+                  </h5>
+                  <p className="m-0 mt-2 text-[15px] leading-relaxed text-forest/72">
+                    {item.body}
+                  </p>
                 </div>
               ))}
             </div>
@@ -119,7 +125,7 @@ export default function Home() {
       <IsThisForMeSection />
 
       {/* Your first visit — image left, text right */}
-      <section id="first-visit" className="py-[80px]">
+      <section id="first-visit" className="py-[120px]">
         <ScrollReveal>
         <div className="w-full px-6 md:px-16">
           <div className="md:grid md:grid-cols-12 md:gap-3 md:items-center">
@@ -178,7 +184,7 @@ export default function Home() {
       </section>
 
       {/* Final CTA — full-bleed gradient */}
-      <section className="relative min-h-[50vh] md:min-h-[55vh] flex flex-col items-center justify-center overflow-hidden py-[80px]">
+      <section className="relative min-h-[50vh] md:min-h-[55vh] flex flex-col items-center justify-center overflow-hidden py-[120px]">
         <div className="absolute inset-0">
           <img
             src="/images/gradient-1.png"
