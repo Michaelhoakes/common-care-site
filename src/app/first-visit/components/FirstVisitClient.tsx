@@ -12,7 +12,6 @@ import {
 const FIRST_VISIT_NAV_SECTIONS = [
   { id: "what-to-expect", label: "What happens during your visit" },
   { id: "how-to-prepare", label: "How to prepare" },
-  { id: "what-to-bring", label: "What to bring" },
   { id: "parking-arrival", label: "Parking & arrival" },
   { id: "insurance-payment", label: "Insurance & payment" },
   { id: "faqs", label: "FAQs" },
@@ -43,11 +42,6 @@ const FAQ_ITEMS: { title: string; description: string }[] = [
     title: "Will I get exercises or homework?",
     description:
       "Often, yes. We’ll give you clear next steps — exercises, posture cues, or habits — to work on between visits so progress continues at home.",
-  },
-  {
-    title: "Can I bring someone with me?",
-    description:
-      "Yes. If you’d like a family member or friend in the room, that’s fine. Let us know when you book or when you arrive.",
   },
   {
     title: "What happens after the first visit?",
@@ -211,26 +205,22 @@ export default function FirstVisitClient() {
             ref={(el) => {
               sectionRefs.current["what-to-expect"] = el;
             }}
-            className="scroll-mt-28"
+            className="care-section scroll-mt-28"
           >
-            <h2 className="font-hero-display text-xl md:text-2xl text-darkgreen font-medium tracking-normal">
-              What happens during your visit
-            </h2>
-            <p className="mt-4 text-forest/90 text-[16px] leading-[1.65] max-w-2xl">
+            <h3>What happens during your visit</h3>
+            <p className="care-body text-forest/90">
               Your first visit is 60–90 minutes. We use that time to understand
               your history, run through the evaluation, and make sure you leave
               with clear next steps.
             </p>
-            <ol className="mt-6 space-y-4 max-w-2xl">
+            <ol className="care-list text-forest/90 mt-6">
               <li className="flex gap-4">
-                <span className="text-matcha font-medium text-[16px] shrink-0">
-                  1.
-                </span>
+                <span className="text-matcha font-medium shrink-0">1.</span>
                 <div>
                   <span className="font-medium text-forest/95">
                     Conversation about history and goals.
                   </span>
-                  <span className="text-forest/85 text-[16px]">
+                  <span className="text-forest/85">
                     {" "}
                     We’ll talk through what brought you in, your goals, and any
                     relevant health history.
@@ -238,14 +228,12 @@ export default function FirstVisitClient() {
                 </div>
               </li>
               <li className="flex gap-4">
-                <span className="text-matcha font-medium text-[16px] shrink-0">
-                  2.
-                </span>
+                <span className="text-matcha font-medium shrink-0">2.</span>
                 <div>
                   <span className="font-medium text-forest/95">
                     Movement assessment.
                   </span>
-                  <span className="text-forest/85 text-[16px]">
+                  <span className="text-forest/85">
                     {" "}
                     We’ll look at how you move — posture, gait, and relevant
                     tests — to build a clear picture.
@@ -253,14 +241,12 @@ export default function FirstVisitClient() {
                 </div>
               </li>
               <li className="flex gap-4">
-                <span className="text-matcha font-medium text-[16px] shrink-0">
-                  3.
-                </span>
+                <span className="text-matcha font-medium shrink-0">3.</span>
                 <div>
                   <span className="font-medium text-forest/95">
                     Hands-on or guided care.
                   </span>
-                  <span className="text-forest/85 text-[16px]">
+                  <span className="text-forest/85">
                     {" "}
                     Depending on what we find, we may include manual therapy,
                     movement guidance, or both.
@@ -268,14 +254,12 @@ export default function FirstVisitClient() {
                 </div>
               </li>
               <li className="flex gap-4">
-                <span className="text-matcha font-medium text-[16px] shrink-0">
-                  4.
-                </span>
+                <span className="text-matcha font-medium shrink-0">4.</span>
                 <div>
                   <span className="font-medium text-forest/95">
                     Clear next steps before you leave.
                   </span>
-                  <span className="text-forest/85 text-[16px]">
+                  <span className="text-forest/85">
                     {" "}
                     We’ll summarize what we’re seeing and what we recommend —
                     follow-up sessions, home support, or both.
@@ -295,15 +279,13 @@ export default function FirstVisitClient() {
             ref={(el) => {
               sectionRefs.current["how-to-prepare"] = el;
             }}
-            className="scroll-mt-28"
+            className="care-section scroll-mt-28"
           >
-            <h2 className="font-hero-display text-xl md:text-2xl text-darkgreen font-medium tracking-normal">
-              How to prepare
-            </h2>
-            <p className="mt-4 text-forest/90 text-[16px] leading-[1.65] max-w-2xl">
+            <h3>How to prepare</h3>
+            <p className="care-body text-forest/90">
               No special preparation required. A few simple things help:
             </p>
-            <ul className="mt-5 space-y-2 text-forest/90 text-[16px] leading-[1.6] max-w-2xl">
+            <ul className="care-list text-forest/90 mt-5">
               <li className="flex gap-3">
                 <span className="text-matcha shrink-0" aria-hidden>
                   —
@@ -326,54 +308,9 @@ export default function FirstVisitClient() {
                 <span>Arrive a few minutes early so you’re not rushed.</span>
               </li>
             </ul>
-            <p className="mt-6 text-forest/80 text-[15px] leading-[1.6] max-w-2xl">
+            <p className="care-body text-forest/80 mt-6">
               That’s it. We’ll guide you through the rest.
             </p>
-          </section>
-
-          <div
-            className="mt-24 md:mt-32 pt-16 md:pt-20 border-t border-forest/10"
-            aria-hidden
-          />
-
-          <section
-            id="what-to-bring"
-            ref={(el) => {
-              sectionRefs.current["what-to-bring"] = el;
-            }}
-            className="scroll-mt-28"
-          >
-            <h2 className="font-hero-display text-xl md:text-2xl text-darkgreen font-medium tracking-normal">
-              What to bring
-            </h2>
-            <ul className="mt-5 space-y-2 text-forest/90 text-[16px] leading-[1.6] max-w-2xl">
-              <li className="flex gap-3">
-                <span className="text-matcha shrink-0" aria-hidden>
-                  —
-                </span>
-                <span>ID</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="text-matcha shrink-0" aria-hidden>
-                  —
-                </span>
-                <span>Insurance card (if you’re using insurance)</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="text-matcha shrink-0" aria-hidden>
-                  —
-                </span>
-                <span>
-                  Any relevant documentation (referrals, imaging reports, etc.)
-                </span>
-              </li>
-              <li className="flex gap-3">
-                <span className="text-matcha shrink-0" aria-hidden>
-                  —
-                </span>
-                <span>Comfortable shoes and clothing</span>
-              </li>
-            </ul>
           </section>
 
           <div
@@ -386,17 +323,15 @@ export default function FirstVisitClient() {
             ref={(el) => {
               sectionRefs.current["parking-arrival"] = el;
             }}
-            className="scroll-mt-28"
+            className="care-section scroll-mt-28"
           >
-            <h2 className="font-hero-display text-xl md:text-2xl text-darkgreen font-medium tracking-normal">
-              Parking & arrival
-            </h2>
-            <p className="mt-4 text-forest/90 text-[16px] leading-[1.65] max-w-2xl">
+            <h3>Parking & arrival</h3>
+            <p className="care-body text-forest/90">
               [Placeholder: Parking is available in the building lot or street
               parking nearby. We’ll send specific directions and access
               instructions when you book.]
             </p>
-            <p className="mt-5 text-forest/90 text-[16px] leading-[1.65] max-w-2xl">
+            <p className="care-body text-forest/90 mt-5">
               Plan to arrive about 5 minutes early. If you have trouble finding
               us or need building access, give us a call.
             </p>
@@ -412,12 +347,10 @@ export default function FirstVisitClient() {
             ref={(el) => {
               sectionRefs.current["insurance-payment"] = el;
             }}
-            className="scroll-mt-28"
+            className="care-section scroll-mt-28"
           >
-            <h2 className="font-hero-display text-xl md:text-2xl text-darkgreen font-medium tracking-normal">
-              Insurance & payment
-            </h2>
-            <p className="mt-4 text-forest/90 text-[16px] leading-[1.65] max-w-2xl">
+            <h3>Insurance & payment</h3>
+            <p className="care-body text-forest/90">
               We operate on a cash-based model and can provide documentation for
               you to submit to your insurer if you have out-of-network benefits.
               If you’re not sure about coverage, we offer an eligibility check —
@@ -425,7 +358,7 @@ export default function FirstVisitClient() {
             </p>
             <Link
               href="/insurance#eligibility"
-              className="mt-6 inline-block text-forest font-medium text-[16px] border-b border-forest/30 hover:border-forest transition-colors"
+              className="mt-6 care-link text-forest font-medium border-b border-forest/30 hover:border-forest transition-colors"
             >
               Check insurance eligibility →
             </Link>
@@ -441,9 +374,9 @@ export default function FirstVisitClient() {
             ref={(el) => {
               sectionRefs.current["faqs"] = el;
             }}
-            className="scroll-mt-28"
+            className="care-section scroll-mt-28"
           >
-            <h3 className="text-darkgreen">FAQs</h3>
+            <h3>FAQs</h3>
             <div className="mt-6 min-w-0">
               <p className="care-body text-forest/90">
                 Quick answers on timing, preparation, and what happens after
@@ -463,7 +396,7 @@ export default function FirstVisitClient() {
                         onClick={() => toggleFaq(idx)}
                         aria-expanded={isOpen}
                         aria-controls={panelId}
-                        className="w-full flex items-start justify-between gap-3 text-left text-[16px] leading-relaxed text-darkgreen transition-colors group"
+                        className="w-full flex items-start justify-between gap-3 text-left text-[17px] leading-relaxed text-darkgreen transition-colors group"
                       >
                         <span className="font-medium transition-colors group-hover:text-forest/70">
                           {item.title}
@@ -494,7 +427,7 @@ export default function FirstVisitClient() {
                       >
                         <div className="overflow-hidden">
                           <div className="flex flex-col gap-2">
-                            <p className="text-[15px] leading-relaxed text-forest/90">
+                            <p className="care-body text-forest/90 leading-relaxed">
                               {item.description}
                             </p>
                           </div>

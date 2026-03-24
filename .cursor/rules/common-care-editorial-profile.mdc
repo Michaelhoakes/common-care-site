@@ -1,0 +1,30 @@
+---
+description: Reuse Common Care editorial header-body-image pattern on pages/components
+globs: {src/app/**/page.tsx,src/app/**/components/**/*.tsx}
+alwaysApply: false
+---
+
+# Common Care Editorial Profile Pattern
+
+When asked to "apply CC Editorial Profile" or "reuse AboutTabs style", follow this pattern.
+
+- Use semantic headings first (`h1`..`h5`) and let global type scale drive size.
+- For paragraph copy, prefer plain `p` (global body rhythm) unless `care-body` is explicitly needed for scoped care-page rhythm.
+- Keep vertical rhythm restrained: use 80px section breaks for major transitions and 24-40px for local spacing.
+- Use calm, editorial containers: `max-w-[1400px]` page shell with readable inner columns (`max-w-3xl` / `max-w-2xl`).
+- For profile rows, use left image + right text with `55/45` or `60/40` split and centered alignment.
+- Use subtle surfaces only (`bg-bone` / `bg-background`), hairline borders, soft radius, minimal shadows.
+- Avoid heavy UI chrome (no loud cards, no aggressive outlines, no dark utility panels unless explicitly requested).
+
+## Reusable Section Structure
+
+1. Headline block (semantic heading + short intro)
+2. Optional contained full-width image (within page container, not edge-to-edge unless requested)
+3. Profile/content rows with semantic heading + global body paragraphs
+4. Optional compact link row/CTA
+
+## Navigation Drawer Style
+
+- Prefer contained hover drawers (roughly 320-420px), anchored to nav item.
+- Keep links curated and concise; avoid full-width mega panels and teaser columns.
+- Motion: subtle fade + tiny vertical shift only.

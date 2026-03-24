@@ -236,12 +236,30 @@ h3 {
 
 /* Core text semantics (semantic tags baseline) */
 p {
-  margin-top: 0;
+  margin-top: 1.25rem; /* 20px */
   margin-bottom: 1.25rem; /* 20px */
 }
 
 p:last-child {
   margin-bottom: 0;
+}
+
+/* Group related paragraphs into a tighter unit while preserving outer rhythm. */
+.text-group {
+  margin-bottom: 1.25rem; /* same as global paragraph spacing */
+}
+
+/* Use when parent spacing already controls rhythm (e.g., list items). */
+.text-group--flush {
+  margin-bottom: 0;
+}
+
+.text-group > p {
+  margin: 0;
+}
+
+.text-group > p + p {
+  margin-top: 0.5rem; /* 8px internal spacing */
 }
 
 ul,
@@ -895,6 +913,10 @@ kbd {
 }
 
 @media (max-width: 767px) {
+  .care-stacked-panel.care-stacked-panel--no-hero {
+    padding-top: 40px;
+  }
+
   .care-stacked-panel {
     margin-top: -10px;
     padding-top: 24px;
@@ -909,6 +931,11 @@ kbd {
     transform: none;
     will-change: auto;
   }
+}
+
+/* No hero above: wins over negative overlap from .care-stacked-panel at all breakpoints */
+.care-stacked-panel.care-stacked-panel--no-hero {
+  margin-top: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {

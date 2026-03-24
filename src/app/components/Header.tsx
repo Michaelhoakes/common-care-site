@@ -6,27 +6,20 @@ import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
-/** Teaser block: heading, short description, link, and optional image (placeholder for now). */
-type Teaser = { title: string; desc: string; href: string };
-
 type MegaConfig = {
   sectionTitle: string;
+  description?: string;
   leftLinks: { label: string; href: string }[];
-  /** One or two teaser blocks (title + desc + image placeholder), shown in middle/right columns. */
-  teasers: [Teaser] | [Teaser, Teaser];
 };
 
 const MEGA_CARE: MegaConfig = {
   sectionTitle: "CARE",
+  description: "Thoughtful, one-on-one care that unfolds in clear stages.",
   leftLinks: [
     { label: "Care overview", href: "/care" },
     { label: "The 360° evaluation", href: "/care/360-evaluation" },
     { label: "Ongoing care", href: "/care/ongoing-care" },
     { label: "Everyday wellness", href: "/care/everyday-wellness" },
-  ],
-  teasers: [
-    { title: "The 360° evaluation", desc: "A comprehensive look at how you move.", href: "/care/360-evaluation" },
-    { title: "Ongoing care", desc: "Steady support after your evaluation.", href: "/care/ongoing-care" },
   ],
 };
 
@@ -36,21 +29,14 @@ const MEGA_FIRST_VISIT: MegaConfig = {
     { label: "What to expect", href: "/first-visit#what-to-expect" },
     { label: "FAQs", href: "/first-visit#faqs" },
   ],
-  teasers: [
-    { title: "What to expect", desc: "Comprehensive and unhurried.", href: "/first-visit#what-to-expect" },
-    { title: "FAQs", desc: "Common questions about your first visit.", href: "/first-visit#faqs" },
-  ],
 };
 
 const MEGA_ABOUT: MegaConfig = {
   sectionTitle: "ABOUT",
+  description: "Meet the people and philosophy behind your care.",
   leftLinks: [
     { label: "About us", href: "/about" },
     { label: "Your care team", href: "/about/care-team" },
-  ],
-  teasers: [
-    { title: "About us", desc: "Exceptional care made common.", href: "/about" },
-    { title: "Your care team", desc: "The people behind your care.", href: "/about/care-team" },
   ],
 };
 
@@ -60,9 +46,6 @@ const MEGA_INSURANCE: MegaConfig = {
     { label: "How it works", href: "/insurance" },
     { label: "Deductible basics", href: "/insurance#deductible" },
     { label: "FAQ", href: "/insurance#faq" },
-  ],
-  teasers: [
-    { title: "Eligibility check", href: "/insurance#eligibility", desc: "Submit your info. We'll follow up within 24 hours." },
   ],
 };
 
@@ -80,8 +63,7 @@ export default function Header() {
   // Default to home style until pathname is known (avoids white bar flash on load)
   const isHome = pathname === "/" || pathname === null;
 
-  const isDropdownItem = (id: DropdownId) =>
-    id === "care" || id === "about" || id === "insurance";
+  const isDropdownItem = (id: DropdownId) => id === "care" || id === "about";
 
   const handleEnter = (id: DropdownId) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -89,12 +71,21 @@ export default function Header() {
   };
 
   const handleLeave = () => {
-    timeoutRef.current = setTimeout(() => setOpenDropdown(null), 120);
+    timeoutRef.current = setTimeout(() => setOpenDropdown(null), 180);
   };
 
   const handleLeavePanel = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => setOpenDropdown(null), 120);
+    timeoutRef.current = setTimeout(() => setOpenDropdown(null), 180);
+  };
+
+  const handleBlurWithin = (
+    e: React.FocusEvent<HTMLElement>,
+    id: DropdownId
+  ) => {
+    const next = e.relatedTarget as Node | null;
+    if (next && e.currentTarget.contains(next)) return;
+    if (openDropdown === id) handleLeave();
   };
 
   useEffect(() => {
@@ -118,88 +109,43 @@ export default function Header() {
     ? "cc-btn-primary"
     : "cc-btn-inverse";
 
-  const renderMegaPanel = (id: DropdownId) => {
-    if (!id) return null;
-    const config =
-      id === "care"
-        ? MEGA_CARE
-        : id === "about"
-          ? MEGA_ABOUT
-          : MEGA_INSURANCE;
-    const onHero = isHome && !scrolled;
-    const dropdownText = onHero ? "text-[#8A976F]" : "text-forest";
-    const linkBase = "font-medium inline-block w-fit border-b border-transparent hover:border-current transition-colors";
-    const ruleColor = onHero ? "border-[#8A976F]/30" : "border-forest/30";
-    const placeholderBg = onHero ? "bg-white/10" : "bg-darkgreen/10";
-
+  const renderContainedDrawer = (id: Exclude<DropdownId, null>) => {
+    const config = id === "about" ? MEGA_ABOUT : MEGA_CARE;
+    const isOpen = openDropdown === id;
+    const panelWidth = id === "about" ? "w-[340px]" : "w-[390px]";
     return (
       <div
-        className={`w-full h-[330px] flex flex-col ${onHero ? "border-t border-white/10 bg-darkgreen" : "border-t-0 bg-white"}`}
+        role="menu"
+        aria-label={`${config.sectionTitle} menu`}
         onMouseEnter={() => handleEnter(id)}
         onMouseLeave={handleLeavePanel}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") setOpenDropdown(null);
+        }}
+        className={`absolute left-0 top-full mt-3 ${panelWidth} max-w-[min(92vw,420px)] rounded-2xl border border-forest/10 bg-bone/95 backdrop-blur-sm shadow-[0_8px_24px_-12px_rgba(31,52,20,0.18)] p-5 transition-[opacity,transform,visibility] duration-220 ease-out ${
+          isOpen
+            ? "opacity-100 translate-y-0 visible pointer-events-auto"
+            : "opacity-0 -translate-y-1 invisible pointer-events-none"
+        }`}
       >
-        <div className="w-full flex-1 px-16 py-8 flex flex-col min-h-0">
-          {/* Section title: Geist Mono, 14px, olive */}
-          <p className="cc-mega-section-title">
-            {config.sectionTitle}
+        <p className="cc-eyebrow mb-2">{config.sectionTitle}</p>
+        {config.description ? (
+          <p className="text-sm leading-relaxed text-forest/75 pr-2">
+            {config.description}
           </p>
-          {/* Horizontal rule: full width; vertical line below connects to this */}
-          <div className={`mt-3 border-b ${ruleColor} w-full`} aria-hidden />
-          {/* Grid: vertical line runs top-to-bottom (connects to rule); nav + teasers have 32px top padding */}
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_1px_1fr_1fr] gap-x-0 md:gap-x-8 gap-y-8 flex-1 min-h-0">
-            {/* Left: nav links (display font), 32px below rule */}
-            <nav className="min-w-0 flex flex-col gap-3 pt-8 md:pt-8 font-hero-display" aria-label={`${config.sectionTitle} links`}>
-              {config.leftLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`text-[20px] ${dropdownText} ${linkBase}`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-            {/* Vertical line: full height from top (touches horizontal) to bottom */}
-            <div className="hidden md:block relative min-w-0 w-px shrink-0">
-              <div
-                className={`absolute inset-y-0 left-0 w-px ${onHero ? "bg-white/20" : "bg-forest/20"}`}
-                aria-hidden
-              />
-            </div>
-            {/* First teaser: 32px below rule, extra left padding to sit further right; 32px gap to next teaser */}
-            <div className="min-w-0 flex flex-col pt-8 md:pt-8 md:pl-16">
-              {config.teasers[0] && (
-                <Link href={config.teasers[0].href} className="block group flex flex-col">
-                  <span className={`text-[16px] font-normal ${dropdownText}`}>{config.teasers[0].title}</span>
-                  <span className={`mt-1 block text-[14px] font-normal ${dropdownText} opacity-90`}>
-                    {config.teasers[0].desc}
-                  </span>
-                  <div
-                    className={`mt-4 w-[130px] h-[130px] shrink-0 ${placeholderBg}`}
-                    aria-hidden
-                  />
-                </Link>
-              )}
-            </div>
-            {/* Second teaser: 32px apart from first (grid gap handles it), no extra pl */}
-            <div className="min-w-0 flex flex-col pt-8 md:pt-8 md:pl-0">
-              {config.teasers[1] ? (
-                <Link href={config.teasers[1].href} className="block group flex flex-col">
-                  <span className={`text-[16px] font-normal ${dropdownText}`}>{config.teasers[1].title}</span>
-                  <span className={`mt-1 block text-[14px] font-normal ${dropdownText} opacity-90`}>
-                    {config.teasers[1].desc}
-                  </span>
-                  <div
-                    className={`mt-4 w-[130px] h-[130px] shrink-0 ${placeholderBg}`}
-                    aria-hidden
-                  />
-                </Link>
-              ) : (
-                <div className="w-[130px] h-[130px] shrink-0" aria-hidden />
-              )}
-            </div>
-          </div>
-        </div>
+        ) : null}
+        <nav className="mt-4 flex flex-col gap-2.5" aria-label={`${config.sectionTitle} links`}>
+          {config.leftLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              role="menuitem"
+              className="inline-block w-fit text-[17px] leading-snug text-darkgreen border-b border-transparent hover:border-darkgreen/25 transition-colors"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
       </div>
     );
   };
@@ -242,13 +188,19 @@ export default function Header() {
                 <div
                   className="relative"
                   onMouseEnter={() => handleEnter("care")}
+                  onMouseLeave={handleLeavePanel}
+                  onFocusCapture={() => handleEnter("care")}
+                  onBlurCapture={(e) => handleBlurWithin(e, "care")}
                 >
                   <Link
                     href="/care"
+                    aria-haspopup="menu"
+                    aria-expanded={openDropdown === "care"}
                     className={`flex items-center px-4 py-2 h-9 text-base leading-6 ${navClass} opacity-90 hover:opacity-100 rounded-md`}
                   >
                     Care
                   </Link>
+                  {renderContainedDrawer("care")}
                 </div>
                 <Link
                   href="/first-visit"
@@ -259,25 +211,26 @@ export default function Header() {
                 <div
                   className="relative"
                   onMouseEnter={() => handleEnter("about")}
+                  onMouseLeave={handleLeavePanel}
+                  onFocusCapture={() => handleEnter("about")}
+                  onBlurCapture={(e) => handleBlurWithin(e, "about")}
                 >
                   <Link
                     href="/about"
+                    aria-haspopup="menu"
+                    aria-expanded={openDropdown === "about"}
                     className={`flex items-center px-4 py-2 h-9 text-base leading-6 ${navClass} opacity-90 hover:opacity-100 rounded-md`}
                   >
                     About
                   </Link>
+                  {renderContainedDrawer("about")}
                 </div>
-                <div
-                  className="relative"
-                  onMouseEnter={() => handleEnter("insurance")}
+                <Link
+                  href="/insurance"
+                  className={`flex items-center px-4 py-2 h-9 text-base leading-6 ${navClass} opacity-90 hover:opacity-100 rounded-md`}
                 >
-                  <Link
-                    href="/insurance"
-                    className={`flex items-center px-4 py-2 h-9 text-base leading-6 ${navClass} opacity-90 hover:opacity-100 rounded-md`}
-                  >
-                    Insurance
-                  </Link>
-                </div>
+                  Insurance
+                </Link>
               </nav>
             </div>
 
@@ -312,15 +265,6 @@ Book an evaluation
           </div>
         </div>
 
-        {/* Desktop mega dropdown — only when hovering; motion: opacity + slight translate */}
-        {openDropdown && isDropdownItem(openDropdown) && (
-          <div
-            className="absolute left-0 right-0 top-full z-10 nav-dropdown-panel"
-            style={{ boxShadow: "0 8px 32px rgba(0,0,0,0.06)" }}
-          >
-            {renderMegaPanel(openDropdown)}
-          </div>
-        )}
       </header>
 
       {/* Mobile menu */}
@@ -348,11 +292,6 @@ Book an evaluation
                       {l.label}
                     </Link>
                   ))}
-                  {MEGA_CARE.teasers.map((t) => (
-                    <Link key={t.href} href={t.href} className="text-darkgreen/80 text-sm py-1" onClick={() => setMobileOpen(false)}>
-                      {t.title}
-                    </Link>
-                  ))}
                 </div>
               )}
             </div>
@@ -371,11 +310,6 @@ Book an evaluation
                   {MEGA_FIRST_VISIT.leftLinks.map((l) => (
                     <Link key={l.href} href={l.href} className="text-darkgreen/80 text-sm py-1" onClick={() => setMobileOpen(false)}>
                       {l.label}
-                    </Link>
-                  ))}
-                  {MEGA_FIRST_VISIT.teasers.map((t) => (
-                    <Link key={t.href} href={t.href} className="text-darkgreen/80 text-sm py-1" onClick={() => setMobileOpen(false)}>
-                      {t.title}
                     </Link>
                   ))}
                 </div>
@@ -398,11 +332,6 @@ Book an evaluation
                       {l.label}
                     </Link>
                   ))}
-                  {MEGA_ABOUT.teasers.map((t) => (
-                    <Link key={t.href} href={t.href} className="text-darkgreen/80 text-sm py-1" onClick={() => setMobileOpen(false)}>
-                      {t.title}
-                    </Link>
-                  ))}
                 </div>
               )}
             </div>
@@ -421,11 +350,6 @@ Book an evaluation
                   {MEGA_INSURANCE.leftLinks.map((l) => (
                     <Link key={l.href} href={l.href} className="text-darkgreen/80 text-sm py-1" onClick={() => setMobileOpen(false)}>
                       {l.label}
-                    </Link>
-                  ))}
-                  {MEGA_INSURANCE.teasers.map((t) => (
-                    <Link key={t.href} href={t.href} className="text-darkgreen/80 text-sm py-1" onClick={() => setMobileOpen(false)}>
-                      {t.title}
                     </Link>
                   ))}
                 </div>
