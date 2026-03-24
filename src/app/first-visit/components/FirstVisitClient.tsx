@@ -218,7 +218,7 @@ export default function FirstVisitClient() {
                 <img
                   src="/images/treatmenttable1.jpg"
                   alt="Clinic treatment room and arrival environment"
-                  className="absolute inset-0 h-full w-full object-cover object-center scale-[1.06]"
+                  className="absolute inset-0 h-full w-full object-cover object-center scale-[1.16]"
                   loading="lazy"
                   sizes="(min-width: 1400px) 1400px, 100vw"
                 />
