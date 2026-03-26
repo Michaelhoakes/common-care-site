@@ -37,7 +37,7 @@ export default function ScrollReveal({
   return (
     <div
       ref={ref}
-      className={`scroll-reveal ${inView ? "scroll-reveal-in" : ""} ${className}`}
+      className={`scroll-reveal w-full min-w-0 ${inView ? "scroll-reveal-in" : ""} ${className}`}
     >
       {children}
     </div>

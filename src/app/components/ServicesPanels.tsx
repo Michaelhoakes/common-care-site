@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { useRef, useState, useEffect, useSyncExternalStore } from "react";
 
 /**
@@ -82,21 +83,21 @@ type ServiceItem = {
 
 const services: ServiceItem[] = [
   {
-    title: "The 360° Evaluation",
-    desc: "A thorough baseline to understand how you move and where to begin.",
+    title: "Care Evaluation",
+    desc: "An in-depth look at your overall health, combining your story with objective data to truly understand what’s going on.",
     image: "/images/_DSF8105.jpeg",
     href: "/care#the-360-evaluation",
   },
   {
-    title: "Ongoing Care",
-    desc: "60–90 minutes of focused care tailored to your goals. No rushing, no shortcuts.",
+    title: "Care Sessions",
+    desc: "One-on-one sessions built around you, combining hands-on care, movement, and advanced technology to support how your body heals.",
     image: "/images/_DSF8511.jpeg",
     href: "/care#the-care-sessions",
     flipX: true,
   },
   {
-    title: "Everyday Wellness",
-    desc: "Ongoing guidance for people who want consistency over quick fixes.",
+    title: "Recovery Care",
+    desc: "Targeted recovery sessions designed to support how your body adapts to training, stress, and daily demands so you can sustain and improve your overall health.",
     image: "/images/_DSF8789.jpeg",
     href: "/care#everyday-wellness",
   },
@@ -104,16 +105,41 @@ const services: ServiceItem[] = [
 
 /** Shared height so image + text column align; tuned for header + breathing room */
 const STICKY_VIEWPORT_H =
-  "h-[min(640px,calc(100dvh-6rem))] min-h-[480px]";
+  "h-[min(580px,calc(100dvh-6rem))] min-h-[440px]";
 const STICKY_IMAGE_CLASSES = `${STICKY_VIEWPORT_H} w-full`;
 
 /** Scroll “chapters” under the sticky text — shorter = less blank scroll, taller = smoother IO */
 const SENTINEL_MIN_H = "min-h-[min(48dvh,480px)]";
-// Make the first chapter advance sooner (360° evaluation felt longer).
+// Make the first chapter advance sooner (Care Evaluation felt longer).
 const SENTINEL_MIN_H_FIRST = "min-h-[min(28dvh,300px)]";
+// Hold the sticky scene longer after chapter 3 engages before next section appears.
+const SENTINEL_MIN_H_LAST = "min-h-[min(72dvh,760px)]";
 
 const TERTIARY_BUTTON_CLASS =
-  "group/link inline-flex items-center gap-2 text-[12px] font-mono tracking-[0.24em] uppercase transition-colors duration-300 ease-out";
+  "group/link inline-flex items-center gap-1.5 font-sans text-[14px] leading-normal transition-opacity duration-300 ease-out hover:opacity-80";
+
+/** Vertical slide (% of frame): modest distance + smooth ease reads calmer than a hard cut */
+const SERVICE_IMAGE_SLIDE_PCT = 11;
+/** ms — slightly long so the move can ease out without feeling snappy */
+const SERVICE_IMAGE_TRANSITION_MS = 680;
+/** Soft deceleration into rest (no harsh “hit” at the end) */
+const SERVICE_IMAGE_EASE = "cubic-bezier(0.16, 1, 0.3, 1)";
+
+function serviceImageLayerStyle(
+  index: number,
+  activeIndex: number,
+  flipX?: boolean
+): Pick<CSSProperties, "transform" | "opacity" | "zIndex"> {
+  const isActive = activeIndex === index;
+  const ty = isActive ? 0 : index < activeIndex ? -SERVICE_IMAGE_SLIDE_PCT : SERVICE_IMAGE_SLIDE_PCT;
+  const parts = [`translateY(${ty}%)`];
+  if (flipX) parts.push("scaleX(-1)");
+  return {
+    transform: parts.join(" "),
+    opacity: isActive ? 1 : 0,
+    zIndex: isActive ? 2 : 1,
+  };
+}
 
 
 function ServiceTextPanel({
@@ -123,6 +149,7 @@ function ServiceTextPanel({
   onActivate,
   setRef,
   dense,
+  isLast,
 }: {
   s: ServiceItem;
   index: number;
@@ -130,6 +157,7 @@ function ServiceTextPanel({
   onActivate: () => void;
   setRef?: (el: HTMLDivElement | null, i: number) => void;
   dense?: boolean;
+  isLast?: boolean;
 }) {
   const showDetail = dense || isActive;
   const interactive = !dense && !isActive;
@@ -138,7 +166,9 @@ function ServiceTextPanel({
     <div
       ref={setRef ? (el) => setRef(el, index) : undefined}
       className={`flex flex-col justify-start ${
-        dense ? "py-8 md:pl-4 lg:pl-6" : "py-3 scroll-mt-28"
+        dense
+          ? "py-8 md:pl-4 lg:pl-6"
+          : `scroll-mt-28 pt-0 pb-0 ${isLast ? "" : "mb-8"}`
       }`}
     >
       <div
@@ -185,9 +215,9 @@ function ServiceTextPanel({
           id={`service-panel-detail-${index}`}
           role="region"
           aria-labelledby={`service-panel-trigger-${index}`}
-          className="services-panel-detail-reveal flex flex-col gap-5"
+          className="services-panel-detail-reveal flex flex-col gap-4"
         >
-          <p className="max-w-md">
+          <p className="max-w-md cc-body-18 text-[18px] leading-[26px]">
             {s.desc}
           </p>
           <Link
@@ -195,9 +225,9 @@ function ServiceTextPanel({
             className={`${TERTIARY_BUTTON_CLASS} w-fit`}
             onClick={(e) => e.stopPropagation()}
           >
-            <span>Learn more</span>
+            <span className="underline underline-offset-2">Learn more</span>
             <span
-              className="inline-block text-[12px] leading-none transition-transform duration-300 ease-out group-hover/link:translate-x-0.5"
+              className="inline-block text-[14px] leading-none transition-transform duration-300 ease-out group-hover/link:translate-x-0.5"
               aria-hidden
             >
               →
@@ -259,26 +289,28 @@ export default function ServicesPanels() {
     };
   }, [reducedMotion]);
 
-  return (
-    <section id="services" className="py-[120px]">
-      <div className="w-full px-6 md:px-16">
-        <div className="flex flex-col gap-4">
-          <p className="cc-eyebrow">
-            the common care method
-          </p>
-          <h2 className="font-hero-display text-4xl md:text-5xl max-w-4xl">
-            Comprehensive care — from evaluation to everyday movement.
-          </h2>
-        </div>
-      </div>
+  const servicesIntro = (
+    <h4 className="max-w-4xl text-balance">
+      A complete approach to understanding your body, your story, and your overall health.
+    </h4>
+  );
 
-      <div className="hidden md:block pt-10 w-full px-6 md:px-16">
+  return (
+    <section id="services" className="pt-[80px] pb-[120px]">
+      <div className="hidden md:block w-full px-6 md:px-16">
+        <div className="mx-auto w-full max-w-[1400px]">
         {reducedMotion ? (
-          <div className="flex flex-col gap-20 lg:gap-24">
+          <div className="flex flex-col">
+            <div className="mb-10">{servicesIntro}</div>
+            <div
+              className="w-full border-t border-darkgreen/20"
+              aria-hidden
+            />
+            <div className="flex flex-col gap-20 lg:gap-24 pt-8">
             {services.map((s, i) => (
               <div
                 key={s.title}
-                className="grid grid-cols-1 lg:grid-cols-[3fr_1.8fr] gap-10 lg:gap-12 items-center"
+                className="grid grid-cols-1 lg:grid-cols-[2.75fr_1.85fr] gap-10 lg:gap-12 items-center"
               >
                 <div
                   className={`relative overflow-hidden rounded-sm ${STICKY_IMAGE_CLASSES}`}
@@ -298,70 +330,96 @@ export default function ServicesPanels() {
                     isActive
                     onActivate={() => {}}
                     dense
+                    isLast={i === services.length - 1}
                   />
                 </div>
               </div>
             ))}
+            </div>
+            <div
+              className="mt-8 w-full border-t border-darkgreen/20"
+              aria-hidden
+            />
           </div>
         ) : (
-          <div className="grid grid-cols-[3fr_1.8fr] gap-x-8 lg:gap-x-12 items-stretch">
+          <div className="grid grid-cols-[2.75fr_1.85fr] gap-x-8 lg:gap-x-12 items-stretch">
             <div className="relative h-full min-h-0">
-              <div
-                className={`sticky top-24 md:top-28 overflow-hidden rounded-sm bg-darkgreen/5 ${STICKY_IMAGE_CLASSES}`}
-              >
-                <span className="sr-only" aria-live="polite" aria-atomic="true">
-                  {services[activeIndex]?.title}
-                </span>
-                {services.map((s, i) => (
-                  <div
-                    key={s.title}
-                    className="absolute inset-0 bg-cover bg-center transition-[opacity] duration-[580ms] ease-[cubic-bezier(0.4,0,0.2,1)]"
-                    style={{
-                      backgroundImage: `url(${s.image})`,
-                      transform: s.flipX ? "scaleX(-1)" : undefined,
-                      opacity: activeIndex === i ? 1 : 0,
-                      zIndex: activeIndex === i ? 2 : 1,
-                    }}
-                    aria-hidden={activeIndex !== i}
-                  />
-                ))}
+              <div className="sticky top-24 md:top-28 z-10 flex w-full flex-col gap-8">
+                {servicesIntro}
+                <div
+                  className={`relative overflow-hidden rounded-sm bg-darkgreen/5 ${STICKY_IMAGE_CLASSES}`}
+                >
+                  <span className="sr-only" aria-live="polite" aria-atomic="true">
+                    {services[activeIndex]?.title}
+                  </span>
+                  {services.map((s, i) => (
+                    <div
+                      key={s.title}
+                      className="absolute inset-0 bg-cover bg-center motion-safe:transition-[transform,opacity] motion-reduce:transition-none"
+                      style={{
+                        backgroundImage: `url(${s.image})`,
+                        transitionProperty: "transform, opacity",
+                        transitionDuration: `${SERVICE_IMAGE_TRANSITION_MS}ms`,
+                        transitionTimingFunction: SERVICE_IMAGE_EASE,
+                        ...serviceImageLayerStyle(i, activeIndex, s.flipX),
+                      }}
+                      aria-hidden={activeIndex !== i}
+                    />
+                  ))}
 
-                <div className="absolute inset-0 pointer-events-none z-[3] opacity-[0.04] mix-blend-overlay rounded-sm">
-                  <div
-                    className="h-full w-full"
-                    style={{
-                      backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-                      backgroundRepeat: "repeat",
-                    }}
-                  />
+                  <div className="absolute inset-0 pointer-events-none z-[3] opacity-[0.04] mix-blend-overlay rounded-sm">
+                    <div
+                      className="h-full w-full"
+                      style={{
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+                        backgroundRepeat: "repeat",
+                      }}
+                    />
+                  </div>
                 </div>
-
-                {/* progress dots removed */}
               </div>
             </div>
 
             <div className="min-w-0 flex min-h-0 flex-col h-full">
-              <div
-                className={`sticky top-24 md:top-28 z-10 flex w-full items-center ${STICKY_VIEWPORT_H}`}
-              >
-                <div className="w-full py-2 pl-5 lg:pl-9 pr-4">
-                  <div className="max-w-md">
-                    {services.map((s, i) => (
-                      <div key={s.title}>
-                        {i > 0 ? (
-                          <div
-                            className="border-t border-darkgreen/20 pt-7 pb-1 -mr-4 lg:-mr-6 w-[calc(100%+1rem)] lg:w-[calc(100%+1.5rem)]"
-                            aria-hidden
+              <div className="sticky top-24 md:top-28 z-10 flex w-full flex-col gap-8">
+                {/* Reserve same vertical space as left intro so the text band lines up with the photo */}
+                <div
+                  className="invisible pointer-events-none shrink-0 select-none"
+                  aria-hidden
+                >
+                  {servicesIntro}
+                </div>
+                <div
+                  className={`flex w-full min-h-0 items-center ${STICKY_VIEWPORT_H}`}
+                >
+                  <div className="w-full py-2 pl-5 lg:pl-9 pr-4">
+                    <div className="max-w-md">
+                      <div
+                        className="border-t border-darkgreen/20 pt-8 -mr-4 lg:-mr-6 w-[calc(100%+1rem)] lg:w-[calc(100%+1.5rem)]"
+                        aria-hidden
+                      />
+                      {services.map((s, i) => (
+                        <div key={s.title}>
+                          {i > 0 ? (
+                            <div
+                              className="border-t border-darkgreen/20 pt-8 -mr-4 lg:-mr-6 w-[calc(100%+1rem)] lg:w-[calc(100%+1.5rem)]"
+                              aria-hidden
+                            />
+                          ) : null}
+                          <ServiceTextPanel
+                            s={s}
+                            index={i}
+                            isActive={activeIndex === i}
+                            onActivate={() => activateSection(i)}
+                            isLast={i === services.length - 1}
                           />
-                        ) : null}
-                        <ServiceTextPanel
-                          s={s}
-                          index={i}
-                          isActive={activeIndex === i}
-                          onActivate={() => activateSection(i)}
-                        />
-                      </div>
-                    ))}
+                        </div>
+                      ))}
+                      <div
+                        className="border-t border-darkgreen/20 mt-8 -mr-4 lg:-mr-6 w-[calc(100%+1rem)] lg:w-[calc(100%+1.5rem)]"
+                        aria-hidden
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -370,16 +428,26 @@ export default function ServicesPanels() {
                   key={`sentinel-${s.title}`}
                   ref={(el) => setSentinelRef(el, i)}
                   data-service-index={i}
-                  className={`${i === 0 ? SENTINEL_MIN_H_FIRST : SENTINEL_MIN_H} w-full shrink-0`}
+                  className={`${
+                    i === 0
+                      ? SENTINEL_MIN_H_FIRST
+                      : i === services.length - 1
+                        ? SENTINEL_MIN_H_LAST
+                        : SENTINEL_MIN_H
+                  } w-full shrink-0`}
                   aria-hidden
                 />
               ))}
             </div>
           </div>
         )}
+        </div>
       </div>
 
-      <div className="flex flex-col w-full md:hidden pt-10 px-6 gap-16">
+      <div className="flex flex-col w-full md:hidden px-6 md:px-16">
+        {servicesIntro}
+        <div className="-mx-6 mt-8 border-t border-darkgreen/20" aria-hidden />
+        <div className="flex flex-col gap-8 pt-8">
         {services.map((s, i) => (
           <article key={s.title}>
             <div className="relative aspect-[4/3] overflow-hidden rounded-sm bg-darkgreen/5">
@@ -398,21 +466,23 @@ export default function ServicesPanels() {
               <h3 className="font-hero-display text-2xl font-medium leading-tight">
                 {s.title}
               </h3>
-              <p>
+              <p className="cc-body-18 text-[18px] leading-[26px]">
                 {s.desc}
               </p>
-              <Link
-                href={s.href}
-                className={TERTIARY_BUTTON_CLASS}
-              >
-                <span>Learn more</span>
-                <span className="inline-block text-[12px] leading-none transition-transform duration-300 ease-out group-hover/link:translate-x-0.5">
-                  →
-                </span>
-              </Link>
             </div>
+            <Link
+              href={s.href}
+              className={`${TERTIARY_BUTTON_CLASS} mt-4`}
+            >
+              <span className="underline underline-offset-2">Learn more</span>
+              <span className="inline-block text-[14px] leading-none transition-transform duration-300 ease-out group-hover/link:translate-x-0.5">
+                →
+              </span>
+            </Link>
           </article>
         ))}
+        </div>
+        <div className="-mx-6 mt-8 border-t border-darkgreen/20" aria-hidden />
       </div>
     </section>
   );

@@ -17,9 +17,9 @@ const MEGA_CARE: MegaConfig = {
   description: "Thoughtful, one-on-one care that unfolds in clear stages.",
   leftLinks: [
     { label: "Care overview", href: "/care" },
-    { label: "The 360° evaluation", href: "/care/360-evaluation" },
-    { label: "Ongoing care", href: "/care/ongoing-care" },
-    { label: "Everyday wellness", href: "/care/everyday-wellness" },
+    { label: "Care Evaluation", href: "/care/360-evaluation" },
+    { label: "Care Sessions", href: "/care/ongoing-care" },
+    { label: "Recovery Care", href: "/care/everyday-wellness" },
   ],
 };
 

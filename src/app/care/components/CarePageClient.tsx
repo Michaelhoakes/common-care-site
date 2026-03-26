@@ -12,9 +12,9 @@ import {
 /** Sidebar + scrollspy: overview first, then each care chapter (Seed-style persistent nav). */
 const CARE_NAV_SECTIONS = [
   { id: "care-approach", label: "Overview" },
-  { id: "the-360-evaluation", label: "The 360° evaluation" },
-  { id: "the-care-sessions", label: "The care sessions" },
-  { id: "everyday-wellness", label: "Everyday wellness" },
+  { id: "the-360-evaluation", label: "Care Evaluation" },
+  { id: "the-care-sessions", label: "Care Sessions" },
+  { id: "everyday-wellness", label: "Recovery Care" },
 ] as const;
 
 const CARE_SECTION_IDS: readonly string[] = CARE_NAV_SECTIONS.map((s) => s.id);
@@ -337,16 +337,16 @@ export default function CarePageClient() {
 
           <div className="mt-20 pt-20 border-t border-forest/10" aria-hidden />
 
-          {/* The 360° Evaluation */}
+          {/* Care Evaluation */}
           <section
             id="the-360-evaluation"
             ref={(el) => { sectionRefs.current["the-360-evaluation"] = el; }}
             className="care-section care-section-animate scroll-mt-28"
           >
-            <h3 className="text-darkgreen">The 360° evaluation</h3>
+            <h3 className="text-darkgreen">Care Evaluation</h3>
             <div className="min-w-0">
               <p className="care-body text-forest/90">
-                Before we recommend treatment or next steps, we build a clear picture. The 360° evaluation is that baseline: it combines conversation, hands-on assessment, and measured data so we’re not guessing — we’re deciding from clarity.
+                An in-depth look at your overall health, combining your story with objective data to truly understand what’s going on.
               </p>
               <CareEvaluationCarousel />
               <p className="care-label text-forest/60 mt-10 md:mt-12">
@@ -433,16 +433,16 @@ export default function CarePageClient() {
 
           <div className="mt-20 pt-20 border-t border-forest/10" aria-hidden />
 
-          {/* Section 3 — The Care Sessions */}
+          {/* Section 3 — Care Sessions */}
           <section
             id="the-care-sessions"
             ref={(el) => { sectionRefs.current["the-care-sessions"] = el; }}
             className="care-section care-section-animate scroll-mt-28"
           >
             <div className="flex flex-col">
-              <h3 className="text-darkgreen">The care sessions</h3>
+              <h3 className="text-darkgreen">Care Sessions</h3>
               <p className="care-body text-forest/90">
-                Follow-up care is delivered in one-on-one sessions that put the evaluation into action. We re-test and reassess as you go, so the plan stays aligned with your progress. Sessions are 60–90 minutes by design — an intentional pace so we’re not rushing.
+                One-on-one sessions built around you, combining hands-on care, movement, and advanced technology to support how your body heals.
               </p>
               <div className="mt-10 w-full max-w-none overflow-hidden rounded-xl bg-forest/[0.03]">
                 <div className="relative aspect-[21/9] min-h-[220px] w-full sm:aspect-[2/1] md:min-h-[280px]">
@@ -516,15 +516,15 @@ export default function CarePageClient() {
 
           <div className="mt-20 pt-20 border-t border-forest/10" aria-hidden />
 
-          {/* Section 4 — Everyday Wellness */}
+          {/* Section 4 — Recovery Care */}
           <section
             id="everyday-wellness"
             ref={(el) => { sectionRefs.current["everyday-wellness"] = el; }}
             className="care-section care-section-animate scroll-mt-28"
           >
-            <h3 className="text-darkgreen">Everyday wellness</h3>
+            <h3 className="text-darkgreen">Recovery Care</h3>
             <p className="care-body text-forest/90">
-              What you do between visits — recovery, movement, and how you manage load — matters as much as what we do in the room. We help you build habits and awareness that fit your life so the benefits of care extend into your week.
+              Targeted recovery sessions designed to support how your body adapts to training, stress, and daily demands so you can sustain and improve your overall health.
             </p>
             <p className="care-label text-forest/60">
               Pillars
@@ -583,7 +583,7 @@ export default function CarePageClient() {
             </div>
             <CareEvaluationCarousel
               slides={WELLNESS_SLIDES}
-              ariaLabel="Everyday wellness imagery"
+              ariaLabel="Recovery Care imagery"
             />
           </section>
         </div>

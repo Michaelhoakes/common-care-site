@@ -81,6 +81,16 @@
   color: #8A976F;
 }
 
+/* 18px / 26px body scale (explicit px so it doesn’t track body’s 16px rem baseline) */
+.cc-body-18 {
+  font-size: 18px;
+  line-height: 26px;
+}
+
+p.cc-body-18 {
+  margin-bottom: 0;
+}
+
 .cc-btn-primary {
   display: inline-flex;
   width: fit-content;
@@ -153,7 +163,7 @@ h4 {
 }
 
 h5 {
-  font-weight: 500;
+  font-weight: 600;
 }
 
 /* Match homepage h3 typography (ServicesPanels “34px” headline) */
@@ -225,7 +235,7 @@ h3 {
   h5 {
     font-size: 1.5rem; /* 24px */
     line-height: 2rem; /* 32px */
-    font-weight: 500;
+    font-weight: 600;
   }
 
   h6 {
@@ -681,14 +691,19 @@ kbd {
   max-height: 900px;
 }
 
-/* Hero subhead line: draw from left to right on load */
+/* Hero subhead line: draw L→R on load (scaleX so width can be px / viewport-sized) */
 @keyframes hero-line-draw {
-  from { width: 0; }
-  to { width: 100%; }
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
 }
 
 .hero-subhead-line {
-  width: 0;
+  transform-origin: left center;
+  transform: scaleX(0);
   animation: hero-line-draw 0.7s ease-out 0.2s forwards;
 }
 
@@ -706,6 +721,7 @@ kbd {
 
 .hero-text-float-subhead {
   opacity: 0;
+  font-weight: 500;
   animation: hero-text-float 0.9s ease-out 0.35s both !important;
 }
 
@@ -720,6 +736,11 @@ kbd {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
+  }
+
+  .hero-subhead-line {
+    animation: none;
+    transform: scaleX(1);
   }
 }
 

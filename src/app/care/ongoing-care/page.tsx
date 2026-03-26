@@ -5,10 +5,10 @@ export default function OngoingCarePage() {
     <div className="min-h-screen bg-background">
       <main className="px-16 py-20 md:py-28">
         <h1 className="text-4xl md:text-5xl text-darkgreen max-w-2xl">
-          Ongoing Care
+          Care Sessions
         </h1>
         <p className="mt-6 text-xl opacity-90 leading-relaxed max-w-xl">
-          Steady support after your evaluation — progress that lasts.
+          One-on-one sessions built around you, combining hands-on care, movement, and advanced technology to support how your body heals.
         </p>
 
         <section className="mt-[120px] pt-[120px] border-t border-matcha/10">

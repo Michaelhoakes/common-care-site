@@ -10,7 +10,7 @@ export default function BookPage() {
 
         <section className="mt-16">
           <p className="text-lg opacity-90 leading-relaxed max-w-xl">
-            Begin with a 360 Evaluation.
+            Begin with a Care Evaluation.
           </p>
           <Link
             href="#"

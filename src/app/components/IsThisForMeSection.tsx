@@ -31,7 +31,7 @@ const STAGES = [
     id: "longevity",
     title: "Investing in longevity",
     short: "Longevity",
-    body: "You feel strong and want to continue investing in your long-term health and longevity.",
+    body: "You feel strong and want to continue investing in your long-term health.",
   },
 ] as const;
 
@@ -235,7 +235,8 @@ export default function IsThisForMeSection() {
     : "left 380ms cubic-bezier(0.22, 1, 0.36, 1), width 380ms cubic-bezier(0.22, 1, 0.36, 1)";
 
   const moduleContent = (
-    <div className="relative z-10 w-full px-6 md:px-16 flex flex-col gap-4">
+    <div className="relative z-10 w-full px-6 md:px-16">
+      <div className="mx-auto w-full max-w-[1400px] flex flex-col gap-4">
         <p
           className={`text-sm font-mono font-medium tracking-widest uppercase ${
             show ? "opacity-60 translate-y-0" : "opacity-0 translate-y-[10px]"
@@ -256,61 +257,68 @@ export default function IsThisForMeSection() {
 
         <div className="pt-14 md:pt-16 relative mt-3 md:mt-4">
           <div
-            className={`-ml-6 md:-ml-16 relative ${
-              show
-                ? "w-[calc(100%+1.5rem)] md:w-[calc(100%+128px)]"
-                : "w-0"
-            } ${!reducedMotion ? "transition-[width] ease-out" : ""}`}
-            style={
-              !reducedMotion
-                ? {
-                    transitionDuration: `${LINE_DURATION_MS}ms`,
-                    transitionDelay: visible ? `${LINE_DELAY_MS}ms` : "0ms",
-                  }
-                : undefined
-            }
+            className="md:hidden flex gap-2 overflow-x-auto mb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x snap-mandatory -mr-2 pr-2"
+            role="tablist"
+            aria-label="Stages"
+          >
+            {STAGES.map((item, i) => (
+              <button
+                key={item.id}
+                ref={(el) => {
+                  mobileLabelRefs.current[i] = el;
+                }}
+                type="button"
+                role="tab"
+                aria-selected={activeStage === i}
+                onClick={() => scrollToStage(i)}
+                className={`snap-center shrink-0 rounded-full px-3 py-1.5 text-[13px] font-medium transition-colors duration-200 ${
+                  activeStage === i
+                    ? "text-darkgreen bg-white/35"
+                    : "text-forest/45"
+                }`}
+              >
+                {item.short}
+              </button>
+            ))}
+          </div>
+
+          {/* Viewport-wide rule only; breaks out of page gutters (parent = max-w content well) */}
+          <div
+            className="relative w-screen max-w-[100vw] shrink-0 pb-5 md:pb-6"
+            style={{
+              marginLeft: "calc(50% - 50vw)",
+              marginRight: "calc(50% - 50vw)",
+            }}
           >
             <div
-              className="md:hidden flex gap-2 overflow-x-auto mb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x snap-mandatory -mr-2 pr-2"
-              role="tablist"
-              aria-label="Stages"
+              className={`relative overflow-hidden ${
+                show ? "w-full" : "w-0"
+              } ${!reducedMotion ? "transition-[width] ease-out" : ""}`}
+              style={
+                !reducedMotion
+                  ? {
+                      transitionDuration: `${LINE_DURATION_MS}ms`,
+                      transitionDelay: visible ? `${LINE_DELAY_MS}ms` : "0ms",
+                    }
+                  : undefined
+              }
             >
-              {STAGES.map((item, i) => (
-                <button
-                  key={item.id}
-                  ref={(el) => {
-                    mobileLabelRefs.current[i] = el;
-                  }}
-                  type="button"
-                  role="tab"
-                  aria-selected={activeStage === i}
-                  onClick={() => scrollToStage(i)}
-                  className={`snap-center shrink-0 rounded-full px-3 py-1.5 text-[13px] font-medium transition-colors duration-200 ${
-                    activeStage === i
-                      ? "text-darkgreen bg-white/35"
-                      : "text-forest/45"
-                  }`}
-                >
-                  {item.short}
-                </button>
-              ))}
-            </div>
-
-            <div ref={trackRef} className="relative min-h-px">
-              <div
-                className="pointer-events-none absolute left-0 right-0 top-0 h-px bg-darkgreen/45"
-                aria-hidden
-              />
-              <div className="relative border-b border-forest/12">
-                <span
-                  className="pointer-events-none absolute z-10 h-[2px] bg-darkgreen bottom-[-1px]"
-                  style={{
-                    left: indicator.left,
-                    width: indicator.width,
-                    transition: indicatorTransition,
-                  }}
+              <div ref={trackRef} className="relative min-h-px w-[100vw] min-w-[100vw]">
+                <div
+                  className="pointer-events-none absolute left-0 right-0 top-0 h-px bg-darkgreen/45"
                   aria-hidden
                 />
+                <div className="relative border-b border-forest/12">
+                  <span
+                    className="pointer-events-none absolute z-10 h-[2px] bg-darkgreen bottom-[-1px]"
+                    style={{
+                      left: indicator.left,
+                      width: indicator.width,
+                      transition: indicatorTransition,
+                    }}
+                    aria-hidden
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -340,26 +348,28 @@ export default function IsThisForMeSection() {
                     }
                   >
                     <h5
-                      className={`m-0 leading-snug transition-colors duration-300 ${
+                      className={`m-0 max-w-xl leading-snug transition-colors duration-300 ${
                         active ? "text-darkgreen" : "text-forest/42"
                       }`}
                     >
                       {item.title}
                     </h5>
-                    <p
-                      className={`m-0 !mt-2 text-pretty transition-colors duration-300 ${
-                        active ? "text-forest/88" : "text-forest/48"
-                      }`}
-                      style={{ marginBottom: 0 }}
-                    >
-                      {item.body}
-                    </p>
+                    <div className="text-group pt-3">
+                      <p
+                        className={`mt-3 max-w-md transition-colors duration-300 ${
+                          active ? "text-forest/88" : "text-forest/48"
+                        }`}
+                      >
+                        {item.body}
+                      </p>
+                    </div>
                   </div>
                 </div>
               );
             })}
           </div>
         </div>
+      </div>
     </div>
   );
 
@@ -367,10 +377,10 @@ export default function IsThisForMeSection() {
     <section
       id="is-this-for-me"
       ref={sectionRef}
-      className="relative"
+      className="relative overflow-x-clip"
     >
       {reducedMotion ? (
-        <div className="relative min-h-0 overflow-hidden py-[120px]">
+        <div className="relative min-h-0 overflow-x-clip py-[120px]">
           <IsForMeModuleBackground />
           {moduleContent}
         </div>
@@ -380,7 +390,7 @@ export default function IsThisForMeSection() {
           className="relative"
           style={{ minHeight: `${PIN_SCROLL_VH}vh` }}
         >
-          <div className="sticky top-0 z-30 relative overflow-hidden">
+          <div className="sticky top-0 z-30 relative overflow-x-clip overflow-y-visible">
             <IsForMeModuleBackground />
             <div className="relative z-10 w-full py-[120px]">
               {moduleContent}

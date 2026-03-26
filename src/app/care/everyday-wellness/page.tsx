@@ -5,14 +5,14 @@ export default function EverydayWellnessPage() {
     <div className="min-h-screen bg-background">
       <main className="px-16 py-20 md:py-28">
         <h1 className="text-4xl md:text-5xl text-darkgreen max-w-2xl">
-          Everyday Wellness
+          Recovery Care
         </h1>
         <p className="mt-6 text-xl opacity-90 leading-relaxed max-w-xl">
-          Movement and habits that support how you live day to day.
+          Targeted recovery sessions designed to support how your body adapts to training, stress, and daily demands so you can sustain and improve your overall health.
         </p>
 
         <section className="mt-[120px] pt-[120px] border-t border-matcha/10">
-          <h2 className="text-2xl md:text-3xl text-darkgreen">What we mean by everyday wellness</h2>
+          <h2 className="text-2xl md:text-3xl text-darkgreen">What we mean by recovery care</h2>
           <p className="mt-4 text-lg opacity-90 leading-relaxed max-w-2xl">
             Placeholder: Posture, stress, sleep, and sustainable performance — integrated into your routine.
           </p>

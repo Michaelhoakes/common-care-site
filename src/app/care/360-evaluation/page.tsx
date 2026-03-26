@@ -5,7 +5,7 @@ export default function Evaluation360Page() {
     <div className="min-h-screen bg-background">
       <main className="px-16 py-20 md:py-28">
         <h1 className="text-4xl md:text-5xl text-darkgreen max-w-2xl">
-          The 360° Evaluation
+          Care Evaluation
         </h1>
         <p className="mt-6 text-xl opacity-90 leading-relaxed max-w-xl">
           A comprehensive look at how you move and how we can help.
