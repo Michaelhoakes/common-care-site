@@ -316,9 +316,9 @@ export default function CarePageClient() {
             <p className="cc-eyebrow text-darkgreen">
               Our care approach
             </p>
-            <h4 className="max-w-4xl">
+            <h2 className="cc-heading-md max-w-4xl">
               Care begins with understanding you as a whole. We consider how you move, your stress and load, and daily life. That context guides unhurried, one-on-one care built for long-term health.
-            </h4>
+            </h2>
             <ul className="care-list text-forest/90">
               <li className="flex gap-3">
                 <span className="text-matcha shrink-0" aria-hidden>—</span>
@@ -343,7 +343,7 @@ export default function CarePageClient() {
             ref={(el) => { sectionRefs.current["the-360-evaluation"] = el; }}
             className="care-section care-section-animate scroll-mt-28"
           >
-            <h3 className="text-darkgreen">Care Evaluation</h3>
+            <h2 className="cc-heading-md text-darkgreen">Care Evaluation</h2>
             <div className="min-w-0">
               <p className="care-body text-forest/90">
                 An in-depth look at your overall health, combining your story with objective data to truly understand what’s going on.
@@ -424,7 +424,7 @@ export default function CarePageClient() {
               </div>
               <a
                 href="/technology"
-                className="mt-8 care-link text-forest font-medium border-b border-forest/30 hover:border-forest transition-colors"
+                className="mt-8 cc-text-btn"
               >
                 Explore how we measure →
               </a>
@@ -440,7 +440,7 @@ export default function CarePageClient() {
             className="care-section care-section-animate scroll-mt-28"
           >
             <div className="flex flex-col">
-              <h3 className="text-darkgreen">Care Sessions</h3>
+              <h2 className="cc-heading-md text-darkgreen">Care Sessions</h2>
               <p className="care-body text-forest/90">
                 One-on-one sessions built around you, combining hands-on care, movement, and advanced technology to support how your body heals.
               </p>
@@ -522,7 +522,7 @@ export default function CarePageClient() {
             ref={(el) => { sectionRefs.current["everyday-wellness"] = el; }}
             className="care-section care-section-animate scroll-mt-28"
           >
-            <h3 className="text-darkgreen">Recovery Care</h3>
+            <h2 className="cc-heading-md text-darkgreen">Recovery Care</h2>
             <p className="care-body text-forest/90">
               Targeted recovery sessions designed to support how your body adapts to training, stress, and daily demands so you can sustain and improve your overall health.
             </p>

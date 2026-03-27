@@ -4,7 +4,7 @@ export default function EverydayWellnessPage() {
   return (
     <div className="min-h-screen bg-background">
       <main className="px-16 py-20 md:py-28">
-        <h1 className="text-4xl md:text-5xl text-darkgreen max-w-2xl">
+        <h1 className="cc-heading-lg text-darkgreen max-w-2xl">
           Recovery Care
         </h1>
         <p className="mt-6 text-xl opacity-90 leading-relaxed max-w-xl">
@@ -12,14 +12,14 @@ export default function EverydayWellnessPage() {
         </p>
 
         <section className="mt-[120px] pt-[120px] border-t border-matcha/10">
-          <h2 className="text-2xl md:text-3xl text-darkgreen">What we mean by recovery care</h2>
+          <h2 className="cc-heading-md text-darkgreen">What we mean by recovery care</h2>
           <p className="mt-4 text-lg opacity-90 leading-relaxed max-w-2xl">
             Placeholder: Posture, stress, sleep, and sustainable performance — integrated into your routine.
           </p>
         </section>
 
         <section className="mt-[120px]">
-          <h2 className="text-2xl md:text-3xl text-darkgreen">Who it’s for</h2>
+          <h2 className="cc-heading-md text-darkgreen">Who it’s for</h2>
           <p className="mt-4 text-lg opacity-90 leading-relaxed max-w-2xl">
             Placeholder: Anyone who wants to feel better in their body without a specific injury — prevention and longevity.
           </p>

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import LayoutWithHeader from "./components/LayoutWithHeader";
-import TypekitFonts from "./components/TypekitFonts";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -28,11 +27,12 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <link rel="preconnect" href="https://use.typekit.net" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://p.typekit.net" crossOrigin="anonymous" />
+        <link rel="stylesheet" href="https://use.typekit.net/swf7sdg.css" />
       </head>
       <body
         className={`${inter.variable} ${geistMono.variable} antialiased`}
       >
-        <TypekitFonts />
         <LayoutWithHeader>{children}</LayoutWithHeader>
       </body>
     </html>

@@ -105,9 +105,10 @@ export default function Header() {
 
   const onLightBg = !isHome || (isHome && scrolled);
   const navClass = onLightBg ? "text-darkgreen" : "text-white";
+  const desktopNavColor = onLightBg ? "#1F3414" : "#FFFFFF";
   const ctaClass = onLightBg
     ? "cc-btn-primary"
-    : "cc-btn-inverse";
+    : "cc-btn-primary-white";
 
   const renderContainedDrawer = (id: Exclude<DropdownId, null>) => {
     const config = id === "about" ? MEGA_ABOUT : MEGA_CARE;
@@ -157,7 +158,7 @@ export default function Header() {
         onMouseLeave={handleLeave}
       >
         {/* Main nav bar — on home: transparent until scroll; background layer fades in via opacity */}
-        <div className="relative z-20 w-full px-16 py-2">
+        <div className="relative z-20 w-full px-6 md:px-16 py-2">
           {isHome && (
             <div
               className={`absolute inset-0 pointer-events-none nav-scroll-bg backdrop-blur-sm border-b border-matcha/5 transition-opacity duration-[950ms] ease-[cubic-bezier(0.22,0,0.2,1)] ${
@@ -167,7 +168,7 @@ export default function Header() {
             />
           )}
           <div className="relative z-10 flex items-center justify-between">
-            <div className="flex items-center">
+            <div className="flex items-center shrink-0">
               <Link
                 href="/"
                 className={`flex items-center ${navClass}`}
@@ -178,13 +179,15 @@ export default function Header() {
                   alt="Common Care"
                   width={360}
                   height={194}
-                  className="h-14 w-auto md:h-16 transition-opacity duration-[950ms] ease-[cubic-bezier(0.22,0,0.2,1)]"
+                  className="h-10 w-auto shrink-0 sm:h-11 md:h-14 lg:h-16 transition-opacity duration-[950ms] ease-[cubic-bezier(0.22,0,0.2,1)]"
                   priority
                 />
               </Link>
+            </div>
 
-              {/* Desktop nav — 40px from logo */}
-              <nav className="hidden md:flex items-center gap-1 ml-10">
+            {/* Right cluster: desktop nav + CTA; mobile menu button */}
+            <div className="flex items-center justify-end gap-2 shrink-0">
+              <nav className="hidden md:flex items-center gap-1 mr-2">
                 <div
                   className="relative"
                   onMouseEnter={() => handleEnter("care")}
@@ -196,7 +199,8 @@ export default function Header() {
                     href="/care"
                     aria-haspopup="menu"
                     aria-expanded={openDropdown === "care"}
-                    className={`flex items-center px-4 py-2 h-9 text-base leading-6 ${navClass} opacity-90 hover:opacity-100 rounded-md`}
+                    className="flex items-center px-4 py-2 h-9 text-base leading-6 opacity-90 hover:opacity-100 rounded-md"
+                    style={{ color: desktopNavColor }}
                   >
                     Care
                   </Link>
@@ -204,7 +208,8 @@ export default function Header() {
                 </div>
                 <Link
                   href="/first-visit"
-                  className={`flex items-center px-4 py-2 h-9 text-base leading-6 ${navClass} opacity-90 hover:opacity-100 rounded-md`}
+                  className="flex items-center px-4 py-2 h-9 text-base leading-6 opacity-90 hover:opacity-100 rounded-md"
+                  style={{ color: desktopNavColor }}
                 >
                   First Visit
                 </Link>
@@ -219,7 +224,8 @@ export default function Header() {
                     href="/about"
                     aria-haspopup="menu"
                     aria-expanded={openDropdown === "about"}
-                    className={`flex items-center px-4 py-2 h-9 text-base leading-6 ${navClass} opacity-90 hover:opacity-100 rounded-md`}
+                    className="flex items-center px-4 py-2 h-9 text-base leading-6 opacity-90 hover:opacity-100 rounded-md"
+                    style={{ color: desktopNavColor }}
                   >
                     About
                   </Link>
@@ -227,32 +233,21 @@ export default function Header() {
                 </div>
                 <Link
                   href="/insurance"
-                  className={`flex items-center px-4 py-2 h-9 text-base leading-6 ${navClass} opacity-90 hover:opacity-100 rounded-md`}
+                  className="flex items-center px-4 py-2 h-9 text-base leading-6 opacity-90 hover:opacity-100 rounded-md"
+                  style={{ color: desktopNavColor }}
                 >
                   Insurance
                 </Link>
               </nav>
-            </div>
-
-            <Link
-              href="/book"
-              className={`hidden md:inline-flex ${ctaClass}`}
-            >
-Book an evaluation
-              </Link>
-
-            {/* Mobile: menu button */}
-            <div className="flex items-center gap-3 md:hidden">
-              <Link
-                href="/book"
-                className={ctaClass}
-              >
-                Book an evaluation
-              </Link>
+              <div className="hidden md:flex items-center">
+                <Link href="/book" className={ctaClass}>
+                  Book an evaluation
+                </Link>
+              </div>
               <button
                 type="button"
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className={`p-2 rounded-lg ${navClass} opacity-90`}
+                className={`md:hidden p-2 rounded-lg ${navClass} opacity-90`}
                 aria-expanded={mobileOpen}
               >
                 {mobileOpen ? (
@@ -270,7 +265,7 @@ Book an evaluation
       {/* Mobile menu */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 md:hidden bg-bone/95 backdrop-blur-sm pt-24 px-16 pb-12 overflow-auto"
+          className="fixed inset-0 z-40 md:hidden bg-bone/95 backdrop-blur-sm pt-24 px-6 pb-12 overflow-auto"
           role="dialog"
           aria-label="Menu"
         >

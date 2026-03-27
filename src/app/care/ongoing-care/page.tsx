@@ -4,7 +4,7 @@ export default function OngoingCarePage() {
   return (
     <div className="min-h-screen bg-background">
       <main className="px-16 py-20 md:py-28">
-        <h1 className="text-4xl md:text-5xl text-darkgreen max-w-2xl">
+        <h1 className="cc-heading-lg text-darkgreen max-w-2xl">
           Care Sessions
         </h1>
         <p className="mt-6 text-xl opacity-90 leading-relaxed max-w-xl">
@@ -12,14 +12,14 @@ export default function OngoingCarePage() {
         </p>
 
         <section className="mt-[120px] pt-[120px] border-t border-matcha/10">
-          <h2 className="text-2xl md:text-3xl text-darkgreen">How we work together</h2>
+          <h2 className="cc-heading-md text-darkgreen">How we work together</h2>
           <p className="mt-4 text-lg opacity-90 leading-relaxed max-w-2xl">
             Placeholder: Follow-up sessions, home support, and a plan that adapts to you.
           </p>
         </section>
 
         <section className="mt-[120px]">
-          <h2 className="text-2xl md:text-3xl text-darkgreen">Frequency and focus</h2>
+          <h2 className="cc-heading-md text-darkgreen">Frequency and focus</h2>
           <p className="mt-4 text-lg opacity-90 leading-relaxed max-w-2xl">
             Placeholder: From recovery to maintenance — we match the rhythm to your goals.
           </p>

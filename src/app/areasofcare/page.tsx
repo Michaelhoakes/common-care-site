@@ -13,7 +13,7 @@ export default function AreasOfCarePage() {
   return (
     <div className="min-h-screen bg-background">
       <main className="px-16 py-20 md:py-28">
-        <h1 className="text-4xl md:text-5xl text-darkgreen max-w-2xl">
+        <h1 className="cc-heading-lg text-darkgreen max-w-2xl">
           Areas of care
         </h1>
         <p className="mt-6 text-xl opacity-90 leading-relaxed max-w-xl">
@@ -23,7 +23,7 @@ export default function AreasOfCarePage() {
         <div className="mt-24 grid grid-cols-1 md:grid-cols-2 gap-12">
           {CATEGORIES.map((cat) => (
             <section key={cat.id} id={cat.id} className="border-t border-matcha/10 pt-8">
-              <h2 className="text-2xl text-darkgreen">{cat.title}</h2>
+              <h2 className="cc-heading-xs text-darkgreen">{cat.title}</h2>
               <p className="mt-3 text-lg opacity-80 leading-relaxed">
                 Placeholder: Short description for this area of care.
               </p>

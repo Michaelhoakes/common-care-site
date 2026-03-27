@@ -4,7 +4,7 @@ export default function BookPage() {
   return (
     <div className="min-h-screen bg-background">
       <main className="px-16 py-20 md:py-28">
-        <h1 className="text-4xl md:text-5xl text-darkgreen max-w-2xl">
+        <h1 className="cc-heading-lg text-darkgreen max-w-2xl">
           Book
         </h1>
 
@@ -22,12 +22,12 @@ export default function BookPage() {
 
         <section className="mt-24 pt-16 border-t border-matcha/10 grid grid-cols-1 md:grid-cols-2 gap-12">
           <div>
-            <h2 className="text-xl text-darkgreen font-medium">Contact</h2>
+            <h2 className="cc-heading-minor text-darkgreen font-medium">Contact</h2>
             <p className="mt-3 text-lg opacity-90">hello@commoncare.co</p>
             <p className="mt-1 text-lg opacity-90">(310) 555-1234</p>
           </div>
           <div>
-            <h2 className="text-xl text-darkgreen font-medium">Hours & location</h2>
+            <h2 className="cc-heading-minor text-darkgreen font-medium">Hours & location</h2>
             <p className="mt-3 text-lg opacity-90 leading-relaxed">
               Los Angeles, CA 90028. In-person sessions. Hours placeholder.
             </p>

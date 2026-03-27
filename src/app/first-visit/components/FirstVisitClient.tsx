@@ -207,7 +207,7 @@ export default function FirstVisitClient() {
             }}
             className="care-section scroll-mt-28"
           >
-            <h3>What happens during your visit</h3>
+            <h2 className="cc-heading-md">What happens during your visit</h2>
             <p className="care-body text-forest/90">
               Your first visit is 60–90 minutes. We use that time to understand
               your history, run through the evaluation, and make sure you leave
@@ -292,7 +292,7 @@ export default function FirstVisitClient() {
             }}
             className="care-section scroll-mt-28"
           >
-            <h3>How to prepare</h3>
+            <h2 className="cc-heading-md">How to prepare</h2>
             <p className="care-body text-forest/90">
               No special preparation required. A few simple things help:
             </p>
@@ -336,7 +336,7 @@ export default function FirstVisitClient() {
             }}
             className="care-section scroll-mt-28"
           >
-            <h3>Parking & arrival</h3>
+            <h2 className="cc-heading-md">Parking & arrival</h2>
             <p className="care-body text-forest/90">
               [Placeholder: Parking is available in the building lot or street
               parking nearby. We’ll send specific directions and access
@@ -360,7 +360,7 @@ export default function FirstVisitClient() {
             }}
             className="care-section scroll-mt-28"
           >
-            <h3>Insurance & payment</h3>
+            <h2 className="cc-heading-md">Insurance & payment</h2>
             <p className="care-body text-forest/90">
               We operate on a cash-based model and can provide documentation for
               you to submit to your insurer if you have out-of-network benefits.
@@ -369,7 +369,7 @@ export default function FirstVisitClient() {
             </p>
             <Link
               href="/insurance#eligibility"
-              className="mt-6 care-link text-forest font-medium border-b border-forest/30 hover:border-forest transition-colors"
+              className="mt-6 cc-text-btn"
             >
               Check insurance eligibility →
             </Link>
@@ -387,7 +387,7 @@ export default function FirstVisitClient() {
             }}
             className="care-section scroll-mt-28"
           >
-            <h3>FAQs</h3>
+            <h2 className="cc-heading-md">FAQs</h2>
             <div className="mt-6 min-w-0">
               <p className="care-body text-forest/90">
                 Quick answers on timing, preparation, and what happens after

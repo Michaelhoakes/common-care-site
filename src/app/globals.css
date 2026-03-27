@@ -60,6 +60,7 @@
   text-transform: uppercase;
   color: #1F3414; /* text-darkgreen */
   opacity: 0.6; /* opacity-60 */
+  margin-top: 0;
 }
 
 .cc-footer-nav-label {
@@ -112,6 +113,29 @@ p.cc-body-18 {
   opacity: 0.95;
 }
 
+.cc-btn-primary-white {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  align-items: center;
+  justify-content: center;
+  font-family: "neue-haas-grotesk-text", var(--font-inter), system-ui, sans-serif;
+  border-radius: 9999px;
+  padding: 0.5rem 1rem; /* py-2 px-4 */
+  font-size: 1rem; /* text-base */
+  line-height: 1.5rem;
+  font-weight: var(--cc-cta-font-weight);
+  background: rgba(255, 255, 255, 0.9);
+  color: #1F3414;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  transition: background-color 150ms ease, border-color 150ms ease, opacity 150ms ease;
+}
+
+.cc-btn-primary-white:hover {
+  background: #F7F9F2;
+  border-color: #F7F9F2;
+}
+
 .cc-btn-inverse {
   display: inline-flex;
   align-items: center;
@@ -133,6 +157,112 @@ p.cc-body-18 {
   background: rgba(255, 255, 255, 0.25);
 }
 
+.cc-btn-secondary-white {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  align-items: center;
+  justify-content: center;
+  font-family: "neue-haas-grotesk-text", var(--font-inter), system-ui, sans-serif;
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: var(--cc-cta-font-weight);
+  background: transparent;
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  transition: background-color 150ms ease;
+}
+
+.cc-btn-secondary-white:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Text-style control: reads as a button/link with an underline, not a pill CTA */
+.cc-text-btn {
+  display: inline-block;
+  box-sizing: border-box;
+  font-family: "neue-haas-grotesk-text", var(--font-inter), system-ui, sans-serif;
+  font-size: 1rem; /* 16px */
+  line-height: 1.5rem;
+  font-weight: 500;
+  color: var(--color-forest);
+  text-decoration: none;
+  background: transparent;
+  padding: 0;
+  border: none;
+  border-bottom: 1px solid rgba(45, 74, 46, 0.38); /* slightly stronger than forest/30 */
+  cursor: pointer;
+  transition: border-color 200ms ease;
+}
+
+.cc-text-btn:hover {
+  border-bottom-color: var(--color-forest);
+}
+
+/* Explicit px + anchor/button selectors so mobile size wins over 1rem and Tailwind display utilities */
+@media (max-width: 768px) {
+  a.cc-text-btn,
+  button.cc-text-btn {
+    font-size: 15px !important;
+    line-height: 1.375rem !important;
+  }
+}
+
+/* Home hero CTAs: larger desktop size with balanced mobile scaling */
+.cc-hero-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 9999px;
+  font-family: "neue-haas-grotesk-text", var(--font-inter), system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1;
+  font-weight: var(--cc-cta-font-weight);
+  white-space: nowrap;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, opacity 150ms ease;
+}
+
+@media (min-width: 640px) {
+  .cc-hero-btn {
+    min-height: 46px;
+    padding: 0 20px;
+    font-size: 17px;
+  }
+}
+
+@media (min-width: 768px) {
+  .cc-hero-btn {
+    min-height: 50px;
+    padding: 0 24px;
+    font-size: 18px;
+  }
+}
+
+.cc-hero-btn-primary {
+  background: rgba(255, 255, 255, 0.9);
+  color: #1F3414;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+.cc-hero-btn-primary:hover {
+  background: #F7F9F2;
+  border-color: #F7F9F2;
+}
+
+.cc-hero-btn-inverse {
+  background: transparent;
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+.cc-hero-btn-inverse:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
 body {
   background: var(--background);
   color: var(--color-darkgreen);
@@ -140,30 +270,35 @@ body {
   font-weight: 400;
   font-size: 16px;
   line-height: 24px;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: geometricPrecision;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: "neue-haas-grotesk-display", var(--font-inter), system-ui, sans-serif;
-  letter-spacing: 0.02rem;
+  letter-spacing: normal;
+  font-synthesis: none;
 }
 
 h1 {
-  font-weight: 600;
-  letter-spacing: 0.2rem;
+  font-weight: 500;
+  letter-spacing: normal;
 }
 
 h2,
 h6 {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 h4 {
-  font-weight: 600;
-  letter-spacing: 0.06rem;
+  font-weight: 500;
+  letter-spacing: normal;
 }
 
 h5 {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 /* Match homepage h3 typography (ServicesPanels “34px” headline) */
@@ -235,12 +370,288 @@ h3 {
   h5 {
     font-size: 1.5rem; /* 24px */
     line-height: 2rem; /* 32px */
-    font-weight: 600;
+    font-weight: 500;
   }
 
   h6 {
     font-size: 1rem; /* 16px */
     line-height: 1.2;
+  }
+}
+
+/* Semantic h2 for section titles while preserving former h4 scale */
+h2.cc-heading-as-h4 {
+  font-size: 1.5rem; /* 24px */
+  line-height: 1.1;
+  font-weight: 500;
+  letter-spacing: normal;
+}
+
+@media (min-width: 768px) {
+  h2.cc-heading-as-h4 {
+    font-size: 2.5rem; /* 40px */
+  }
+}
+
+/* Typography classes: semantic HTML (h1–h6) can keep its meaning,
+   while visual sizing comes from these shared classes. */
+.cc-heading-xl,
+.cc-heading-lg,
+.cc-heading-md,
+.cc-heading-ms,
+.cc-heading-sm,
+.cc-heading-xs,
+.cc-heading-minor,
+.cc-heading-compact,
+.cc-heading-minor--md-up {
+  font-family: "neue-haas-grotesk-display", var(--font-inter), system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: normal;
+  font-synthesis: none;
+}
+
+/* XL = current h1 scale */
+.cc-heading-xl {
+  font-size: 3rem; /* 48px */
+  line-height: 1.05;
+}
+@media (min-width: 640px) {
+  .cc-heading-xl { font-size: 3.5rem; /* 56px */ }
+}
+@media (min-width: 768px) {
+  .cc-heading-xl { font-size: 4.5rem; /* 72px */ }
+}
+@media (min-width: 1024px) {
+  .cc-heading-xl { font-size: 5.625rem; /* 90px */ }
+}
+@media (max-width: 768px) {
+  .cc-heading-xl {
+    font-size: 2.625rem; /* 42px */
+    line-height: 1.08;
+  }
+}
+
+/* LG = current h2 scale */
+.cc-heading-lg {
+  font-size: 2.25rem; /* 36px */
+  line-height: 1.1;
+}
+@media (min-width: 768px) {
+  .cc-heading-lg { font-size: 3rem; /* 48px */ }
+}
+@media (max-width: 768px) {
+  .cc-heading-lg {
+    font-size: 1.8125rem; /* 29px */
+    line-height: 1.16;
+  }
+}
+
+/* MD = current h3 scale */
+.cc-heading-md {
+  font-size: 1.875rem; /* 30px */
+  line-height: 1.25;
+}
+@media (min-width: 768px) {
+  .cc-heading-md { font-size: 2.125rem; /* 34px */ }
+}
+@media (max-width: 768px) {
+  .cc-heading-md {
+    font-size: 1.4375rem; /* 23px */
+    line-height: 1.26;
+  }
+}
+
+/* MS = between md and sm — homepage services subheads (~28px from md up) */
+.cc-heading-ms {
+  font-size: 1.3125rem; /* 21px */
+  line-height: 1.3;
+  letter-spacing: 0.01rem;
+}
+@media (min-width: 768px) {
+  .cc-heading-ms {
+    font-size: 1.75rem; /* 28px */
+    line-height: 1.22;
+    letter-spacing: 0.012rem;
+  }
+}
+@media (max-width: 768px) {
+  .cc-heading-ms {
+    letter-spacing: normal;
+  }
+}
+
+/* SM = current h4 scale (used by section titles visually) */
+.cc-heading-sm {
+  font-size: 1.5rem; /* 24px */
+  line-height: 1.1;
+}
+@media (min-width: 768px) {
+  .cc-heading-sm { font-size: 2.5rem; /* 40px */ }
+}
+@media (max-width: 768px) {
+  .cc-heading-sm {
+    font-size: 1.5625rem; /* 25px */
+    line-height: 1.16;
+  }
+}
+
+/* XS = former global h5 scale (card titles, names, stage titles) */
+.cc-heading-xs {
+  font-size: 1.5rem; /* 24px */
+  line-height: 2rem; /* 32px */
+}
+@media (max-width: 768px) {
+  .cc-heading-xs {
+    font-size: 1.1875rem; /* 19px */
+    line-height: 1.4;
+  }
+}
+
+/* Minor = compact line (e.g. book sidebar labels); matches text-xl */
+.cc-heading-minor {
+  font-size: 1.25rem; /* 20px */
+  line-height: 1.75rem;
+}
+
+@media (min-width: 768px) {
+  .cc-heading-minor--md-up {
+    font-size: 1.5rem; /* text-2xl */
+    line-height: 1.5rem;
+  }
+}
+
+/* Compact hero = former text-4xl / sm:text-5xl / md:text-6xl marketing headlines */
+.cc-heading-compact {
+  font-size: 2.25rem; /* 36px */
+  line-height: 1.1;
+}
+@media (min-width: 640px) {
+  .cc-heading-compact {
+    font-size: 3rem; /* 48px */
+  }
+}
+@media (min-width: 768px) {
+  .cc-heading-compact {
+    font-size: 3.75rem; /* 60px */
+  }
+}
+
+/* Subtext = body copy baseline */
+.cc-subtext {
+  font-family: "neue-haas-grotesk-text", var(--font-inter), system-ui, sans-serif;
+  font-weight: 400;
+  letter-spacing: normal;
+  font-size: 16px;
+  line-height: 24px;
+  font-synthesis: none;
+}
+@media (max-width: 768px) {
+  .cc-subtext {
+    font-size: 15px;
+    line-height: 1.55;
+  }
+}
+
+/* Homepage services: semantic h3 + .cc-heading-ms for type scale (see .cc-heading-ms) */
+h3.cc-h3-services {
+  font-weight: 500;
+}
+
+/*
+ * Mobile editorial type (≤768px) — smaller display sizes + readable body;
+ * heading tracking stays neutral (avoid negative letter-spacing on small screens).
+ */
+@media (max-width: 768px) {
+  :root {
+    --cc-tight: 0.625rem; /* 10px */
+    --cc-standard: 0.875rem; /* 14px */
+    --cc-block: 1.25rem; /* 20px */
+  }
+
+  body {
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .gradient-page {
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  /* Moderate tracking: not the global h1 0.2rem, not negative em (reads too tight on phones). */
+  h1,
+  h2,
+  h3,
+  h5,
+  h6 {
+    letter-spacing: normal;
+  }
+
+  h1 {
+    font-size: 2.625rem; /* 42px */
+    line-height: 1.08;
+    letter-spacing: normal;
+    font-weight: 500;
+  }
+
+  h2 {
+    font-size: 1.8125rem; /* 29px */
+    line-height: 1.16;
+    font-weight: 500;
+  }
+
+  h3 {
+    font-size: 1.4375rem; /* 23px */
+    line-height: 1.26;
+    font-weight: 500;
+  }
+
+  h4 {
+    font-size: 1.5625rem; /* 25px */
+    line-height: 1.16;
+    letter-spacing: normal;
+    font-weight: 500;
+  }
+
+  h2.cc-heading-as-h4 {
+    font-size: 1.5625rem; /* 25px */
+    line-height: 1.16;
+    letter-spacing: normal;
+    font-weight: 500;
+  }
+
+  h5 {
+    font-size: 1.1875rem; /* 19px */
+    line-height: 1.4;
+    letter-spacing: normal;
+    font-weight: 500;
+  }
+
+  h6 {
+    font-size: 1rem; /* 16px */
+    line-height: 1.45;
+    font-weight: 500;
+  }
+
+  p {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .text-group {
+    margin-bottom: 1rem;
+  }
+
+  /* Utility bodies: slightly compact vs 18/26 desktop */
+  .cc-body-18 {
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  .cc-eyebrow {
+    font-size: 0.8125rem; /* 13px */
+    line-height: 1.25rem;
+    letter-spacing: 0.08em;
   }
 }
 
@@ -529,15 +940,29 @@ kbd {
   }
 }
 
-.care-page .care-link {
-  display: inline-block;
-  font-weight: 500;
-  font-size: 17px;
-  transition: border-color 200ms ease;
+@media (max-width: 768px) {
+  .care-page .care-lead {
+    font-size: 1.125rem; /* 18px */
+    line-height: 1.45;
+  }
+
+  .care-page .care-body,
+  .care-page .care-list,
+  .care-page .care-list-compact {
+    font-size: 16px;
+    line-height: 1.58;
+  }
+
+  .care-page .care-included-grid {
+    font-size: 16px;
+    line-height: 1.52;
+  }
 }
 
-/* Space from section h3 to first body paragraph (care-page editorial rhythm) */
+/* Space from section heading to first body paragraph (care-page editorial rhythm) */
+.care-section h2 + p.care-body,
 .care-section h3 + p.care-body,
+#the-360-evaluation h2 + div > p.care-body:first-of-type,
 #the-360-evaluation h3 + div > p.care-body:first-of-type {
   margin-top: var(--cc-block);
 }
@@ -684,11 +1109,17 @@ kbd {
   }
 }
 
-/* Hero: fixed height in pixels so layout doesn't shift with viewport height */
+/* Hero: mobile uses bounded viewport height; desktop keeps fixed composition */
 .hero-full-viewport {
-  height: 900px;
-  min-height: 900px;
-  max-height: 900px;
+  min-height: clamp(540px, 66svh, 760px);
+}
+
+@media (min-width: 768px) {
+  .hero-full-viewport {
+    height: 900px;
+    min-height: 900px;
+    max-height: 900px;
+  }
 }
 
 /* Hero subhead line: draw L→R on load (scaleX so width can be px / viewport-sized) */

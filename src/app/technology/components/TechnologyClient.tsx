@@ -73,6 +73,7 @@ export default function TechnologyClient() {
 
   return (
     <>
+      <h2 className="sr-only">Tools we use</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
         {TECHNOLOGIES.map((tech) => (
           <button
@@ -81,7 +82,7 @@ export default function TechnologyClient() {
             onClick={() => setOpenId(tech.id)}
             className="technology-tile group text-left w-full rounded-lg border border-forest/15 bg-white/60 backdrop-blur-sm p-6 md:p-8 transition-all duration-300 ease-out hover:border-forest/25 hover:bg-white/90 hover:shadow-[0_4px_24px_rgba(31,52,20,0.06)] focus:outline-none focus-visible:ring-2 focus-visible:ring-forest/30 focus-visible:ring-offset-2"
           >
-            <h3 className="font-hero-display text-xl md:text-2xl text-darkgreen font-medium tracking-normal">
+            <h3 className="cc-heading-minor cc-heading-minor--md-up text-darkgreen tracking-normal">
               {tech.name}
             </h3>
             <p className="mt-2 text-forest/80 text-[15px] leading-relaxed">
@@ -115,7 +116,7 @@ export default function TechnologyClient() {
             <div className="flex-1 overflow-y-auto px-16 py-10 md:py-12">
               <h2
                 id="technology-sheet-heading"
-                className="font-hero-display text-3xl md:text-4xl text-darkgreen font-medium tracking-normal"
+                className="cc-heading-md text-darkgreen tracking-normal"
               >
                 {selected.name}
               </h2>
@@ -124,18 +125,18 @@ export default function TechnologyClient() {
               </p>
 
               <div className="mt-10">
-                <h4 className="text-xs font-mono font-medium tracking-widest uppercase text-forest/60 mb-2">
+                <p className="text-xs font-mono font-medium tracking-widest uppercase text-forest/60 mb-2">
                   What it measures
-                </h4>
+                </p>
                 <p className="text-forest/90 text-[17px] leading-[1.65]">
                   {selected.measures}
                 </p>
               </div>
 
               <div className="mt-8">
-                <h4 className="text-xs font-mono font-medium tracking-widest uppercase text-forest/60 mb-2">
+                <p className="text-xs font-mono font-medium tracking-widest uppercase text-forest/60 mb-2">
                   Why it matters for care
-                </h4>
+                </p>
                 <p className="text-forest/90 text-[17px] leading-[1.65]">
                   {selected.whyItMatters}
                 </p>

@@ -29,13 +29,14 @@ function ApproachPanel({
 }) {
   return (
     <div id={id} role="tabpanel" aria-labelledby={labelledBy} className="outline-none">
+      <h2 className="sr-only">Common approach</h2>
       <div className="min-w-0 max-w-3xl">
         <section
           id="long-horizon"
           className="care-section scroll-mt-28"
           aria-labelledby="about-long-horizon"
         >
-          <h3 id="about-long-horizon" className="max-w-5xl">
+          <h3 id="about-long-horizon" className="cc-heading-md max-w-5xl">
             Long-horizon care
           </h3>
           <p className="mt-8 max-w-2xl">
@@ -75,7 +76,7 @@ function ApproachPanel({
           className="care-section scroll-mt-28"
           aria-labelledby="about-priorities"
         >
-          <h3 id="about-priorities" className="max-w-2xl">
+          <h3 id="about-priorities" className="cc-heading-md max-w-2xl">
             Discover our key priorities
           </h3>
           <ul className="mt-10 max-w-2xl space-y-6">
@@ -112,13 +113,13 @@ function ApproachPanel({
             <button
               type="button"
               onClick={onShowCareTeam}
-              className="care-link text-left font-medium border-b border-forest/30 hover:border-forest transition-colors"
+              className="cc-text-btn text-left"
             >
               Your care team →
             </button>
             <Link
               href="/first-visit"
-              className="care-link font-medium border-b border-forest/30 hover:border-forest transition-colors"
+              className="cc-text-btn"
             >
               First visit →
             </Link>
@@ -151,9 +152,9 @@ function CareTeamPanel({
             />
           </div>
           <div className="min-w-0 max-w-2xl self-center">
-            <h5 className="max-w-xl" style={{ fontWeight: 600 }}>
+            <h3 className="cc-heading-xs max-w-xl font-semibold">
               Michael Oakes, DPT
-            </h5>
+            </h3>
             <div className="text-group pt-3">
               <p className="mt-3">
                 Michael focuses on whole-person physical therapy that balances
@@ -182,9 +183,9 @@ function CareTeamPanel({
             />
           </div>
           <div className="min-w-0 max-w-2xl self-center">
-            <h5 className="max-w-xl" style={{ fontWeight: 600 }}>
+            <h3 className="cc-heading-xs max-w-xl font-semibold">
               Tommy Wolfe, DPT
-            </h5>
+            </h3>
             <div className="text-group pt-3">
               <p className="mt-3">
                 Tommy combines hands-on treatment with guided movement to build
@@ -325,11 +326,11 @@ export default function AboutTabs() {
         <div className="min-w-0 max-w-3xl">
           <p className="cc-eyebrow text-darkgreen mb-4">About</p>
 
-          <h4 className="max-w-4xl">
+          <h2 className="cc-heading-sm max-w-4xl">
             Care should never feel generic. We take a deeply personal approach,
             delivered by a team that&apos;s committed to understanding you and
             helping you get better.
-          </h4>
+          </h2>
         </div>
 
         <div

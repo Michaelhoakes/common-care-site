@@ -8,12 +8,17 @@ import { useRef, useState, useEffect, useSyncExternalStore } from "react";
  * Pick the service whose sentinel overlaps a horizontal “focus band” in the viewport
  * (accounts for sticky header). More stable than IntersectionObserver + ratio sorting.
  */
-function pickActiveServiceIndex(sentinels: HTMLElement[]): number {
+function pickActiveServiceIndex(
+  sentinels: HTMLElement[],
+  opts?: { bandTopRatio?: number; bandBottomRatio?: number }
+): number {
   if (sentinels.length === 0) return 0;
   const vh = window.innerHeight;
+  const bandTopRatio = opts?.bandTopRatio ?? 0.22;
+  const bandBottomRatio = opts?.bandBottomRatio ?? 0.5;
   // Focus band moved upward so chapter feedback feels sooner.
-  const bandTop = vh * 0.22;
-  const bandBottom = vh * 0.5;
+  const bandTop = vh * bandTopRatio;
+  const bandBottom = vh * bandBottomRatio;
   const bandCenter = (bandTop + bandBottom) / 2;
 
   let best = 0;
@@ -115,8 +120,9 @@ const SENTINEL_MIN_H_FIRST = "min-h-[min(28dvh,300px)]";
 // Hold the sticky scene longer after chapter 3 engages before next section appears.
 const SENTINEL_MIN_H_LAST = "min-h-[min(72dvh,760px)]";
 
-const TERTIARY_BUTTON_CLASS =
-  "group/link inline-flex items-center gap-1.5 font-sans text-[14px] leading-normal transition-opacity duration-300 ease-out hover:opacity-80";
+/** Shared “Learn more” control — matches editorial cc-text-btn (16px + underline) */
+const SERVICES_LEARN_MORE_CLASS =
+  "cc-text-btn !inline-flex items-center gap-1.5 group/link transition-opacity duration-300 ease-out hover:opacity-80";
 
 /** Vertical slide (% of frame): modest distance + smooth ease reads calmer than a hard cut */
 const SERVICE_IMAGE_SLIDE_PCT = 11;
@@ -168,7 +174,7 @@ function ServiceTextPanel({
       className={`flex flex-col justify-start ${
         dense
           ? "py-8 md:pl-4 lg:pl-6"
-          : `scroll-mt-28 pt-0 pb-0 ${isLast ? "" : "mb-8"}`
+          : `scroll-mt-28 pt-0 pb-0 ${isLast ? "" : "mb-[22px]"}`
       }`}
     >
       <div
@@ -200,7 +206,7 @@ function ServiceTextPanel({
         }}
       >
         <h3
-          className={`mt-0 transition-colors ${
+          className={`cc-h3-services cc-heading-ms mt-0 transition-colors ${
             showDetail
               ? "opacity-100"
               : "opacity-40 group-hover:opacity-100 group-focus-within:opacity-100"
@@ -222,12 +228,12 @@ function ServiceTextPanel({
           </p>
           <Link
             href={s.href}
-            className={`${TERTIARY_BUTTON_CLASS} w-fit`}
+            className={`${SERVICES_LEARN_MORE_CLASS} w-fit`}
             onClick={(e) => e.stopPropagation()}
           >
-            <span className="underline underline-offset-2">Learn more</span>
+            Learn more
             <span
-              className="inline-block text-[14px] leading-none transition-transform duration-300 ease-out group-hover/link:translate-x-0.5"
+              className="inline-block leading-none transition-transform duration-300 ease-out group-hover/link:translate-x-0.5"
               aria-hidden
             >
               →
@@ -241,16 +247,27 @@ function ServiceTextPanel({
 
 export default function ServicesPanels() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [releaseMobileSticky, setReleaseMobileSticky] = useState(false);
   const reducedMotion = useSyncExternalStore(
     subscribeReducedMotion,
     getReducedMotionSnapshot,
     getReducedMotionServerSnapshot
   );
   const sentinelRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const mobileSentinelRefs = useRef<(HTMLElement | null)[]>([]);
+  const mobileStickyFrameRef = useRef<HTMLDivElement | null>(null);
+  const recoveryDividerRef = useRef<HTMLDivElement | null>(null);
+  const releaseMobileStickyRef = useRef(false);
+  const lastScrollYRef = useRef(0);
   const rafScrollRef = useRef(0);
+  const rafScrollMobileRef = useRef(0);
 
   const setSentinelRef = (el: HTMLDivElement | null, i: number) => {
     sentinelRefs.current[i] = el;
+  };
+
+  const setMobileSentinelRef = (el: HTMLElement | null, i: number) => {
+    mobileSentinelRefs.current[i] = el;
   };
 
   const activateSection = (i: number) => {
@@ -263,10 +280,26 @@ export default function ServicesPanels() {
     });
   };
 
+  const activateMobileSection = (i: number) => {
+    setActiveIndex(i);
+    const el = mobileSentinelRefs.current[i];
+    if (!el) return;
+    el.scrollIntoView({
+      behavior: reducedMotion ? "instant" : "smooth",
+      block: "center",
+    });
+  };
+
   useEffect(() => {
     if (reducedMotion) return;
 
     const run = () => {
+      if (
+        typeof window !== "undefined" &&
+        window.matchMedia("(max-width: 767px)").matches
+      ) {
+        return;
+      }
       const nodes = sentinelRefs.current.filter(Boolean) as HTMLElement[];
       if (nodes.length !== services.length) return;
       const next = pickActiveServiceIndex(nodes);
@@ -289,24 +322,109 @@ export default function ServicesPanels() {
     };
   }, [reducedMotion]);
 
+  useEffect(() => {
+    if (reducedMotion) return;
+
+    const run = () => {
+      if (
+        typeof window === "undefined" ||
+        !window.matchMedia("(max-width: 767px)").matches
+      ) {
+        return;
+      }
+      const nodes = mobileSentinelRefs.current.filter(Boolean) as HTMLElement[];
+      if (nodes.length !== services.length) return;
+      const next = pickActiveServiceIndex(nodes, {
+        bandTopRatio: 0.32,
+        bandBottomRatio: 0.62,
+      });
+      setActiveIndex((prev) => (next !== prev ? next : prev));
+    };
+
+    const schedule = () => {
+      cancelAnimationFrame(rafScrollMobileRef.current);
+      rafScrollMobileRef.current = requestAnimationFrame(run);
+    };
+
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule, { passive: true });
+    schedule();
+
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      cancelAnimationFrame(rafScrollMobileRef.current);
+    };
+  }, [reducedMotion]);
+
   const servicesIntro = (
-    <h4 className="max-w-4xl text-balance">
+    <h2 className="cc-heading-sm w-full max-w-4xl md:max-w-none xl:max-w-4xl text-balance">
       A complete approach to understanding your body, your story, and your overall health.
-    </h4>
+    </h2>
   );
+  // Release sticky exactly when image frame bottom reaches the divider before Recovery.
+  const isMobileImageSticky = !releaseMobileSticky;
+
+  useEffect(() => {
+    releaseMobileStickyRef.current = releaseMobileSticky;
+  }, [releaseMobileSticky]);
+
+  useEffect(() => {
+    const run = () => {
+      if (
+        typeof window === "undefined" ||
+        !window.matchMedia("(max-width: 767px)").matches
+      ) {
+        setReleaseMobileSticky(false);
+        return;
+      }
+      const stickyFrame = mobileStickyFrameRef.current;
+      const divider = recoveryDividerRef.current;
+      if (!stickyFrame || !divider) return;
+
+      const frameBottom = stickyFrame.getBoundingClientRect().bottom;
+      const dividerTop = divider.getBoundingClientRect().top;
+      const delta = frameBottom - dividerTop;
+      const currentY = window.scrollY;
+      const scrollingDown = currentY >= lastScrollYRef.current;
+      lastScrollYRef.current = currentY;
+
+      // Hysteresis prevents rapid sticky/unsticky oscillation at the crossover.
+      if (!releaseMobileStickyRef.current && scrollingDown && delta >= 2) {
+        setReleaseMobileSticky(true);
+        return;
+      }
+      if (releaseMobileStickyRef.current && !scrollingDown && delta <= -28) {
+        setReleaseMobileSticky(false);
+      }
+    };
+
+    const schedule = () => requestAnimationFrame(run);
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule, { passive: true });
+    schedule();
+
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
+  }, []);
 
   return (
-    <section id="services" className="pt-[80px] pb-[120px]">
+    <section
+      id="services"
+      className="pt-[30px] pb-10 md:pt-[46px] md:pb-14 lg:pt-[70px] lg:pb-20"
+    >
       <div className="hidden md:block w-full px-6 md:px-16">
         <div className="mx-auto w-full max-w-[1400px]">
         {reducedMotion ? (
           <div className="flex flex-col">
             <div className="mb-10">{servicesIntro}</div>
             <div
-              className="w-full border-t border-darkgreen/20"
+              className="w-full border-t border-darkgreen/12"
               aria-hidden
             />
-            <div className="flex flex-col gap-20 lg:gap-24 pt-8">
+            <div className="flex flex-col gap-20 lg:gap-24 pt-[22px]">
             {services.map((s, i) => (
               <div
                 key={s.title}
@@ -337,15 +455,15 @@ export default function ServicesPanels() {
             ))}
             </div>
             <div
-              className="mt-8 w-full border-t border-darkgreen/20"
+              className="mt-[22px] w-full border-t border-darkgreen/12"
               aria-hidden
             />
           </div>
         ) : (
-          <div className="grid grid-cols-[2.75fr_1.85fr] gap-x-8 lg:gap-x-12 items-stretch">
+          <div className="grid grid-cols-[2.75fr_1.85fr] gap-x-8 lg:gap-x-12 gap-y-10 items-stretch">
+            <div className="col-span-2 w-full min-w-0">{servicesIntro}</div>
             <div className="relative h-full min-h-0">
-              <div className="sticky top-24 md:top-28 z-10 flex w-full flex-col gap-8">
-                {servicesIntro}
+              <div className="sticky top-24 md:top-28 z-10 flex w-full flex-col">
                 <div
                   className={`relative overflow-hidden rounded-sm bg-darkgreen/5 ${STICKY_IMAGE_CLASSES}`}
                 >
@@ -381,28 +499,21 @@ export default function ServicesPanels() {
             </div>
 
             <div className="min-w-0 flex min-h-0 flex-col h-full">
-              <div className="sticky top-24 md:top-28 z-10 flex w-full flex-col gap-8">
-                {/* Reserve same vertical space as left intro so the text band lines up with the photo */}
-                <div
-                  className="invisible pointer-events-none shrink-0 select-none"
-                  aria-hidden
-                >
-                  {servicesIntro}
-                </div>
+              <div className="sticky top-24 md:top-28 z-10 flex w-full flex-col">
                 <div
                   className={`flex w-full min-h-0 items-center ${STICKY_VIEWPORT_H}`}
                 >
                   <div className="w-full py-2 pl-5 lg:pl-9 pr-4">
                     <div className="max-w-md">
                       <div
-                        className="border-t border-darkgreen/20 pt-8 -mr-4 lg:-mr-6 w-[calc(100%+1rem)] lg:w-[calc(100%+1.5rem)]"
+                        className="border-t border-darkgreen/12 pt-[22px] -mr-4 lg:-mr-6 w-[calc(100%+1rem)] lg:w-[calc(100%+1.5rem)]"
                         aria-hidden
                       />
                       {services.map((s, i) => (
                         <div key={s.title}>
                           {i > 0 ? (
                             <div
-                              className="border-t border-darkgreen/20 pt-8 -mr-4 lg:-mr-6 w-[calc(100%+1rem)] lg:w-[calc(100%+1.5rem)]"
+                              className="border-t border-darkgreen/12 pt-[22px] -mr-4 lg:-mr-6 w-[calc(100%+1rem)] lg:w-[calc(100%+1.5rem)]"
                               aria-hidden
                             />
                           ) : null}
@@ -416,7 +527,7 @@ export default function ServicesPanels() {
                         </div>
                       ))}
                       <div
-                        className="border-t border-darkgreen/20 mt-8 -mr-4 lg:-mr-6 w-[calc(100%+1rem)] lg:w-[calc(100%+1.5rem)]"
+                        className="border-t border-darkgreen/12 mt-[22px] -mr-4 lg:-mr-6 w-[calc(100%+1rem)] lg:w-[calc(100%+1.5rem)]"
                         aria-hidden
                       />
                     </div>
@@ -445,44 +556,153 @@ export default function ServicesPanels() {
       </div>
 
       <div className="flex flex-col w-full md:hidden px-6 md:px-16">
-        {servicesIntro}
-        <div className="-mx-6 mt-8 border-t border-darkgreen/20" aria-hidden />
-        <div className="flex flex-col gap-8 pt-8">
-        {services.map((s, i) => (
-          <article key={s.title}>
-            <div className="relative aspect-[4/3] overflow-hidden rounded-sm bg-darkgreen/5">
-              <div
-                className="absolute inset-0 bg-cover bg-center"
-                style={{
-                  backgroundImage: `url(${s.image})`,
-                  transform: s.flipX ? "scaleX(-1)" : undefined,
-                }}
-              />
-            </div>
-            <div className="pt-6 flex flex-col gap-3">
-              <span className="text-xs font-mono font-medium tracking-[0.22em] uppercase text-matcha/80">
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <h3 className="font-hero-display text-2xl font-medium leading-tight">
-                {s.title}
-              </h3>
-              <p className="cc-body-18 text-[18px] leading-[26px]">
-                {s.desc}
-              </p>
-            </div>
-            <Link
-              href={s.href}
-              className={`${TERTIARY_BUTTON_CLASS} mt-4`}
-            >
-              <span className="underline underline-offset-2">Learn more</span>
-              <span className="inline-block text-[14px] leading-none transition-transform duration-300 ease-out group-hover/link:translate-x-0.5">
-                →
-              </span>
-            </Link>
-          </article>
-        ))}
+        <div className="mx-auto w-full max-w-[1400px]">
+          {reducedMotion ? (
+            <>
+              <div className="mb-10">{servicesIntro}</div>
+              <div className="flex flex-col gap-8 pt-[22px]">
+                {services.map((s, i) => (
+                  <article key={s.title}>
+                    <div className="relative aspect-[4/3] overflow-hidden rounded-sm bg-darkgreen/5">
+                      <div
+                        className="absolute inset-0 bg-cover bg-center"
+                        style={{
+                          backgroundImage: `url(${s.image})`,
+                          transform: s.flipX ? "scaleX(-1)" : undefined,
+                        }}
+                      />
+                    </div>
+                    <div className="pt-6 flex flex-col gap-3">
+                      <span className="text-xs font-mono font-medium tracking-[0.22em] uppercase text-matcha/80">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <h3 className="cc-h3-services cc-heading-ms">{s.title}</h3>
+                      <p className="cc-body-18 text-[18px] leading-[26px]">
+                        {s.desc}
+                      </p>
+                    </div>
+                    <Link
+                      href={s.href}
+                      className={`${SERVICES_LEARN_MORE_CLASS} mt-4`}
+                    >
+                      Learn more
+                      <span
+                        className="inline-block leading-none transition-transform duration-300 ease-out group-hover/link:translate-x-0.5"
+                        aria-hidden
+                      >
+                        →
+                      </span>
+                    </Link>
+                  </article>
+                ))}
+              </div>
+              <div className="-mx-6 mt-[22px] border-t border-darkgreen/12" aria-hidden />
+            </>
+          ) : (
+            <>
+              <div className="mb-10">{servicesIntro}</div>
+              <div className="mt-[22px]">
+                <div className="relative">
+                  <div
+                    className={`z-20 -mx-1 px-1 pb-3 bg-light-yellow/92 supports-[backdrop-filter]:backdrop-blur-md supports-[backdrop-filter]:bg-light-yellow/85 ${
+                      isMobileImageSticky ? "sticky top-[4.75rem]" : "relative"
+                    }`}
+                  >
+                    <div
+                      ref={mobileStickyFrameRef}
+                      className="relative w-full overflow-hidden rounded-sm bg-darkgreen/5 h-[min(232px,47vw)] max-h-[268px]"
+                    >
+                      <span
+                        className="sr-only"
+                        aria-live="polite"
+                        aria-atomic="true"
+                      >
+                        {services[activeIndex]?.title}
+                      </span>
+                      {services.map((s, i) => (
+                        <div
+                          key={`mobile-svc-img-${s.title}`}
+                          className="absolute inset-0 bg-cover bg-center motion-safe:transition-[transform,opacity] motion-reduce:transition-none"
+                          style={{
+                            backgroundImage: `url(${s.image})`,
+                            transitionProperty: "transform, opacity",
+                            transitionDuration: `${SERVICE_IMAGE_TRANSITION_MS}ms`,
+                            transitionTimingFunction: SERVICE_IMAGE_EASE,
+                            ...serviceImageLayerStyle(i, activeIndex, s.flipX),
+                          }}
+                          aria-hidden={activeIndex !== i}
+                        />
+                      ))}
+                      <div className="absolute inset-0 pointer-events-none z-[3] opacity-[0.04] mix-blend-overlay rounded-sm">
+                        <div
+                          className="h-full w-full"
+                          style={{
+                            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+                            backgroundRepeat: "repeat",
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="relative flex flex-col pt-2">
+                    <div
+                      className="pointer-events-none absolute left-0 right-0 top-0 z-10 h-14 bg-gradient-to-b from-light-yellow via-light-yellow/96 to-transparent"
+                      aria-hidden
+                    />
+                    {services.map((s, i) => {
+                      const active = activeIndex === i;
+                      return (
+                        <article key={s.title} ref={(el) => setMobileSentinelRef(el, i)}>
+                          {i > 0 ? (
+                            <div
+                              ref={i === services.length - 1 ? recoveryDividerRef : undefined}
+                              className="-mx-1 border-t border-darkgreen/12"
+                              aria-hidden
+                            />
+                          ) : null}
+                          <button
+                            type="button"
+                            className={`w-full cursor-pointer text-left py-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-matcha/40 motion-safe:transition-opacity duration-300 ease-out motion-reduce:transition-none ${
+                              active ? "opacity-100" : "opacity-[0.56]"
+                            }`}
+                            aria-current={active ? "true" : undefined}
+                            onClick={() => activateMobileSection(i)}
+                          >
+                            <h3
+                              className={`cc-h3-services cc-heading-ms transition-colors ${
+                                active ? "text-darkgreen" : "text-darkgreen/65"
+                              }`}
+                            >
+                              {s.title}
+                            </h3>
+                            <p
+                              className={`mt-3 cc-body-18 text-[17px] leading-[25px] transition-colors ${
+                                active ? "text-forest/88" : "text-forest/52"
+                              }`}
+                            >
+                              {s.desc}
+                            </p>
+                          </button>
+                          <Link href={s.href} className={`${SERVICES_LEARN_MORE_CLASS} -mt-1 mb-6`}>
+                            Learn more
+                            <span
+                              className="inline-block leading-none transition-transform duration-300 ease-out group-hover/link:translate-x-0.5"
+                              aria-hidden
+                            >
+                              →
+                            </span>
+                          </Link>
+                        </article>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+              <div className="-mx-6 mt-[30px] border-t border-darkgreen/12 sm:hidden" aria-hidden />
+            </>
+          )}
         </div>
-        <div className="-mx-6 mt-8 border-t border-darkgreen/20" aria-hidden />
       </div>
     </section>
   );
