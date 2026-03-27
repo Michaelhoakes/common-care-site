@@ -3,52 +3,59 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-marigold text-darkgreen py-[40px]">
+    <footer className="bg-darkgreen py-[40px] text-white">
       <div className="w-full px-6 md:px-16">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8">
-          <div className="md:col-span-4 flex flex-col">
-            <Link href="/" className="block w-full max-w-[140px] mb-4" aria-label="Common Care — Home">
+        <div className="mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-12 md:grid-cols-12 md:gap-x-8 md:gap-y-0 md:items-start">
+          <div className="md:col-span-4">
+            <Link href="/" className="mb-4 block w-full max-w-[140px]" aria-label="Common Care — Home">
               <Image
-                src="/CommonCare_Logo_DarkGreen_Tight.svg"
+                src="/CommonCare_Logo_White.svg"
                 alt="Common Care"
                 width={792}
                 height={350}
-                className="w-full h-auto"
+                className="h-auto w-full"
               />
             </Link>
           </div>
 
-          <div className="md:col-start-7 md:col-span-2">
-            <p className="cc-footer-nav-label">Navigate</p>
+          <div className="md:col-span-2 md:col-start-8">
+            <p className="cc-footer-nav-label text-white">Care</p>
             <div className="flex flex-col gap-2 text-sm">
-              <Link className="opacity-80 hover:opacity-100" href="/care">Care</Link>
-              <Link className="opacity-80 hover:opacity-100" href="/first-visit">First Visit</Link>
-              <Link className="opacity-80 hover:opacity-100" href="/about">About</Link>
-              <Link className="opacity-80 hover:opacity-100" href="/insurance">Insurance</Link>
-              <Link className="opacity-80 hover:opacity-100" href="/book">Book an evaluation</Link>
+              <Link className="text-white/85 hover:text-white" href="/care">
+                How we care
+              </Link>
+              <Link className="text-white/85 hover:text-white" href="/first-visit">First Visit</Link>
+              <Link className="text-white/85 hover:text-white" href="/about">
+                About us
+              </Link>
+              <Link className="text-white/85 hover:text-white" href="/about#care-team">
+                Your care team
+              </Link>
+              <Link className="text-white/85 hover:text-white" href="/insurance">Insurance</Link>
             </div>
           </div>
 
-          <div className="md:col-span-2">
-            <p className="cc-footer-nav-label">Details</p>
-            <div className="flex flex-col gap-2 text-sm opacity-80">
-              <p>Los Angeles area</p>
-              <p>In-person sessions</p>
-              <p>60–90 min per visit</p>
-            </div>
-          </div>
-
-          <div className="md:col-span-2 flex flex-col">
-            <p className="cc-footer-nav-label">Contact</p>
-            <div className="flex flex-col gap-2 text-sm opacity-80">
-              <a className="hover:opacity-100" href="mailto:hello@commoncare.co">hello@commoncare.co</a>
-              <a className="hover:opacity-100" href="tel:+13105551234">(310) 555-1234</a>
-              <p>Los Angeles, CA 90028</p>
+          <div className="md:col-span-3 md:col-start-10">
+            <p className="cc-footer-nav-label text-white">Contact</p>
+            <div className="flex flex-col gap-2 text-sm text-white/80">
+              <a
+                className="hover:text-white"
+                href="mailto:hello@commoncare.co"
+                aria-label="Email us at hello@commoncare.co"
+              >
+                Email us
+              </a>
+              <a className="hover:text-white" href="tel:+13105551234">(310) 555-1234</a>
+              <p>
+                7551 Sunset Blvd #201
+                <br />
+                Los Angeles, CA 90046
+              </p>
             </div>
           </div>
         </div>
 
-        <div className="mt-[24px] pt-[24px] border-t border-darkgreen/20 text-xs opacity-60">
+        <div className="mt-[24px] text-xs text-white/60">
           © {new Date().getFullYear()} Common Care
         </div>
       </div>

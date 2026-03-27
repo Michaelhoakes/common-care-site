@@ -16,7 +16,7 @@ export default function Home() {
         <picture className="absolute inset-0">
           <source media="(max-width: 767px)" srcSet="/images/Hero-m.jpg" />
           <img
-            src="/images/Hero-d.jpg"
+            src="/images/gradient-1.png"
             alt=""
             className="h-full w-full object-cover"
             aria-hidden
@@ -238,32 +238,6 @@ export default function Home() {
 
       <IsThisForMeSection />
 
-      {/* Patient quote — editorial */}
-      <section
-        id="patient-quote"
-        className="border-t border-darkgreen/10 py-10 md:py-14 lg:py-20"
-      >
-        <ScrollReveal>
-          <div className="w-full px-6 md:px-16">
-            <div className="mx-auto w-full max-w-[1400px]">
-            <figure className="mx-auto max-w-3xl">
-              <blockquote className="m-0 border-0 p-0">
-                <p className="m-0 text-[1.125rem] md:text-[1.3125rem] leading-[1.5] text-darkgreen font-normal tracking-tight">
-                  &ldquo;I&apos;ve struggled to find practitioners who genuinely listen
-                  and take all of life&apos;s circumstances into account. Even if you
-                  don&apos;t have anything specific that feels &apos;off,&apos;
-                  it&apos;s an opportunity to take inventory of your health.&rdquo;
-                </p>
-              </blockquote>
-              <figcaption className="mt-8 text-[15px] text-forest/65 not-italic">
-                — Patient, Common Care
-              </figcaption>
-            </figure>
-            </div>
-          </div>
-        </ScrollReveal>
-      </section>
-
       <section id="insurance" className="mt-0">
         <div className="w-full border-y border-darkgreen/10 py-10 md:py-14 lg:py-20">
           <ScrollReveal>
@@ -271,7 +245,7 @@ export default function Home() {
               <div className="mx-auto w-full max-w-[1400px]">
               <div className="mx-auto w-full max-w-3xl text-center flex flex-col items-center gap-6">
                 <h2 className="cc-heading-sm">
-                  Out-of-network, with support.
+                  Check your insurance coverage
                 </h2>
                 <p className="max-w-2xl" style={{ margin: 0 }}>
                   We&apos;re out-of-network. We verify your benefits and expected
@@ -290,15 +264,82 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Patient quote — editorial */}
+      <section
+        id="patient-quote"
+        className="border-b border-darkgreen/10 py-10 md:py-14 lg:py-20"
+      >
+        <ScrollReveal>
+          <div className="w-full px-6 md:px-16">
+            <div className="mx-auto w-full max-w-[1400px]">
+              <div className="pb-8 md:pb-10">
+                <p className="cc-eyebrow text-darkgreen m-0">
+                  From our clients
+                </p>
+              </div>
+              <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-14 lg:items-stretch">
+                <figure className="m-0 flex min-h-0 min-w-0 flex-col self-stretch lg:h-full">
+                  <div className="flex h-full min-h-0 w-full flex-col rounded-lg border border-forest/25 p-4 md:p-8">
+                    <blockquote className="m-0 shrink-0 border-0 p-0 not-italic">
+                      <p className="m-0 !mt-0 cc-heading-xs text-darkgreen">
+                        &ldquo;This is a place where you&apos;re truly heard and cared for in
+                        the midst of everything else. Mike doesn&apos;t just treat symptoms; he
+                        helps you understand your body and how stress and daily life shape how
+                        you feel. Even if you don&apos;t have anything specific that feels
+                        &ldquo;off,&rdquo;{" "}
+                        <span className="font-semibold">
+                          it&apos;s an opportunity to take inventory of your health.
+                        </span>
+                        &rdquo;
+                      </p>
+                    </blockquote>
+                    <div className="min-h-0 flex-1" aria-hidden />
+                    <figcaption className="m-0 shrink-0 pt-3 cc-subtext leading-snug text-forest/65 not-italic opacity-100">
+                      &ndash;Natasha B.
+                    </figcaption>
+                  </div>
+                </figure>
+                <figure className="m-0 flex min-h-0 min-w-0 flex-col self-stretch lg:h-full">
+                  <div className="flex h-full min-h-0 w-full flex-col rounded-lg border border-forest/25 p-4 md:p-8">
+                    <blockquote className="m-0 shrink-0 border-0 p-0 not-italic">
+                      <p className="m-0 !mt-0 cc-heading-xs text-darkgreen">
+                        &ldquo;I came in with severe hip pain, unsure if I&apos;d even make it
+                        to race day&mdash;but after working with Mike, everything changed.
+                        His ability to identify the root cause, combined with a deeply
+                        personalized approach, got me back to running stronger than ever in
+                        just weeks.{" "}
+                        <span className="font-semibold">
+                          This isn&apos;t just physical therapy&mdash;it&apos;s the highest
+                          level of care, delivered with expertise, intention, and genuine care.
+                        </span>
+                        &rdquo;
+                      </p>
+                    </blockquote>
+                    <div className="min-h-0 flex-1" aria-hidden />
+                    <figcaption className="m-0 shrink-0 pt-3 cc-subtext leading-snug text-forest/65 not-italic opacity-100">
+                      &ndash; Daniel M.
+                    </figcaption>
+                  </div>
+                </figure>
+              </div>
+            </div>
+          </div>
+        </ScrollReveal>
+      </section>
+
       <section className="relative min-h-[50vh] md:min-h-[55vh] flex flex-col items-center justify-center overflow-hidden py-10 md:py-14 lg:py-20">
         <div className="absolute inset-0">
           <img
-            src="/images/gradient-1.png"
+            src="/images/staff-rev.jpg"
             alt=""
             className="w-full h-full object-cover"
             aria-hidden
           />
         </div>
+        <div
+          className="pointer-events-none absolute inset-0 bg-black/30"
+          aria-hidden
+        />
         <ScrollReveal>
           <div className="relative z-10 w-full px-6 md:px-16">
             <div className="mx-auto w-full max-w-[1400px] text-center text-white">
@@ -307,7 +348,7 @@ export default function Home() {
             </h2>
             <a
               href="/book"
-              className="mt-10 cc-btn-inverse px-6 py-3.5"
+              className="mt-10 cc-btn-primary-white px-6 py-3.5"
             >
               Book an Evaluation
             </a>

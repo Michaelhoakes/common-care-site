@@ -14,9 +14,12 @@ import {
 type AboutTab = "approach" | "team";
 
 const TABS: { id: AboutTab; label: string }[] = [
-  { id: "approach", label: "Common approach" },
+  { id: "approach", label: "Who we are" },
   { id: "team", label: "Your care team" },
 ];
+
+/** Space from viewport top to tab panel when a tab is chosen (header + sticky subnav + ~40px lift vs former 128px scroll-margin). */
+const TAB_PANEL_TOP_GUTTER_PX = 88;
 
 function ApproachPanel({
   id,
@@ -29,82 +32,100 @@ function ApproachPanel({
 }) {
   return (
     <div id={id} role="tabpanel" aria-labelledby={labelledBy} className="outline-none">
-      <h2 className="sr-only">Common approach</h2>
+      <h2 className="sr-only">Who we are</h2>
       <div className="min-w-0 max-w-3xl">
         <section
-          id="long-horizon"
+          id="what-we-believe"
           className="care-section scroll-mt-28"
-          aria-labelledby="about-long-horizon"
+          aria-labelledby="about-what-we-believe"
         >
-          <h3 id="about-long-horizon" className="cc-heading-md max-w-5xl">
-            Long-horizon care
+          <h3 id="about-what-we-believe" className="cc-heading-md max-w-5xl">
+            What we believe
           </h3>
-          <p className="mt-8 max-w-2xl">
-            Lasting outcomes rarely come from rushed appointments or one-size
-            templates. We take time to understand how you move, recover, and
-            carry stress—then build a picture that can grow with you, visit
-            after visit.
-          </p>
-          <p className="mt-6 max-w-2xl">
-            That means honest expectations, follow-through, and room to adjust
-            as life changes. The goal isn’t a perfect week on paper; it&apos;s
-            steady progress you can recognize and keep.
-          </p>
+          <div className="mt-10 flex max-w-2xl flex-col gap-6 md:gap-8">
+            <div className="text-group text-group--flush">
+              <p className="font-medium">Care should be built around people, not systems.</p>
+              <p>
+                Too often, care is shaped by constraints—time limits, volume,
+                and reimbursement. We believe care should adapt to the
+                individual, not the other way around.
+              </p>
+            </div>
+            <div className="text-group text-group--flush">
+              <p className="font-medium">Understanding comes before treatment.</p>
+              <p>
+                Real progress starts with listening. Your story, your history,
+                and your goals matter just as much as any test or diagnosis.
+              </p>
+            </div>
+            <div className="text-group text-group--flush">
+              <p className="font-medium">Getting better is the standard.</p>
+              <p>
+                Care shouldn&apos;t just maintain or manage—it should lead
+                somewhere. We hold ourselves to the expectation that what we do
+                makes a meaningful difference.
+              </p>
+            </div>
+            <div className="text-group text-group--flush">
+              <p className="font-medium">Trust is earned through consistency.</p>
+              <p>
+                We show up prepared, present, and accountable—every session,
+                every interaction.
+              </p>
+            </div>
+          </div>
         </section>
       </div>
 
-      <div className="mt-10 md:mt-12 w-full min-w-0">
-        <div className="relative w-full aspect-[16/9] overflow-hidden rounded-lg bg-forest/5">
-          <Image
-            src="/images/clinic1.jpg"
-            alt="Common Care clinic interior"
-            fill
-            className="object-cover object-center"
-            sizes="(max-width: 768px) 100vw, 1400px"
-          />
-        </div>
-      </div>
-
-      <div className="min-w-0 max-w-3xl pb-[80px]">
+      <div className="min-w-0 max-w-3xl">
         <div
           className="mt-20 md:mt-28 pt-12 md:pt-16 border-t border-forest/10"
           aria-hidden
         />
 
         <section
-          id="what-guides-us"
+          id="what-we-value"
           className="care-section scroll-mt-28"
-          aria-labelledby="about-priorities"
+          aria-labelledby="about-what-we-value"
         >
-          <h3 id="about-priorities" className="cc-heading-md max-w-2xl">
-            Discover our key priorities
+          <h3 id="about-what-we-value" className="cc-heading-md max-w-2xl">
+            What we value
           </h3>
           <ul className="mt-10 max-w-2xl space-y-6">
             <li>
               <p className="font-medium" style={{ marginBottom: 0 }}>
-                Whole-person context
+                Time and attention
               </p>
               <p style={{ marginTop: 8 }}>
-                Movement, stress, sleep, and daily load all shape how you feel.
-                We listen for the full picture.
+                You&apos;re never rushed. We give care the time it actually
+                requires.
               </p>
             </li>
             <li>
               <p className="font-medium" style={{ marginBottom: 0 }}>
-                Evidence-informed practice
+                Clarity
               </p>
               <p style={{ marginTop: 8 }}>
-                We combine clinical experience with what research supports
-                —without jargon or performance theater.
+                You should understand what&apos;s going on in your body and why.
+                We explain, not just treat.
               </p>
             </li>
             <li>
               <p className="font-medium" style={{ marginBottom: 0 }}>
-                Time and dignity
+                Ownership
               </p>
               <p style={{ marginTop: 8 }}>
-                Unhurried sessions, clear explanations, and respect for your
-                goals—not ours.
+                We take responsibility for outcomes, and we equip you to take
+                ownership of your health.
+              </p>
+            </li>
+            <li>
+              <p className="font-medium" style={{ marginBottom: 0 }}>
+                Integrity
+              </p>
+              <p style={{ marginTop: 8 }}>
+                We do what&apos;s right for you, not what&apos;s easiest or most
+                convenient.
               </p>
             </li>
           </ul>
@@ -125,7 +146,18 @@ function ApproachPanel({
             </Link>
           </div>
         </section>
+      </div>
 
+      <div className="mt-10 md:mt-12 w-full min-w-0 pb-[80px]">
+        <div className="relative aspect-[16/9] w-full max-w-full overflow-hidden rounded-lg bg-forest/5 xl:max-w-[min(100%,1100px)] 2xl:max-w-[min(100%,1180px)]">
+          <Image
+            src="/images/Clinic-front2.jpg"
+            alt="Common Care clinic entrance and storefront"
+            fill
+            className="object-cover object-center"
+            sizes="(max-width: 768px) 100vw, (max-width: 1280px) 100vw, 1100px"
+          />
+        </div>
       </div>
     </div>
   );
@@ -141,7 +173,10 @@ function CareTeamPanel({
   return (
     <div id={id} role="tabpanel" aria-labelledby={labelledBy} className="outline-none w-full min-w-0">
       <div className="grid grid-cols-1 gap-24 md:gap-28">
-        <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,11fr)_minmax(0,9fr)] gap-8 lg:gap-16 items-center">
+        <section
+          id="care-team"
+          className="care-section scroll-mt-28 grid grid-cols-1 lg:grid-cols-[minmax(0,11fr)_minmax(0,9fr)] gap-8 lg:gap-16 items-center"
+        >
           <div className="relative w-full aspect-[16/10] overflow-hidden rounded-lg bg-forest/5">
             <Image
               src="/images/Michael.jpg"
@@ -152,7 +187,7 @@ function CareTeamPanel({
             />
           </div>
           <div className="min-w-0 max-w-2xl self-center">
-            <h3 className="cc-heading-xs max-w-xl font-semibold">
+            <h3 className="cc-heading-xs max-w-xl">
               Michael Oakes, DPT
             </h3>
             <div className="text-group pt-3">
@@ -183,7 +218,7 @@ function CareTeamPanel({
             />
           </div>
           <div className="min-w-0 max-w-2xl self-center">
-            <h3 className="cc-heading-xs max-w-xl font-semibold">
+            <h3 className="cc-heading-xs max-w-xl">
               Tommy Wolfe, DPT
             </h3>
             <div className="text-group pt-3">
@@ -231,6 +266,7 @@ export default function AboutTabs() {
   const [indicator, setIndicator] = useState({ left: 0, width: 0 });
   const [reduceMotion, setReduceMotion] = useState(false);
   const panelStartRef = useRef<HTMLDivElement>(null);
+  const scrollAfterTabChangeRef = useRef(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -275,24 +311,89 @@ export default function AboutTabs() {
   }, []);
 
   useEffect(() => {
+    const scrollForHash = () => {
+      const reduce = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+      const behavior: ScrollBehavior = reduce ? "auto" : "smooth";
+      let attempts = 0;
+      const tryScroll = () => {
+        const raw = window.location.hash.replace(/^#/, "");
+        if (!raw) return;
+        const h = decodeURIComponent(raw);
+        if (h === "care-team" || h === "team") {
+          const el = document.getElementById("care-team");
+          if (el) {
+            el.scrollIntoView({ behavior, block: "start" });
+            return;
+          }
+        } else if (
+          h === "long-horizon" ||
+          h === "what-guides-us" ||
+          h === "what-we-believe" ||
+          h === "what-we-value"
+        ) {
+          const targetId =
+            h === "what-guides-us" || h === "what-we-value"
+              ? "what-we-value"
+              : "what-we-believe";
+          const el = document.getElementById(targetId);
+          if (el) {
+            el.scrollIntoView({ behavior, block: "start" });
+            return;
+          }
+        } else {
+          return;
+        }
+        if (attempts++ < 24) requestAnimationFrame(tryScroll);
+      };
+      requestAnimationFrame(tryScroll);
+    };
+
     const apply = () => {
       const h = window.location.hash.replace(/^#/, "");
       if (h === "care-team" || h === "team") setTab("team");
       else setTab("approach");
+      scrollForHash();
     };
     apply();
     window.addEventListener("hashchange", apply);
     return () => window.removeEventListener("hashchange", apply);
   }, []);
 
-  const selectTab = useCallback((next: AboutTab) => {
-    setTab(next);
-    syncHash(next);
-    panelStartRef.current?.scrollIntoView({
+  const scrollTabPanelToGutter = useCallback(() => {
+    const el = panelStartRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const nextY = window.scrollY + rect.top - TAB_PANEL_TOP_GUTTER_PX;
+    window.scrollTo({
+      top: Math.max(0, nextY),
       behavior: reduceMotion ? "auto" : "smooth",
-      block: "start",
     });
-  }, [reduceMotion, syncHash]);
+  }, [reduceMotion]);
+
+  const selectTab = useCallback(
+    (next: AboutTab) => {
+      setTab((prev) => {
+        if (prev !== next) {
+          scrollAfterTabChangeRef.current = true;
+          return next;
+        }
+        queueMicrotask(() => {
+          requestAnimationFrame(() => scrollTabPanelToGutter());
+        });
+        return prev;
+      });
+      syncHash(next);
+    },
+    [syncHash, scrollTabPanelToGutter]
+  );
+
+  useLayoutEffect(() => {
+    if (!scrollAfterTabChangeRef.current) return;
+    scrollAfterTabChangeRef.current = false;
+    scrollTabPanelToGutter();
+  }, [tab, scrollTabPanelToGutter]);
 
   const onKeyDown = useCallback((e: React.KeyboardEvent) => {
     if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
@@ -327,14 +428,13 @@ export default function AboutTabs() {
           <p className="cc-eyebrow text-darkgreen mb-4">About</p>
 
           <h2 className="cc-heading-sm max-w-4xl">
-            Care should never feel generic. We take a deeply personal approach,
-            delivered by a team that&apos;s committed to understanding you and
-            helping you get better.
+            We exist to make care feel personal again—where every person is
+            deeply understood, supported, and cared for.
           </h2>
         </div>
 
         <div
-          className="sticky top-20 z-40 mt-20 md:mt-24 w-screen max-w-[100vw] shrink-0 bg-background ml-[calc(50%-50vw)] pt-4 -mt-px"
+          className="sticky top-14 z-40 mt-20 md:mt-24 w-screen max-w-[100vw] shrink-0 bg-background ml-[calc(50%-50vw)] pt-4 -mt-px sm:top-[60px] md:top-[4.5rem] lg:top-20"
         >
           <div ref={trackRef} className="relative border-b border-forest/12">
             <span
@@ -392,7 +492,7 @@ export default function AboutTabs() {
           </div>
         </div>
 
-        <div ref={panelStartRef} className="mt-[80px] scroll-mt-32">
+        <div ref={panelStartRef} className="mt-[80px]">
           {tab === "approach" ? (
             <ApproachPanel
               id={approachPanelId}

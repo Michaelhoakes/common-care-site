@@ -7,24 +7,19 @@ import { useState, useRef, useEffect } from "react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 type MegaConfig = {
-  sectionTitle: string;
-  description?: string;
   leftLinks: { label: string; href: string }[];
 };
 
 const MEGA_CARE: MegaConfig = {
-  sectionTitle: "CARE",
-  description: "Thoughtful, one-on-one care that unfolds in clear stages.",
   leftLinks: [
-    { label: "Care overview", href: "/care" },
-    { label: "Care Evaluation", href: "/care/360-evaluation" },
-    { label: "Care Sessions", href: "/care/ongoing-care" },
-    { label: "Recovery Care", href: "/care/everyday-wellness" },
+    { label: "Care overview", href: "/care#care-approach" },
+    { label: "Care Evaluation", href: "/care#the-360-evaluation" },
+    { label: "Care Sessions", href: "/care#the-care-sessions" },
+    { label: "Recovery Care", href: "/care#everyday-wellness" },
   ],
 };
 
 const MEGA_FIRST_VISIT: MegaConfig = {
-  sectionTitle: "FIRST VISIT",
   leftLinks: [
     { label: "What to expect", href: "/first-visit#what-to-expect" },
     { label: "FAQs", href: "/first-visit#faqs" },
@@ -32,16 +27,13 @@ const MEGA_FIRST_VISIT: MegaConfig = {
 };
 
 const MEGA_ABOUT: MegaConfig = {
-  sectionTitle: "ABOUT",
-  description: "Meet the people and philosophy behind your care.",
   leftLinks: [
-    { label: "About us", href: "/about" },
-    { label: "Your care team", href: "/about/care-team" },
+    { label: "About us", href: "/about#what-we-believe" },
+    { label: "Your care team", href: "/about#care-team" },
   ],
 };
 
 const MEGA_INSURANCE: MegaConfig = {
-  sectionTitle: "INSURANCE",
   leftLinks: [
     { label: "How it works", href: "/insurance" },
     { label: "Deductible basics", href: "/insurance#deductible" },
@@ -110,38 +102,37 @@ export default function Header() {
     ? "cc-btn-primary"
     : "cc-btn-primary-white";
 
-  const renderContainedDrawer = (id: Exclude<DropdownId, null>) => {
+  const desktopNavLinkClass =
+    "nav-link-ltr-underline flex items-center px-4 py-2 h-9 text-base leading-6 opacity-90 hover:opacity-100 rounded-md outline-none";
+
+  const renderContainedDrawer = (id: "care" | "about") => {
     const config = id === "about" ? MEGA_ABOUT : MEGA_CARE;
     const isOpen = openDropdown === id;
-    const panelWidth = id === "about" ? "w-[340px]" : "w-[390px]";
+    const panelWidth = id === "about" ? "w-[260px]" : "w-[300px]";
+    const menuLabel = id === "about" ? "About menu" : "Care menu";
+    const linksLabel = id === "about" ? "About links" : "Care links";
     return (
       <div
         role="menu"
-        aria-label={`${config.sectionTitle} menu`}
+        aria-label={menuLabel}
         onMouseEnter={() => handleEnter(id)}
         onMouseLeave={handleLeavePanel}
         onKeyDown={(e) => {
           if (e.key === "Escape") setOpenDropdown(null);
         }}
-        className={`absolute left-0 top-full mt-3 ${panelWidth} max-w-[min(92vw,420px)] rounded-2xl border border-forest/10 bg-bone/95 backdrop-blur-sm shadow-[0_8px_24px_-12px_rgba(31,52,20,0.18)] p-5 transition-[opacity,transform,visibility] duration-220 ease-out ${
+        className={`absolute left-0 top-full mt-3 ${panelWidth} max-w-[min(90vw,320px)] rounded-[10px] border border-forest/10 bg-bone/50 backdrop-blur-sm shadow-[0_8px_24px_-12px_rgba(31,52,20,0.18)] p-5 transition-[opacity,transform,visibility] duration-220 ease-out ${
           isOpen
             ? "opacity-100 translate-y-0 visible pointer-events-auto"
             : "opacity-0 -translate-y-1 invisible pointer-events-none"
         }`}
       >
-        <p className="cc-eyebrow mb-2">{config.sectionTitle}</p>
-        {config.description ? (
-          <p className="text-sm leading-relaxed text-forest/75 pr-2">
-            {config.description}
-          </p>
-        ) : null}
-        <nav className="mt-4 flex flex-col gap-2.5" aria-label={`${config.sectionTitle} links`}>
+        <nav className="flex flex-col gap-2.5" aria-label={linksLabel}>
           {config.leftLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               role="menuitem"
-              className="inline-block w-fit text-[17px] leading-snug text-darkgreen border-b border-transparent hover:border-darkgreen/25 transition-colors"
+              className="inline-block w-fit font-sans text-sm font-normal leading-normal text-darkgreen border-b border-transparent hover:border-darkgreen/25 transition-colors"
             >
               {link.label}
             </Link>
@@ -199,7 +190,7 @@ export default function Header() {
                     href="/care"
                     aria-haspopup="menu"
                     aria-expanded={openDropdown === "care"}
-                    className="flex items-center px-4 py-2 h-9 text-base leading-6 opacity-90 hover:opacity-100 rounded-md"
+                    className={desktopNavLinkClass}
                     style={{ color: desktopNavColor }}
                   >
                     Care
@@ -208,7 +199,7 @@ export default function Header() {
                 </div>
                 <Link
                   href="/first-visit"
-                  className="flex items-center px-4 py-2 h-9 text-base leading-6 opacity-90 hover:opacity-100 rounded-md"
+                  className={desktopNavLinkClass}
                   style={{ color: desktopNavColor }}
                 >
                   First Visit
@@ -224,7 +215,7 @@ export default function Header() {
                     href="/about"
                     aria-haspopup="menu"
                     aria-expanded={openDropdown === "about"}
-                    className="flex items-center px-4 py-2 h-9 text-base leading-6 opacity-90 hover:opacity-100 rounded-md"
+                    className={desktopNavLinkClass}
                     style={{ color: desktopNavColor }}
                   >
                     About
@@ -233,7 +224,7 @@ export default function Header() {
                 </div>
                 <Link
                   href="/insurance"
-                  className="flex items-center px-4 py-2 h-9 text-base leading-6 opacity-90 hover:opacity-100 rounded-md"
+                  className={desktopNavLinkClass}
                   style={{ color: desktopNavColor }}
                 >
                   Insurance

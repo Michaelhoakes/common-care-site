@@ -8,7 +8,7 @@ export default function InsurancePage() {
         <section className="care-stacked-panel care-stacked-panel--no-hero relative z-20">
           <div className="w-full px-6 md:px-16">
             <div className="mx-auto max-w-[1400px] pb-24 md:pb-32 pt-8 md:pt-10">
-              <h1 className="cc-heading-compact font-semibold text-darkgreen max-w-3xl">
+              <h1 className="cc-heading-compact text-darkgreen max-w-3xl">
                 Insurance
               </h1>
               <p className="care-lead text-forest/90 mt-4 md:mt-5">

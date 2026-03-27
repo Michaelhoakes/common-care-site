@@ -179,6 +179,31 @@ export default function CarePageClient() {
     };
   }, [isDesktopNav]);
 
+  const scrollSectionIntoView = useCallback(
+    (id: string) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.scrollIntoView({
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+        block: "start",
+      });
+    },
+    [prefersReducedMotion]
+  );
+
+  useEffect(() => {
+    const onHash = () => {
+      const raw = window.location.hash.replace(/^#/, "");
+      if (!raw) return;
+      const id = decodeURIComponent(raw);
+      if (!CARE_SECTION_IDS.includes(id)) return;
+      requestAnimationFrame(() => scrollSectionIntoView(id));
+    };
+    onHash();
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, [scrollSectionIntoView]);
+
   // Section enter animation (once): fade + translate when in view; CSS respects prefers-reduced-motion
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -202,10 +227,7 @@ export default function CarePageClient() {
     return () => observer.disconnect();
   }, []);
 
-  const scrollTo = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
+  const scrollTo = (id: string) => scrollSectionIntoView(id);
 
   const toggleIncluded = (idx: number) => {
     setOpenIncluded((prev) => {
