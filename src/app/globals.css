@@ -1242,9 +1242,16 @@ footer.home-editorial-stack-layer::after {
   animation: hero-text-float 0.9s ease-out 0.5s both !important;
 }
 
+/* Mobile hero: CTAs are outside the headline wrapper — match float-in with a slight stagger */
+.hero-text-float-cta {
+  opacity: 0;
+  animation: hero-text-float 0.9s ease-out 0.62s both !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-text-float-subhead,
-  .hero-text-float-headline {
+  .hero-text-float-headline,
+  .hero-text-float-cta {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;

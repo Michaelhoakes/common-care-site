@@ -108,18 +108,9 @@ const services: ServiceItem[] = [
   },
 ];
 
-/** Shared height so image + text column align; tuned for header + breathing room */
-const STICKY_VIEWPORT_H =
-  "h-[min(580px,calc(100dvh-6rem))] min-h-[440px]";
+/** Desktop shared image frame + reduced-motion rows */
+const STICKY_VIEWPORT_H = "h-[560px] min-h-[440px]";
 const STICKY_IMAGE_CLASSES = `${STICKY_VIEWPORT_H} w-full`;
-
-/** Scroll “chapters” under the sticky text — shorter = less blank scroll, taller = smoother IO */
-const SENTINEL_MIN_H = "min-h-[min(48dvh,480px)]";
-// Make the first chapter advance sooner (Care Evaluation felt longer).
-const SENTINEL_MIN_H_FIRST = "min-h-[min(28dvh,300px)]";
-// Recovery uses the same band as chapter 1; once active, desktop sticky is released so the
-// module scrolls naturally (no long tail — see desktopStickyReleased).
-const SENTINEL_MIN_H_LAST = SENTINEL_MIN_H_FIRST;
 
 /** Shared “Learn more” control — matches editorial cc-text-btn (16px + underline) */
 const SERVICES_LEARN_MORE_CLASS =
@@ -258,18 +249,12 @@ export default function ServicesPanels({
     getReducedMotionSnapshot,
     getReducedMotionServerSnapshot
   );
-  const sentinelRefs = useRef<(HTMLDivElement | null)[]>([]);
   const mobileSentinelRefs = useRef<(HTMLElement | null)[]>([]);
   const mobileStickyFrameRef = useRef<HTMLDivElement | null>(null);
   const recoveryDividerRef = useRef<HTMLDivElement | null>(null);
   const releaseMobileStickyRef = useRef(false);
   const lastScrollYRef = useRef(0);
-  const rafScrollRef = useRef(0);
   const rafScrollMobileRef = useRef(0);
-
-  const setSentinelRef = (el: HTMLDivElement | null, i: number) => {
-    sentinelRefs.current[i] = el;
-  };
 
   const setMobileSentinelRef = (el: HTMLElement | null, i: number) => {
     mobileSentinelRefs.current[i] = el;
@@ -277,12 +262,6 @@ export default function ServicesPanels({
 
   const activateSection = (i: number) => {
     setActiveIndex(i);
-    const el = sentinelRefs.current[i];
-    if (!el) return;
-    el.scrollIntoView({
-      behavior: reducedMotion ? "instant" : "smooth",
-      block: "center",
-    });
   };
 
   const activateMobileSection = (i: number) => {
@@ -294,42 +273,6 @@ export default function ServicesPanels({
       block: "center",
     });
   };
-
-  const lastServiceIdx = services.length - 1;
-  /** Desktop: pin image + copy while chapters 0–1 scroll; release once Recovery Care is active. */
-  const desktopStickyReleased = activeIndex >= lastServiceIdx;
-
-  useEffect(() => {
-    if (reducedMotion) return;
-
-    const run = () => {
-      if (
-        typeof window !== "undefined" &&
-        window.matchMedia("(max-width: 767px)").matches
-      ) {
-        return;
-      }
-      const nodes = sentinelRefs.current.filter(Boolean) as HTMLElement[];
-      if (nodes.length !== services.length) return;
-      const next = pickActiveServiceIndex(nodes);
-      setActiveIndex((prev) => (next !== prev ? next : prev));
-    };
-
-    const schedule = () => {
-      cancelAnimationFrame(rafScrollRef.current);
-      rafScrollRef.current = requestAnimationFrame(run);
-    };
-
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule, { passive: true });
-    schedule();
-
-    return () => {
-      window.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", schedule);
-      cancelAnimationFrame(rafScrollRef.current);
-    };
-  }, [reducedMotion]);
 
   useEffect(() => {
     if (reducedMotion) return;
@@ -429,10 +372,6 @@ export default function ServicesPanels({
         {reducedMotion ? (
           <div className="flex flex-col">
             <div className="mb-10">{servicesIntro}</div>
-            <div
-              className="w-full border-t border-darkgreen/12"
-              aria-hidden
-            />
             <div className="flex flex-col gap-20 lg:gap-24 pt-[22px]">
             {services.map((s, i) => (
               <div
@@ -463,22 +402,12 @@ export default function ServicesPanels({
               </div>
             ))}
             </div>
-            <div
-              className="mt-[22px] w-full border-t border-darkgreen/12"
-              aria-hidden
-            />
           </div>
         ) : (
-          <div className="grid grid-cols-[2.75fr_1.85fr] gap-x-8 lg:gap-x-12 gap-y-10 items-stretch">
-            <div className="col-span-2 w-full min-w-0">{servicesIntro}</div>
-            <div className="relative h-full min-h-0">
-              <div
-                className={
-                  desktopStickyReleased
-                    ? "relative z-10 flex w-full flex-col"
-                    : "sticky top-24 md:top-28 z-10 flex w-full flex-col"
-                }
-              >
+          <div className="flex flex-col">
+            <div className="mb-10">{servicesIntro}</div>
+            <div className="mt-10 grid grid-cols-[2.75fr_1.85fr] gap-x-8 lg:gap-x-12 items-center">
+              <div className="relative min-w-0">
                 <div
                   className={`relative overflow-hidden rounded-sm bg-darkgreen/5 ${STICKY_IMAGE_CLASSES}`}
                 >
@@ -494,6 +423,7 @@ export default function ServicesPanels({
                         transitionProperty: "transform, opacity",
                         transitionDuration: `${SERVICE_IMAGE_TRANSITION_MS}ms`,
                         transitionTimingFunction: SERVICE_IMAGE_EASE,
+                        pointerEvents: "none",
                         ...serviceImageLayerStyle(i, activeIndex, s.flipX),
                       }}
                       aria-hidden={activeIndex !== i}
@@ -511,65 +441,38 @@ export default function ServicesPanels({
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className="min-w-0 flex min-h-0 flex-col h-full">
-              <div
-                className={
-                  desktopStickyReleased
-                    ? "relative z-10 flex w-full flex-col"
-                    : "sticky top-24 md:top-28 z-10 flex w-full flex-col"
-                }
-              >
-                <div
-                  className={`flex w-full min-h-0 items-center ${STICKY_VIEWPORT_H}`}
-                >
-                  <div className="w-full py-2 pl-5 lg:pl-9 pr-4">
-                    <div className="max-w-md">
-                      <div
-                        className="border-t border-darkgreen/12 pt-[22px] -mr-4 lg:-mr-6 w-[calc(100%+1rem)] lg:w-[calc(100%+1.5rem)]"
-                        aria-hidden
-                      />
-                      {services.map((s, i) => (
-                        <div key={s.title}>
-                          {i > 0 ? (
-                            <div
-                              className="border-t border-darkgreen/12 pt-[22px] -mr-4 lg:-mr-6 w-[calc(100%+1rem)] lg:w-[calc(100%+1.5rem)]"
-                              aria-hidden
-                            />
-                          ) : null}
-                          <ServiceTextPanel
-                            s={s}
-                            index={i}
-                            isActive={activeIndex === i}
-                            onActivate={() => activateSection(i)}
-                            isLast={i === services.length - 1}
+              <div className="min-w-0">
+                <div className="w-full py-2 pl-5 lg:pl-9 pr-4">
+                  <div className="max-w-md">
+                    <div
+                      className="border-t border-darkgreen/12 pt-[22px] -mr-4 lg:-mr-6 w-[calc(100%+1rem)] lg:w-[calc(100%+1.5rem)]"
+                      aria-hidden
+                    />
+                    {services.map((s, i) => (
+                      <div key={s.title}>
+                        {i > 0 ? (
+                          <div
+                            className="border-t border-darkgreen/12 pt-[22px] -mr-4 lg:-mr-6 w-[calc(100%+1rem)] lg:w-[calc(100%+1.5rem)]"
+                            aria-hidden
                           />
-                        </div>
-                      ))}
-                      <div
-                        className="border-t border-darkgreen/12 mt-[22px] -mr-4 lg:-mr-6 w-[calc(100%+1rem)] lg:w-[calc(100%+1.5rem)]"
-                        aria-hidden
-                      />
-                    </div>
+                        ) : null}
+                        <ServiceTextPanel
+                          s={s}
+                          index={i}
+                          isActive={activeIndex === i}
+                          onActivate={() => activateSection(i)}
+                          isLast={i === services.length - 1}
+                        />
+                      </div>
+                    ))}
+                    <div
+                      className="border-t border-darkgreen/12 mt-[22px] -mr-4 lg:-mr-6 w-[calc(100%+1rem)] lg:w-[calc(100%+1.5rem)]"
+                      aria-hidden
+                    />
                   </div>
                 </div>
               </div>
-              {services.map((s, i) => (
-                <div
-                  key={`sentinel-${s.title}`}
-                  ref={(el) => setSentinelRef(el, i)}
-                  data-service-index={i}
-                  className={`${
-                    i === 0
-                      ? SENTINEL_MIN_H_FIRST
-                      : i === services.length - 1
-                        ? SENTINEL_MIN_H_LAST
-                        : SENTINEL_MIN_H
-                  } w-full shrink-0`}
-                  aria-hidden
-                />
-              ))}
             </div>
           </div>
         )}
@@ -617,7 +520,6 @@ export default function ServicesPanels({
                   </article>
                 ))}
               </div>
-              <div className="-mx-6 mt-[22px] border-t border-darkgreen/12" aria-hidden />
             </>
           ) : (
             <>
@@ -720,7 +622,6 @@ export default function ServicesPanels({
                   </div>
                 </div>
               </div>
-              <div className="-mx-6 mt-[30px] border-t border-darkgreen/12 sm:hidden" aria-hidden />
             </>
           )}
         </div>

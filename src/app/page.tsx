@@ -43,7 +43,7 @@ export default function Home() {
                   </h1>
                 </div>
               </div>
-              <div className="pointer-events-auto mt-10">
+              <div className="pointer-events-auto mt-10 hero-text-float-cta">
                 <div className="flex flex-wrap gap-2 md:gap-3">
                   <a
                     href="/book"
@@ -132,14 +132,14 @@ export default function Home() {
         <HomeParallaxBleedImage
           src="/images/Clinic-front.jpeg"
           alt=""
-          wrapperClassName="relative w-full h-[200px] md:h-[580px]"
+          wrapperClassName="relative w-full h-[120px] md:h-[500px]"
           imgClassName="h-full w-full object-cover object-[right_70%]"
           motionInsetClassName="-inset-[7%]"
           options={{
             parallaxFactor: 0.048,
             maxOffsetPx: 40,
             lerp: 0.11,
-            scale: 1,
+            scale: 0.93,
           }}
         />
       </section>
@@ -236,39 +236,10 @@ export default function Home() {
 
       <IsThisForMeSection sectionClassName="home-editorial-stack-layer relative z-[5]" />
 
-      <section
-        id="insurance"
-        className="home-editorial-stack-layer relative z-[6] mt-0 bg-background"
-      >
-        <div className="w-full py-10 md:py-14 lg:py-20">
-          <ScrollReveal>
-            <div className="w-full px-6 md:px-16">
-              <div className="mx-auto w-full max-w-[1400px]">
-              <div className="mx-auto w-full max-w-3xl text-center flex flex-col items-center gap-6">
-                <h2 className="cc-heading-sm">
-                  Check your insurance coverage
-                </h2>
-                <p className="max-w-2xl" style={{ margin: 0 }}>
-                  We&apos;re out-of-network. We verify your benefits and expected
-                  cost before your first visit, then handle reimbursement for you.
-                </p>
-                <Link
-                  href="/insurance"
-                  className="cc-btn-primary px-5 py-3"
-                >
-                  Check insurance
-                </Link>
-              </div>
-              </div>
-            </div>
-          </ScrollReveal>
-        </div>
-      </section>
-
       {/* Patient quote — editorial */}
       <section
         id="patient-quote"
-        className="home-editorial-stack-layer relative z-[7] bg-background pt-10 md:pt-14 lg:pt-20 pb-0"
+        className="home-editorial-stack-layer relative z-[6] bg-background pt-10 md:pt-14 lg:pt-20 pb-0"
       >
         <ScrollReveal>
           <div className="w-full px-6 md:px-16">
@@ -328,20 +299,55 @@ export default function Home() {
         </ScrollReveal>
       </section>
 
-      <section className="home-editorial-stack-layer home-editorial-stack-layer--no-trailer relative z-[8] flex min-h-[66vh] md:min-h-[58vh] flex-col items-center justify-center pb-[4.5rem] md:pb-[5.5rem] lg:pb-[7rem]">
+      <section
+        id="insurance"
+        className="home-editorial-stack-layer relative z-[7] mt-0 bg-background"
+      >
+        <div className="w-full pt-12 md:pt-14 lg:pt-[80px]" aria-hidden>
+          <div className="w-full border-t border-darkgreen/12" />
+        </div>
+        <div className="w-full pt-10 pb-0 md:pt-14 lg:pt-20">
+          <ScrollReveal>
+            <div className="w-full px-6 md:px-16">
+              <div className="mx-auto w-full max-w-[1400px]">
+              <div className="mx-auto w-full max-w-3xl text-center flex flex-col items-center gap-6">
+                <h2 className="cc-heading-sm">
+                  Check your insurance coverage
+                </h2>
+                <p className="max-w-2xl" style={{ margin: 0 }}>
+                  We&apos;re out-of-network. We verify your benefits and expected
+                  cost before your first visit, then handle reimbursement for you.
+                </p>
+                <Link
+                  href="/insurance"
+                  className="cc-btn-primary px-5 py-3"
+                >
+                  Check insurance
+                </Link>
+              </div>
+              </div>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      <section className="home-editorial-stack-layer home-editorial-stack-layer--no-trailer relative z-[8] flex min-h-[66vh] md:min-h-[58vh] flex-col items-center justify-end pb-[4.5rem] md:pb-[5.5rem] lg:pb-[7rem]">
         <HomeParallaxBleedImage
           src="/images/staff-rev.jpg"
           alt=""
           wrapperClassName="absolute inset-0 z-0"
-          imgClassName="h-full w-full object-cover"
-          options={{ parallaxFactor: 0.042, maxOffsetPx: 44 }}
+          options={{
+            parallaxFactor: 0.042,
+            maxOffsetPx: 44,
+            scale: 1,
+          }}
         />
         <div
           className="pointer-events-none absolute inset-0 z-[1] bg-black/30"
           aria-hidden
         />
         <ScrollReveal className="relative z-10 w-full min-w-0">
-          <div className="relative w-full px-6 py-10 md:px-16 md:py-14 lg:py-20">
+          <div className="relative w-full px-6 pb-10 md:px-16 md:pb-14 lg:pb-20">
             <div className="mx-auto w-full max-w-[1400px] text-center text-white">
             <h2 className="cc-heading-sm text-white">
               Experience what care should feel like.
