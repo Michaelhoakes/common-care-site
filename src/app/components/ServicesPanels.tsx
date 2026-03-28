@@ -117,8 +117,9 @@ const STICKY_IMAGE_CLASSES = `${STICKY_VIEWPORT_H} w-full`;
 const SENTINEL_MIN_H = "min-h-[min(48dvh,480px)]";
 // Make the first chapter advance sooner (Care Evaluation felt longer).
 const SENTINEL_MIN_H_FIRST = "min-h-[min(28dvh,300px)]";
-// Hold the sticky scene longer after chapter 3 engages before next section appears.
-const SENTINEL_MIN_H_LAST = "min-h-[min(72dvh,760px)]";
+// Recovery uses the same band as chapter 1; once active, desktop sticky is released so the
+// module scrolls naturally (no long tail — see desktopStickyReleased).
+const SENTINEL_MIN_H_LAST = SENTINEL_MIN_H_FIRST;
 
 /** Shared “Learn more” control — matches editorial cc-text-btn (16px + underline) */
 const SERVICES_LEARN_MORE_CLASS =
@@ -245,7 +246,11 @@ function ServiceTextPanel({
   );
 }
 
-export default function ServicesPanels() {
+export default function ServicesPanels({
+  sectionClassName = "",
+}: {
+  sectionClassName?: string;
+}) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [releaseMobileSticky, setReleaseMobileSticky] = useState(false);
   const reducedMotion = useSyncExternalStore(
@@ -289,6 +294,10 @@ export default function ServicesPanels() {
       block: "center",
     });
   };
+
+  const lastServiceIdx = services.length - 1;
+  /** Desktop: pin image + copy while chapters 0–1 scroll; release once Recovery Care is active. */
+  const desktopStickyReleased = activeIndex >= lastServiceIdx;
 
   useEffect(() => {
     if (reducedMotion) return;
@@ -413,7 +422,7 @@ export default function ServicesPanels() {
   return (
     <section
       id="services"
-      className="pt-[30px] pb-10 md:pt-[46px] md:pb-14 lg:pt-[70px] lg:pb-20"
+      className={`pt-[30px] pb-0 md:pt-[46px] md:pb-0 lg:pt-[70px] lg:pb-0 ${sectionClassName}`.trim()}
     >
       <div className="hidden md:block w-full px-6 md:px-16">
         <div className="mx-auto w-full max-w-[1400px]">
@@ -463,7 +472,13 @@ export default function ServicesPanels() {
           <div className="grid grid-cols-[2.75fr_1.85fr] gap-x-8 lg:gap-x-12 gap-y-10 items-stretch">
             <div className="col-span-2 w-full min-w-0">{servicesIntro}</div>
             <div className="relative h-full min-h-0">
-              <div className="sticky top-24 md:top-28 z-10 flex w-full flex-col">
+              <div
+                className={
+                  desktopStickyReleased
+                    ? "relative z-10 flex w-full flex-col"
+                    : "sticky top-24 md:top-28 z-10 flex w-full flex-col"
+                }
+              >
                 <div
                   className={`relative overflow-hidden rounded-sm bg-darkgreen/5 ${STICKY_IMAGE_CLASSES}`}
                 >
@@ -499,7 +514,13 @@ export default function ServicesPanels() {
             </div>
 
             <div className="min-w-0 flex min-h-0 flex-col h-full">
-              <div className="sticky top-24 md:top-28 z-10 flex w-full flex-col">
+              <div
+                className={
+                  desktopStickyReleased
+                    ? "relative z-10 flex w-full flex-col"
+                    : "sticky top-24 md:top-28 z-10 flex w-full flex-col"
+                }
+              >
                 <div
                   className={`flex w-full min-h-0 items-center ${STICKY_VIEWPORT_H}`}
                 >

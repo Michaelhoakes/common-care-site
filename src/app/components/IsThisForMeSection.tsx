@@ -43,7 +43,11 @@ function IsForMeModuleBackground() {
   );
 }
 
-export default function IsThisForMeSection() {
+export default function IsThisForMeSection({
+  sectionClassName = "",
+}: {
+  sectionClassName?: string;
+}) {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [visible, setVisible] = useState(false);
 
@@ -80,12 +84,12 @@ export default function IsThisForMeSection() {
     <section
       id="is-this-for-me"
       ref={sectionRef}
-      className="relative overflow-x-clip"
+      className={`relative overflow-x-clip ${sectionClassName}`.trim()}
     >
-      <div className="relative min-h-0 overflow-x-clip py-10 md:py-14 lg:py-20">
+      <div className="relative min-h-0 overflow-x-clip py-7 md:py-14 lg:py-20">
         <IsForMeModuleBackground />
         <div className="relative z-10 w-full px-6 md:px-16">
-          <div className="mx-auto w-full max-w-[1400px] flex flex-col gap-4">
+          <div className="mx-auto w-full max-w-[1400px] flex flex-col gap-3 md:gap-4">
             <p
               className={`text-sm font-mono font-medium tracking-widest uppercase text-white/85 ${motionCls} ${
                 visible
@@ -111,7 +115,7 @@ export default function IsThisForMeSection() {
               Wherever you are, we meet you there.
             </h2>
 
-            <div className="pt-14 md:pt-16 relative mt-3 md:mt-4">
+            <div className="pt-6 md:pt-16 relative mt-1 md:mt-4">
               <div
                 className="relative hidden md:block w-screen max-w-[100vw] shrink-0 pb-5 md:pb-6"
                 style={{
@@ -130,7 +134,7 @@ export default function IsThisForMeSection() {
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 pt-4 md:pt-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 pt-1 md:pt-4">
                 {STAGES.map((item, i) => {
                   const colDelay = STAGGER.colBase + STAGGER.colStep * i;
                   return (
@@ -154,8 +158,8 @@ export default function IsThisForMeSection() {
                         <h3 className="cc-heading-xs m-0 max-w-xl leading-snug text-white">
                           {item.title}
                         </h3>
-                        <div className="text-group pt-3">
-                          <p className="mt-3 max-w-md text-white/92">
+                        <div className="text-group pt-2 md:pt-3">
+                          <p className="mt-2 md:mt-3 max-w-md text-white/92">
                             {item.body}
                           </p>
                         </div>

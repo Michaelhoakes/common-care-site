@@ -16,7 +16,7 @@ export default function CarePage() {
           <div
             className="absolute inset-0 bg-cover care-parallax-media care-parallax-hero"
             style={{
-              backgroundImage: "url('/images/treatmenttable3.jpg')",
+              backgroundImage: "url('/images/treatmenttable3-opt.jpg')",
               backgroundPosition: "center 42%",
             }}
           />

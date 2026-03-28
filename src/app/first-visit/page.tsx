@@ -16,7 +16,7 @@ export default function FirstVisitPage() {
           <div
             className="absolute inset-0 bg-cover care-parallax-media care-parallax-hero"
             style={{
-              backgroundImage: "url('/images/consult2.jpg')",
+              backgroundImage: "url('/images/consult2a.jpg')",
               backgroundPosition: "center 42%",
             }}
           />

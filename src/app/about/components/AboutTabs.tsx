@@ -179,7 +179,7 @@ function CareTeamPanel({
         >
           <div className="relative w-full aspect-[16/10] overflow-hidden rounded-lg bg-forest/5">
             <Image
-              src="/images/Michael.jpg"
+              src="/images/Michael-opt.jpg"
               alt="Michael Oakes, DPT"
               fill
               className="object-cover object-[50%_60%]"
@@ -210,7 +210,7 @@ function CareTeamPanel({
         <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,11fr)_minmax(0,9fr)] gap-8 lg:gap-16 items-center">
           <div className="relative w-full aspect-[16/10] overflow-hidden rounded-lg bg-forest/5">
             <Image
-              src="/images/Tommy.jpg"
+              src="/images/Tommy-opt.jpg"
               alt="Tommy Wolfe, DPT"
               fill
               className="object-cover object-center"

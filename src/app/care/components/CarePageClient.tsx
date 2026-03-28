@@ -1,8 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useCareParallaxScrollY } from "../../hooks/useCareParallaxScrollY";
-import CareEvaluationCarousel from "./CareEvaluationCarousel";
 import {
   useCareSidebarProgress,
   useMediaQuery,
@@ -31,6 +31,12 @@ type IncludedItem = {
 type ServiceItem = {
   title: string;
   description: string;
+};
+
+type CarePhotoSlide = {
+  src: string;
+  alt: string;
+  imageClassName?: string;
 };
 
 const INCLUDED_ITEMS: IncludedItem[] = [
@@ -66,16 +72,28 @@ const INCLUDED_ITEMS: IncludedItem[] = [
   },
 ];
 
-const WELLNESS_SLIDES = [
+const WELLNESS_SLIDES: readonly CarePhotoSlide[] = [
   {
-    src: "/images/_DSF8789.jpeg",
-    alt: "Calming wellness room environment at Common Care",
+    src: "/images/Redlight.jpeg",
+    alt: "Red light therapy area used for recovery sessions at Common Care",
   },
   {
     src: "/images/Soundbed.jpg",
     alt: "Sound bed setup used for recovery and restorative wellness work",
+    imageClassName: "object-cover object-[center_72%]",
   },
-] as const;
+];
+
+const CARE_EVALUATION_PHOTOS: readonly CarePhotoSlide[] = [
+  {
+    src: "/images/exbody.jpg",
+    alt: "InBody-style body composition readout and analysis context",
+  },
+  {
+    src: "/images/treatment2.jpg",
+    alt: "Hands-on clinical assessment and treatment",
+  },
+];
 
 const CARE_SESSION_SERVICES: ServiceItem[] = [
   {
@@ -112,6 +130,37 @@ const EVERYDAY_WELLNESS_SERVICES: ServiceItem[] = [
       "Compression-based recovery work to help with circulation, swelling management, and post-load reset.",
   },
 ];
+
+function CareTwoColPhotoGrid({
+  slides,
+  ariaLabel,
+}: {
+  slides: readonly CarePhotoSlide[];
+  ariaLabel: string;
+}) {
+  return (
+    <div
+      className="mt-10 md:mt-12 grid grid-cols-2 gap-3 sm:gap-4 md:gap-5 w-full"
+      role="group"
+      aria-label={ariaLabel}
+    >
+      {slides.map((slide, i) => (
+        <div key={slide.src} className="min-w-0">
+          <div className="relative aspect-[4/3] w-full min-h-0 overflow-hidden rounded-xl bg-forest/5">
+            <Image
+              src={slide.src}
+              alt={slide.alt}
+              fill
+              className={slide.imageClassName ?? "object-cover object-center"}
+              sizes="(max-width: 1024px) 45vw, 560px"
+              priority={i === 0}
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function CarePageClient() {
   const isDesktopNav = useMediaQuery("(min-width: 1024px)");
@@ -370,7 +419,10 @@ export default function CarePageClient() {
               <p className="care-body text-forest/90">
                 An in-depth look at your overall health, combining your story with objective data to truly understand what’s going on.
               </p>
-              <CareEvaluationCarousel />
+              <CareTwoColPhotoGrid
+                slides={CARE_EVALUATION_PHOTOS}
+                ariaLabel="Care Evaluation imagery"
+              />
               <p className="care-label text-forest/60 mt-10 md:mt-12">
                 What’s included
               </p>
@@ -603,7 +655,7 @@ export default function CarePageClient() {
                 );
               })}
             </div>
-            <CareEvaluationCarousel
+            <CareTwoColPhotoGrid
               slides={WELLNESS_SLIDES}
               ariaLabel="Recovery Care imagery"
             />

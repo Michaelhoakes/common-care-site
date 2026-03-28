@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Footer() {
+export default function Footer({ className = "" }: { className?: string }) {
   return (
-    <footer className="bg-darkgreen py-[40px] text-white">
+    <footer className={`bg-darkgreen py-[40px] text-white ${className}`.trim()}>
       <div className="w-full px-6 md:px-16">
         <div className="mx-auto grid w-full max-w-[1400px] grid-cols-1 gap-12 md:grid-cols-12 md:gap-x-8 md:gap-y-0 md:items-start">
           <div className="md:col-span-4">

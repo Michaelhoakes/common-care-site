@@ -214,16 +214,16 @@ p.cc-body-18 {
   }
 }
 
-/* Home hero CTAs: larger desktop size with balanced mobile scaling */
+/* Home hero CTAs: slightly compact on small phones; scale up from sm */
 .cc-hero-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
-  padding: 0 18px;
+  min-height: 42px;
+  padding: 0 16px;
   border-radius: 9999px;
   font-family: "neue-haas-grotesk-text", var(--font-inter), system-ui, sans-serif;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 1;
   font-weight: var(--cc-cta-font-weight);
   white-space: nowrap;
@@ -971,6 +971,54 @@ kbd {
   margin-top: var(--cc-block);
 }
 
+/* Home: structural section overlap (editorial depth; full-bleed, not card UI) */
+.home-editorial-stack-layer {
+  position: relative;
+  margin-top: -4.5rem;
+}
+@media (min-width: 768px) {
+  .home-editorial-stack-layer {
+    margin-top: -5.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .home-editorial-stack-layer {
+    margin-top: -7rem;
+  }
+}
+
+/*
+ * Bottom band matching the pull-up overlap so foreground copy isn’t left in the
+ * strip covered by the next section’s background (higher z-index).
+ * Spacer via ::after avoids fighting Tailwind py-* on the same element.
+ */
+.home-editorial-stack-layer::after {
+  content: "";
+  display: block;
+  width: 100%;
+  flex-shrink: 0;
+  height: 4.5rem;
+  pointer-events: none;
+}
+@media (min-width: 768px) {
+  .home-editorial-stack-layer::after {
+    height: 5.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .home-editorial-stack-layer::after {
+    height: 7rem;
+  }
+}
+footer.home-editorial-stack-layer::after {
+  display: none;
+}
+
+/* Full-bleed CTA: no flow ::after (it skews flex vertical centering); use padding for footer overlap */
+.home-editorial-stack-layer--no-trailer::after {
+  display: none;
+}
+
 /* Soft, diffused page gradient — green-tinted, atmospheric */
 .gradient-page {
   background: linear-gradient(
@@ -1144,7 +1192,7 @@ kbd {
 
 /* Hero: mobile uses bounded viewport height; desktop keeps fixed composition */
 .hero-full-viewport {
-  min-height: clamp(540px, 66svh, 760px);
+  min-height: clamp(560px, 70svh, 780px);
 }
 
 @media (min-width: 768px) {

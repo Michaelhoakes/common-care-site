@@ -4,7 +4,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  Bars3Icon,
+  XMarkIcon,
+  MinusIcon,
+  PlusIcon,
+} from "@heroicons/react/24/outline";
 
 type MegaConfig = {
   leftLinks: { label: string; href: string }[];
@@ -44,6 +49,21 @@ const MEGA_INSURANCE: MegaConfig = {
 type DropdownId = "care" | "first-visit" | "about" | "insurance" | null;
 
 const SCROLL_THRESHOLD = 56;
+
+const MOBILE_DRAWER_SUBMENU_LINK =
+  "text-[18px] leading-snug py-2 text-white/85";
+
+const MOBILE_DRAWER_HEADING =
+  "cc-heading-sm flex w-full items-center justify-between py-3 text-left text-white";
+
+function MobileDrawerAccordionGlyph({ expanded }: { expanded: boolean }) {
+  const cls = "h-7 w-7 shrink-0 text-white pointer-events-none";
+  return expanded ? (
+    <MinusIcon className={cls} strokeWidth={1} aria-hidden />
+  ) : (
+    <PlusIcon className={cls} strokeWidth={1} aria-hidden />
+  );
+}
 
 export default function Header() {
   const pathname = usePathname();
@@ -256,25 +276,26 @@ export default function Header() {
       {/* Mobile menu */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 z-40 md:hidden bg-bone/95 backdrop-blur-sm pt-24 px-6 pb-12 overflow-auto"
+          className="fixed inset-0 z-40 md:hidden flex flex-col bg-darkgreen text-white"
           role="dialog"
           aria-label="Menu"
         >
+          <div className="flex-1 overflow-auto pt-24 px-6 pb-6">
           <div className="flex flex-col gap-2">
             {/* Care accordion */}
             <div>
               <button
                 type="button"
                 onClick={() => setMobileAccordion(mobileAccordion === "care" ? null : "care")}
-                className="flex w-full items-center justify-between py-3 text-left text-darkgreen font-medium"
+                className={MOBILE_DRAWER_HEADING}
               >
                 Care
-                <span className="text-lg">{mobileAccordion === "care" ? "−" : "+"}</span>
+                <MobileDrawerAccordionGlyph expanded={mobileAccordion === "care"} />
               </button>
               {mobileAccordion === "care" && (
-                <div className="pl-4 pb-4 flex flex-col gap-2">
+                <div className="pl-4 pb-4 flex flex-col gap-1">
                   {MEGA_CARE.leftLinks.map((l) => (
-                    <Link key={l.href} href={l.href} className="text-darkgreen/80 text-sm py-1" onClick={() => setMobileOpen(false)}>
+                    <Link key={l.href} href={l.href} className={MOBILE_DRAWER_SUBMENU_LINK} onClick={() => setMobileOpen(false)}>
                       {l.label}
                     </Link>
                   ))}
@@ -286,15 +307,15 @@ export default function Header() {
               <button
                 type="button"
                 onClick={() => setMobileAccordion(mobileAccordion === "first-visit" ? null : "first-visit")}
-                className="flex w-full items-center justify-between py-3 text-left text-darkgreen font-medium"
+                className={MOBILE_DRAWER_HEADING}
               >
                 First Visit
-                <span className="text-lg">{mobileAccordion === "first-visit" ? "−" : "+"}</span>
+                <MobileDrawerAccordionGlyph expanded={mobileAccordion === "first-visit"} />
               </button>
               {mobileAccordion === "first-visit" && (
-                <div className="pl-4 pb-4 flex flex-col gap-2">
+                <div className="pl-4 pb-4 flex flex-col gap-1">
                   {MEGA_FIRST_VISIT.leftLinks.map((l) => (
-                    <Link key={l.href} href={l.href} className="text-darkgreen/80 text-sm py-1" onClick={() => setMobileOpen(false)}>
+                    <Link key={l.href} href={l.href} className={MOBILE_DRAWER_SUBMENU_LINK} onClick={() => setMobileOpen(false)}>
                       {l.label}
                     </Link>
                   ))}
@@ -306,15 +327,15 @@ export default function Header() {
               <button
                 type="button"
                 onClick={() => setMobileAccordion(mobileAccordion === "about" ? null : "about")}
-                className="flex w-full items-center justify-between py-3 text-left text-darkgreen font-medium"
+                className={MOBILE_DRAWER_HEADING}
               >
                 About
-                <span className="text-lg">{mobileAccordion === "about" ? "−" : "+"}</span>
+                <MobileDrawerAccordionGlyph expanded={mobileAccordion === "about"} />
               </button>
               {mobileAccordion === "about" && (
-                <div className="pl-4 pb-4 flex flex-col gap-2">
+                <div className="pl-4 pb-4 flex flex-col gap-1">
                   {MEGA_ABOUT.leftLinks.map((l) => (
-                    <Link key={l.href} href={l.href} className="text-darkgreen/80 text-sm py-1" onClick={() => setMobileOpen(false)}>
+                    <Link key={l.href} href={l.href} className={MOBILE_DRAWER_SUBMENU_LINK} onClick={() => setMobileOpen(false)}>
                       {l.label}
                     </Link>
                   ))}
@@ -326,21 +347,31 @@ export default function Header() {
               <button
                 type="button"
                 onClick={() => setMobileAccordion(mobileAccordion === "insurance" ? null : "insurance")}
-                className="flex w-full items-center justify-between py-3 text-left text-darkgreen font-medium"
+                className={MOBILE_DRAWER_HEADING}
               >
                 Insurance
-                <span className="text-lg">{mobileAccordion === "insurance" ? "−" : "+"}</span>
+                <MobileDrawerAccordionGlyph expanded={mobileAccordion === "insurance"} />
               </button>
               {mobileAccordion === "insurance" && (
-                <div className="pl-4 pb-4 flex flex-col gap-2">
+                <div className="pl-4 pb-4 flex flex-col gap-1">
                   {MEGA_INSURANCE.leftLinks.map((l) => (
-                    <Link key={l.href} href={l.href} className="text-darkgreen/80 text-sm py-1" onClick={() => setMobileOpen(false)}>
+                    <Link key={l.href} href={l.href} className={MOBILE_DRAWER_SUBMENU_LINK} onClick={() => setMobileOpen(false)}>
                       {l.label}
                     </Link>
                   ))}
                 </div>
               )}
             </div>
+          </div>
+          </div>
+          <div className="shrink-0 px-6 pt-4 pb-[calc(40px+env(safe-area-inset-bottom,0px))]">
+            <Link
+              href="/book"
+              className="cc-btn-primary-white w-full justify-center px-6 py-3.5 text-[17px]"
+              onClick={() => setMobileOpen(false)}
+            >
+              Book an evaluation
+            </Link>
           </div>
         </div>
       )}

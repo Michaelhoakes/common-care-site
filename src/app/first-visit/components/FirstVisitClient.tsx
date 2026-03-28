@@ -216,7 +216,7 @@ export default function FirstVisitClient() {
             <div className="mt-8 mb-8 w-full max-w-none overflow-hidden rounded-xl bg-forest/[0.03]">
               <div className="relative aspect-[21/9] min-h-[220px] w-full sm:aspect-[2/1] md:min-h-[280px]">
                 <img
-                  src="/images/consult1a-nog.jpg"
+                  src="/images/consult1a.jpg"
                   alt="Care team consultation in the clinic treatment room"
                   className="absolute inset-0 h-full w-full object-cover object-center scale-[1.26]"
                   loading="lazy"

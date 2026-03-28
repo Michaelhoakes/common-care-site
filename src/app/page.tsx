@@ -5,28 +5,29 @@ import ScrollReveal from "./components/ScrollReveal";
 import IsThisForMeSection from "./components/IsThisForMeSection";
 import HeroSubheadRuleLine from "./components/HeroSubheadRuleLine";
 import Footer from "./components/Footer";
+import HomeHeroParallaxBackground from "./components/HomeHeroParallaxBackground";
+import HomeParallaxBleedImage from "./components/HomeParallaxBleedImage";
+import HomeBrownParallaxPicture from "./components/HomeBrownParallaxPicture";
 
 export default function Home() {
   return (
-    <div className="min-h-screen gradient-page">
-  <main className="relative z-10 min-h-screen">
+    <div className="min-h-screen bg-background">
+  <main className="relative z-10 min-h-screen bg-background">
       <Header />
 
-      <section className="hero-full-viewport relative flex flex-col overflow-hidden -mt-28 md:-mt-[7.5rem]">
-        <picture className="absolute inset-0">
-          <source media="(max-width: 767px)" srcSet="/images/Hero-m.jpg" />
-          <img
-            src="/images/gradient-1.png"
-            alt=""
-            className="h-full w-full object-cover"
-            aria-hidden
-          />
-        </picture>
+      <section className="hero-full-viewport relative z-0 flex flex-col overflow-hidden -mt-28 md:-mt-[7.5rem]">
+        <HomeHeroParallaxBackground />
 
         <div className="relative z-10 w-full h-full min-h-full">
           {/* Mobile: flex-based vertical distribution for consistent spacing across devices */}
           <div className="md:hidden z-10 h-full min-h-full px-6 pointer-events-none">
-            <div className="mx-auto flex h-full min-h-full w-full max-w-[1400px] flex-col pt-40 pb-10 pointer-events-none">
+            <div
+              className="mx-auto flex h-full min-h-full w-full max-w-[1400px] flex-col pt-40 pointer-events-none"
+              style={{
+                paddingBottom:
+                  "max(8rem, calc(env(safe-area-inset-bottom, 0px) + 2.5rem))",
+              }}
+            >
               <div className="flex flex-col gap-12">
                 <div className="pointer-events-auto ml-auto max-w-[22rem] text-left">
                   <HeroSubheadRuleLine />
@@ -43,7 +44,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="pointer-events-auto mt-10">
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-2 md:gap-3">
                   <a
                     href="/book"
                     className="cc-hero-btn cc-hero-btn-primary"
@@ -71,7 +72,7 @@ export default function Home() {
                 </h5>
               </div>
 
-              <div className="pointer-events-auto absolute bottom-0 left-0 pb-32 md:pb-36 max-w-[min(48rem,100%)] md:max-w-[52rem] lg:max-w-[56rem] hero-text-float-headline">
+              <div className="pointer-events-auto absolute bottom-0 left-0 pb-40 md:pb-44 max-w-[min(48rem,100%)] md:max-w-[52rem] lg:max-w-[56rem] hero-text-float-headline">
                 <h1 className="cc-heading-xl text-white">
                   Exceptional care
                   <br />
@@ -100,10 +101,10 @@ export default function Home() {
       {/* Why we exist — editorial */}
       <section
         id="why-we-exist"
-        className="py-10 md:py-14 lg:py-20"
+        className="home-editorial-stack-layer relative z-[1] bg-background pt-10 md:pt-14 lg:pt-20 pb-0"
       >
         <ScrollReveal>
-          <div className="w-full px-6 md:px-16">
+          <div className="w-full px-6 md:px-16 pb-10 md:pb-14 lg:pb-20">
             <div className="mx-auto w-full max-w-[1400px]">
               <div className="min-w-0 max-w-3xl">
                 <p className="cc-eyebrow text-darkgreen mt-0 mb-4">
@@ -125,35 +126,32 @@ export default function Home() {
 
       {/* Edge-to-edge clinic photo */}
       <section
-        className="relative w-screen max-w-[100vw] ml-[calc(50%-50vw)] min-w-0 mt-0 overflow-hidden"
+        className="home-editorial-stack-layer relative z-[2] w-screen max-w-[100vw] ml-[calc(50%-50vw)] min-w-0 mt-0 overflow-hidden"
         aria-hidden
       >
-        <img
+        <HomeParallaxBleedImage
           src="/images/Clinic-front.jpeg"
           alt=""
-          className="w-full h-[200px] md:h-[580px] object-cover object-[right_70%] scale-[1.08] origin-[100%_70%]"
+          wrapperClassName="relative w-full h-[200px] md:h-[580px]"
+          imgClassName="h-full w-full object-cover object-[right_70%]"
+          motionInsetClassName="-inset-[7%]"
+          options={{
+            parallaxFactor: 0.048,
+            maxOffsetPx: 40,
+            lerp: 0.11,
+            scale: 1,
+          }}
         />
       </section>
 
       {/* What makes us different */}
       <section
         id="what-makes-us-different"
-        className="relative overflow-hidden py-10 md:py-14 lg:py-20 lg:border-b lg:border-white/10"
+        className="home-editorial-stack-layer relative z-[3] pt-10 md:pt-14 lg:pt-20 pb-0"
       >
-        <picture className="absolute inset-0" aria-hidden>
-          <source media="(min-width: 1024px)" srcSet="/images/Brown-d.jpg" />
-          <img
-            src="/images/Brown-m.jpg"
-            alt=""
-            className="h-full w-full object-cover"
-          />
-        </picture>
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-black/10"
-        />
+        <HomeBrownParallaxPicture />
         <ScrollReveal>
-        <div className="relative z-10 w-full px-6 md:px-16">
+        <div className="relative z-10 w-full px-6 md:px-16 pb-10 md:pb-14 lg:pb-20">
           <div className="mx-auto w-full max-w-[1400px]">
             <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_520px] lg:gap-x-14 lg:items-start">
               <h2 className="cc-heading-sm max-w-4xl text-balance text-white">
@@ -234,12 +232,15 @@ export default function Home() {
         </ScrollReveal>
       </section>
 
-      <ServicesPanels />
+      <ServicesPanels sectionClassName="home-editorial-stack-layer relative z-[4] bg-background" />
 
-      <IsThisForMeSection />
+      <IsThisForMeSection sectionClassName="home-editorial-stack-layer relative z-[5]" />
 
-      <section id="insurance" className="mt-0">
-        <div className="w-full border-y border-darkgreen/10 py-10 md:py-14 lg:py-20">
+      <section
+        id="insurance"
+        className="home-editorial-stack-layer relative z-[6] mt-0 bg-background"
+      >
+        <div className="w-full py-10 md:py-14 lg:py-20">
           <ScrollReveal>
             <div className="w-full px-6 md:px-16">
               <div className="mx-auto w-full max-w-[1400px]">
@@ -267,7 +268,7 @@ export default function Home() {
       {/* Patient quote — editorial */}
       <section
         id="patient-quote"
-        className="border-b border-darkgreen/10 py-10 md:py-14 lg:py-20"
+        className="home-editorial-stack-layer relative z-[7] bg-background pt-10 md:pt-14 lg:pt-20 pb-0"
       >
         <ScrollReveal>
           <div className="w-full px-6 md:px-16">
@@ -327,37 +328,36 @@ export default function Home() {
         </ScrollReveal>
       </section>
 
-      <section className="relative min-h-[50vh] md:min-h-[55vh] flex flex-col items-center justify-center overflow-hidden py-10 md:py-14 lg:py-20">
-        <div className="absolute inset-0">
-          <img
-            src="/images/staff-rev.jpg"
-            alt=""
-            className="w-full h-full object-cover"
-            aria-hidden
-          />
-        </div>
+      <section className="home-editorial-stack-layer home-editorial-stack-layer--no-trailer relative z-[8] flex min-h-[66vh] md:min-h-[58vh] flex-col items-center justify-center pb-[4.5rem] md:pb-[5.5rem] lg:pb-[7rem]">
+        <HomeParallaxBleedImage
+          src="/images/staff-rev.jpg"
+          alt=""
+          wrapperClassName="absolute inset-0 z-0"
+          imgClassName="h-full w-full object-cover"
+          options={{ parallaxFactor: 0.042, maxOffsetPx: 44 }}
+        />
         <div
-          className="pointer-events-none absolute inset-0 bg-black/30"
+          className="pointer-events-none absolute inset-0 z-[1] bg-black/30"
           aria-hidden
         />
-        <ScrollReveal>
-          <div className="relative z-10 w-full px-6 md:px-16">
+        <ScrollReveal className="relative z-10 w-full min-w-0">
+          <div className="relative w-full px-6 py-10 md:px-16 md:py-14 lg:py-20">
             <div className="mx-auto w-full max-w-[1400px] text-center text-white">
             <h2 className="cc-heading-sm text-white">
-              Precision care, built around you.
+              Experience what care should feel like.
             </h2>
             <a
               href="/book"
               className="mt-10 cc-btn-primary-white px-6 py-3.5"
             >
-              Book an Evaluation
+              Book an evaluation
             </a>
             </div>
           </div>
         </ScrollReveal>
       </section>
 
-      <Footer />
+      <Footer className="home-editorial-stack-layer relative z-[9]" />
       </main>
     </div>
   );
