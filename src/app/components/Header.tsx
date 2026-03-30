@@ -20,7 +20,7 @@ const MEGA_CARE: MegaConfig = {
     { label: "Care overview", href: "/care#care-approach" },
     { label: "Care Evaluation", href: "/care#the-360-evaluation" },
     { label: "Care Sessions", href: "/care#the-care-sessions" },
-    { label: "Recovery Care", href: "/care#everyday-wellness" },
+    { label: "Wellness Care", href: "/care#everyday-wellness" },
   ],
 };
 

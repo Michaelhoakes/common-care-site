@@ -2,67 +2,14 @@
 
 import Link from "next/link";
 import type { CSSProperties } from "react";
-import { useRef, useState, useEffect, useSyncExternalStore } from "react";
-
-/**
- * Pick the service whose sentinel overlaps a horizontal “focus band” in the viewport
- * (accounts for sticky header). More stable than IntersectionObserver + ratio sorting.
- */
-function pickActiveServiceIndex(
-  sentinels: HTMLElement[],
-  opts?: { bandTopRatio?: number; bandBottomRatio?: number }
-): number {
-  if (sentinels.length === 0) return 0;
-  const vh = window.innerHeight;
-  const bandTopRatio = opts?.bandTopRatio ?? 0.22;
-  const bandBottomRatio = opts?.bandBottomRatio ?? 0.5;
-  // Focus band moved upward so chapter feedback feels sooner.
-  const bandTop = vh * bandTopRatio;
-  const bandBottom = vh * bandBottomRatio;
-  const bandCenter = (bandTop + bandBottom) / 2;
-
-  let best = 0;
-  let bestScore = -1;
-  let bestCenterDist = Infinity;
-
-  for (let i = 0; i < sentinels.length; i++) {
-    const r = sentinels[i].getBoundingClientRect();
-    const lo = Math.max(r.top, bandTop);
-    const hi = Math.min(r.bottom, bandBottom);
-    const overlap = Math.max(0, hi - lo);
-    // Bias the first chapter so we transition to chapter 2 sooner.
-    const weightedOverlap = i === 0 ? overlap * 0.72 : overlap;
-    const mid = (r.top + r.bottom) / 2;
-    const centerDist = Math.abs(mid - bandCenter);
-
-    const wins =
-      weightedOverlap > bestScore ||
-      (overlap === bestScore &&
-        weightedOverlap > 0 &&
-        centerDist < bestCenterDist);
-    if (wins) {
-      bestScore = weightedOverlap;
-      best = i;
-      bestCenterDist = centerDist;
-    }
-  }
-
-  if (bestScore <= 0) {
-    let bestDist = Infinity;
-    for (let i = 0; i < sentinels.length; i++) {
-      const r = sentinels[i].getBoundingClientRect();
-      const mid = (r.top + r.bottom) / 2;
-      // Same early-transition bias when no chapter overlaps the focus band.
-      const d = Math.abs(mid - bandCenter) + (i === 0 ? vh * 0.1 : 0);
-      if (d < bestDist) {
-        bestDist = d;
-        best = i;
-      }
-    }
-  }
-
-  return best;
-}
+import PulseDot from "./PulseDot";
+import {
+  useState,
+  useSyncExternalStore,
+  useRef,
+  useLayoutEffect,
+  useCallback,
+} from "react";
 
 function subscribeReducedMotion(onChange: () => void) {
   const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -83,6 +30,7 @@ type ServiceItem = {
   desc: string;
   image: string;
   href: string;
+  ctaLabel: string;
   flipX?: boolean;
 };
 
@@ -92,19 +40,22 @@ const services: ServiceItem[] = [
     desc: "An in-depth look at your overall health, combining your story with objective data to truly understand what’s going on.",
     image: "/images/_DSF8105.jpeg",
     href: "/care#the-360-evaluation",
+    ctaLabel: "How we evaluate",
   },
   {
     title: "Care Sessions",
     desc: "One-on-one sessions built around you, combining hands-on care, movement, and advanced technology to support how your body heals.",
     image: "/images/_DSF8511.jpeg",
     href: "/care#the-care-sessions",
+    ctaLabel: "How we treat",
     flipX: true,
   },
   {
-    title: "Recovery Care",
-    desc: "Targeted recovery sessions designed to support how your body adapts to training, stress, and daily demands so you can sustain and improve your overall health.",
+    title: "Wellness Care",
+    desc: "Sessions designed to support your nervous system, reduce stress, and help your body feel more balanced and regulated.",
     image: "/images/_DSF8789.jpeg",
     href: "/care#everyday-wellness",
+    ctaLabel: "How we help you reset",
   },
 ];
 
@@ -112,7 +63,7 @@ const services: ServiceItem[] = [
 const STICKY_VIEWPORT_H = "h-[560px] min-h-[440px]";
 const STICKY_IMAGE_CLASSES = `${STICKY_VIEWPORT_H} w-full`;
 
-/** Shared “Learn more” control — matches editorial cc-text-btn (16px + underline) */
+/** Shared service CTA — matches editorial cc-text-btn (16px + underline) */
 const SERVICES_LEARN_MORE_CLASS =
   "cc-text-btn !inline-flex items-center gap-1.5 group/link transition-opacity duration-300 ease-out hover:opacity-80";
 
@@ -148,6 +99,7 @@ function ServiceTextPanel({
   setRef,
   dense,
   isLast,
+  idPrefix = "",
 }: {
   s: ServiceItem;
   index: number;
@@ -156,9 +108,13 @@ function ServiceTextPanel({
   setRef?: (el: HTMLDivElement | null, i: number) => void;
   dense?: boolean;
   isLast?: boolean;
+  /** Avoid duplicate ids when desktop + mobile panels both mount (CSS-hidden). */
+  idPrefix?: string;
 }) {
   const showDetail = dense || isActive;
   const interactive = !dense && !isActive;
+  const triggerId = `${idPrefix}service-panel-trigger-${index}`;
+  const detailId = `${idPrefix}service-panel-detail-${index}`;
 
   return (
     <div
@@ -175,13 +131,13 @@ function ServiceTextPanel({
             ? "group cursor-pointer py-1 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-matcha/40"
             : ""
         }`}
-        id={`service-panel-trigger-${index}`}
+        id={triggerId}
         {...(interactive
           ? {
               role: "button" as const,
               tabIndex: 0,
               "aria-expanded": false,
-              "aria-controls": `service-panel-detail-${index}`,
+              "aria-controls": detailId,
             }
           : {})}
         onClick={(e) => {
@@ -197,22 +153,21 @@ function ServiceTextPanel({
           }
         }}
       >
-        <h3
-          className={`cc-h3-services cc-heading-ms mt-0 transition-colors ${
-            showDetail
-              ? "opacity-100"
-              : "opacity-40 group-hover:opacity-100 group-focus-within:opacity-100"
-          }`}
-        >
-          {s.title}
-        </h3>
+        <div className="flex items-center gap-2.5">
+          {!dense && isActive ? (
+            <PulseDot color="matcha" size="sm" />
+          ) : null}
+          <h3 className="cc-h3-services cc-heading-ms mt-0 flex-1 min-w-0 transition-colors opacity-100">
+            {s.title}
+          </h3>
+        </div>
       </div>
 
       {showDetail && (
         <div
-          id={`service-panel-detail-${index}`}
+          id={detailId}
           role="region"
-          aria-labelledby={`service-panel-trigger-${index}`}
+          aria-labelledby={triggerId}
           className="services-panel-detail-reveal flex flex-col gap-4"
         >
           <p className="max-w-md cc-body-18 text-[18px] leading-[26px]">
@@ -223,7 +178,7 @@ function ServiceTextPanel({
             className={`${SERVICES_LEARN_MORE_CLASS} w-fit`}
             onClick={(e) => e.stopPropagation()}
           >
-            Learn more
+            {s.ctaLabel}
             <span
               className="inline-block leading-none transition-transform duration-300 ease-out group-hover/link:translate-x-0.5"
               aria-hidden
@@ -243,129 +198,60 @@ export default function ServicesPanels({
   sectionClassName?: string;
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [releaseMobileSticky, setReleaseMobileSticky] = useState(false);
   const reducedMotion = useSyncExternalStore(
     subscribeReducedMotion,
     getReducedMotionSnapshot,
     getReducedMotionServerSnapshot
   );
-  const mobileSentinelRefs = useRef<(HTMLElement | null)[]>([]);
-  const mobileStickyFrameRef = useRef<HTMLDivElement | null>(null);
-  const recoveryDividerRef = useRef<HTMLDivElement | null>(null);
-  const releaseMobileStickyRef = useRef(false);
-  const lastScrollYRef = useRef(0);
-  const rafScrollMobileRef = useRef(0);
+  /** Set when user picks a row on mobile; cleared after scroll runs (Figma-style anchor). */
+  const pendingMobileScrollIndexRef = useRef<number | null>(null);
+  const mobileRowRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  const setMobileSentinelRef = (el: HTMLElement | null, i: number) => {
-    mobileSentinelRefs.current[i] = el;
-  };
+  const setMobileRowRef = useCallback((el: HTMLDivElement | null, index: number) => {
+    mobileRowRefs.current[index] = el;
+  }, []);
 
   const activateSection = (i: number) => {
     setActiveIndex(i);
   };
 
+  /** Mobile only: expand row + scroll it into view under the sticky header after paint. */
   const activateMobileSection = (i: number) => {
+    pendingMobileScrollIndexRef.current = i;
     setActiveIndex(i);
-    const el = mobileSentinelRefs.current[i];
-    if (!el) return;
-    el.scrollIntoView({
-      behavior: reducedMotion ? "instant" : "smooth",
-      block: "center",
-    });
   };
 
-  useEffect(() => {
-    if (reducedMotion) return;
+  useLayoutEffect(() => {
+    const i = pendingMobileScrollIndexRef.current;
+    if (i === null) return;
+    pendingMobileScrollIndexRef.current = null;
 
-    const run = () => {
-      if (
-        typeof window === "undefined" ||
-        !window.matchMedia("(max-width: 767px)").matches
-      ) {
-        return;
-      }
-      const nodes = mobileSentinelRefs.current.filter(Boolean) as HTMLElement[];
-      if (nodes.length !== services.length) return;
-      const next = pickActiveServiceIndex(nodes, {
-        bandTopRatio: 0.32,
-        bandBottomRatio: 0.62,
-      });
-      setActiveIndex((prev) => (next !== prev ? next : prev));
-    };
+    if (typeof window === "undefined") return;
+    if (!window.matchMedia("(max-width: 767px)").matches) return;
 
-    const schedule = () => {
-      cancelAnimationFrame(rafScrollMobileRef.current);
-      rafScrollMobileRef.current = requestAnimationFrame(run);
-    };
+    const el = mobileRowRefs.current[i];
+    if (!el) return;
 
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule, { passive: true });
-    schedule();
+    const instant =
+      reducedMotion || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    return () => {
-      window.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", schedule);
-      cancelAnimationFrame(rafScrollMobileRef.current);
-    };
-  }, [reducedMotion]);
+    el.scrollIntoView({
+      behavior: instant ? "instant" : "smooth",
+      block: "start",
+      inline: "nearest",
+    });
+  }, [activeIndex, reducedMotion]);
 
   const servicesIntro = (
     <h2 className="cc-heading-sm w-full max-w-4xl md:max-w-none xl:max-w-4xl text-balance">
-      A complete approach to understanding your body, your story, and your overall health.
+      A complete approach to understanding, treating, and sustaining your health.
     </h2>
   );
-  // Release sticky exactly when image frame bottom reaches the divider before Recovery.
-  const isMobileImageSticky = !releaseMobileSticky;
-
-  useEffect(() => {
-    releaseMobileStickyRef.current = releaseMobileSticky;
-  }, [releaseMobileSticky]);
-
-  useEffect(() => {
-    const run = () => {
-      if (
-        typeof window === "undefined" ||
-        !window.matchMedia("(max-width: 767px)").matches
-      ) {
-        setReleaseMobileSticky(false);
-        return;
-      }
-      const stickyFrame = mobileStickyFrameRef.current;
-      const divider = recoveryDividerRef.current;
-      if (!stickyFrame || !divider) return;
-
-      const frameBottom = stickyFrame.getBoundingClientRect().bottom;
-      const dividerTop = divider.getBoundingClientRect().top;
-      const delta = frameBottom - dividerTop;
-      const currentY = window.scrollY;
-      const scrollingDown = currentY >= lastScrollYRef.current;
-      lastScrollYRef.current = currentY;
-
-      // Hysteresis prevents rapid sticky/unsticky oscillation at the crossover.
-      if (!releaseMobileStickyRef.current && scrollingDown && delta >= 2) {
-        setReleaseMobileSticky(true);
-        return;
-      }
-      if (releaseMobileStickyRef.current && !scrollingDown && delta <= -28) {
-        setReleaseMobileSticky(false);
-      }
-    };
-
-    const schedule = () => requestAnimationFrame(run);
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule, { passive: true });
-    schedule();
-
-    return () => {
-      window.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", schedule);
-    };
-  }, []);
 
   return (
     <section
       id="services"
-      className={`pt-[30px] pb-0 md:pt-[46px] md:pb-0 lg:pt-[70px] lg:pb-0 ${sectionClassName}`.trim()}
+      className={`pt-10 pb-10 max-md:after:hidden md:pt-[46px] md:pb-20 lg:pt-[70px] ${sectionClassName}`.trim()}
     >
       <div className="hidden md:block w-full px-6 md:px-16">
         <div className="mx-auto w-full max-w-[1400px]">
@@ -481,13 +367,49 @@ export default function ServicesPanels({
 
       <div className="flex flex-col w-full md:hidden px-6 md:px-16">
         <div className="mx-auto w-full max-w-[1400px]">
-          {reducedMotion ? (
-            <>
-              <div className="mb-10">{servicesIntro}</div>
-              <div className="flex flex-col gap-8 pt-[22px]">
-                {services.map((s, i) => (
-                  <article key={s.title}>
-                    <div className="relative aspect-[4/3] overflow-hidden rounded-sm bg-darkgreen/5">
+          <div className="mb-10">{servicesIntro}</div>
+          <div className="flex flex-col mt-[22px]">
+            <div
+              className="border-t border-darkgreen/12 pt-[22px] -mx-1 w-[calc(100%+0.5rem)]"
+              aria-hidden
+            />
+            {services.map((s, i) => {
+              const expanded = reducedMotion || activeIndex === i;
+              const MOBILE_RULE =
+                "border-t border-darkgreen/12 -mx-1 w-[calc(100%+0.5rem)]";
+              /** Collapsed stack: line above row i. Skip when previous row already ends with a trailing divider (selected). */
+              const showLeadingDivider =
+                i > 0 &&
+                (reducedMotion || activeIndex !== i - 1);
+              /** Selected row: line after its block (incl. image) before the next title. */
+              const showTrailingDivider =
+                !reducedMotion &&
+                activeIndex === i &&
+                i < services.length - 1;
+
+              return (
+                <div
+                  key={s.title}
+                  ref={(el) => setMobileRowRef(el, i)}
+                  className="flex flex-col scroll-mt-28"
+                >
+                  {showLeadingDivider ? (
+                    <div
+                      className={`${MOBILE_RULE} pt-[22px]`}
+                      aria-hidden
+                    />
+                  ) : null}
+                  <ServiceTextPanel
+                    s={s}
+                    index={i}
+                    isActive={activeIndex === i}
+                    onActivate={() => activateMobileSection(i)}
+                    dense={reducedMotion}
+                    isLast={i === services.length - 1}
+                    idPrefix="mobile-"
+                  />
+                  {expanded ? (
+                    <div className="relative mt-6 aspect-[4/3] w-full overflow-hidden rounded-sm bg-darkgreen/5">
                       <div
                         className="absolute inset-0 bg-cover bg-center"
                         style={{
@@ -495,67 +417,6 @@ export default function ServicesPanels({
                           transform: s.flipX ? "scaleX(-1)" : undefined,
                         }}
                       />
-                    </div>
-                    <div className="pt-6 flex flex-col gap-3">
-                      <span className="text-xs font-mono font-medium tracking-[0.22em] uppercase text-matcha/80">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <h3 className="cc-h3-services cc-heading-ms">{s.title}</h3>
-                      <p className="cc-body-18 text-[18px] leading-[26px]">
-                        {s.desc}
-                      </p>
-                    </div>
-                    <Link
-                      href={s.href}
-                      className={`${SERVICES_LEARN_MORE_CLASS} mt-4`}
-                    >
-                      Learn more
-                      <span
-                        className="inline-block leading-none transition-transform duration-300 ease-out group-hover/link:translate-x-0.5"
-                        aria-hidden
-                      >
-                        →
-                      </span>
-                    </Link>
-                  </article>
-                ))}
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="mb-10">{servicesIntro}</div>
-              <div className="mt-[22px]">
-                <div className="relative">
-                  <div
-                    className={`z-20 -mx-1 px-1 pb-3 bg-light-yellow/92 supports-[backdrop-filter]:backdrop-blur-md supports-[backdrop-filter]:bg-light-yellow/85 ${
-                      isMobileImageSticky ? "sticky top-[4.75rem]" : "relative"
-                    }`}
-                  >
-                    <div
-                      ref={mobileStickyFrameRef}
-                      className="relative w-full overflow-hidden rounded-sm bg-darkgreen/5 h-[min(232px,47vw)] max-h-[268px]"
-                    >
-                      <span
-                        className="sr-only"
-                        aria-live="polite"
-                        aria-atomic="true"
-                      >
-                        {services[activeIndex]?.title}
-                      </span>
-                      {services.map((s, i) => (
-                        <div
-                          key={`mobile-svc-img-${s.title}`}
-                          className="absolute inset-0 bg-cover bg-center motion-safe:transition-[transform,opacity] motion-reduce:transition-none"
-                          style={{
-                            backgroundImage: `url(${s.image})`,
-                            transitionProperty: "transform, opacity",
-                            transitionDuration: `${SERVICE_IMAGE_TRANSITION_MS}ms`,
-                            transitionTimingFunction: SERVICE_IMAGE_EASE,
-                            ...serviceImageLayerStyle(i, activeIndex, s.flipX),
-                          }}
-                          aria-hidden={activeIndex !== i}
-                        />
-                      ))}
                       <div className="absolute inset-0 pointer-events-none z-[3] opacity-[0.04] mix-blend-overlay rounded-sm">
                         <div
                           className="h-full w-full"
@@ -566,64 +427,21 @@ export default function ServicesPanels({
                         />
                       </div>
                     </div>
-                  </div>
-
-                  <div className="relative flex flex-col pt-2">
+                  ) : null}
+                  {showTrailingDivider ? (
                     <div
-                      className="pointer-events-none absolute left-0 right-0 top-0 z-10 h-14 bg-gradient-to-b from-light-yellow via-light-yellow/96 to-transparent"
+                      className={`${MOBILE_RULE} mt-[22px] pt-[22px]`}
                       aria-hidden
                     />
-                    {services.map((s, i) => {
-                      const active = activeIndex === i;
-                      return (
-                        <article key={s.title} ref={(el) => setMobileSentinelRef(el, i)}>
-                          {i > 0 ? (
-                            <div
-                              ref={i === services.length - 1 ? recoveryDividerRef : undefined}
-                              className="-mx-1 border-t border-darkgreen/12"
-                              aria-hidden
-                            />
-                          ) : null}
-                          <button
-                            type="button"
-                            className={`w-full cursor-pointer text-left py-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-matcha/40 motion-safe:transition-opacity duration-300 ease-out motion-reduce:transition-none ${
-                              active ? "opacity-100" : "opacity-[0.56]"
-                            }`}
-                            aria-current={active ? "true" : undefined}
-                            onClick={() => activateMobileSection(i)}
-                          >
-                            <h3
-                              className={`cc-h3-services cc-heading-ms transition-colors ${
-                                active ? "text-darkgreen" : "text-darkgreen/65"
-                              }`}
-                            >
-                              {s.title}
-                            </h3>
-                            <p
-                              className={`mt-3 cc-body-18 text-[17px] leading-[25px] transition-colors ${
-                                active ? "text-forest/88" : "text-forest/52"
-                              }`}
-                            >
-                              {s.desc}
-                            </p>
-                          </button>
-                          <Link href={s.href} className={`${SERVICES_LEARN_MORE_CLASS} -mt-1 mb-6`}>
-                            Learn more
-                            <span
-                              className="inline-block leading-none transition-transform duration-300 ease-out group-hover/link:translate-x-0.5"
-                              aria-hidden
-                            >
-                              →
-                            </span>
-                          </Link>
-                        </article>
-                      );
-                    })}
-                  </div>
+                  ) : null}
                 </div>
-              </div>
-            </>
-          )}
+              );
+            })}
+            <div
+              className="border-t border-darkgreen/12 mt-[22px] -mx-1 w-[calc(100%+0.5rem)]"
+              aria-hidden
+            />
+          </div>
         </div>
       </div>
     </section>

@@ -2,17 +2,22 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import {
+  CheckCircleIcon,
+  DocumentTextIcon,
+} from "@heroicons/react/24/outline";
 import { useCareParallaxScrollY } from "../../hooks/useCareParallaxScrollY";
 import {
   useCareSidebarProgress,
   useMediaQuery,
   usePrefersReducedMotion,
 } from "../../care/hooks/useCareSidebarProgress";
+import StickySectionSubnav from "../../components/StickySectionSubnav";
 
 const FIRST_VISIT_NAV_SECTIONS = [
-  { id: "what-to-expect", label: "What happens during your visit" },
+  { id: "what-to-expect", label: "What happens during your first visit" },
   { id: "how-to-prepare", label: "How to prepare" },
-  { id: "parking-arrival", label: "Parking & arrival" },
+  { id: "parking-arrival", label: "Location & parking" },
   { id: "insurance-payment", label: "Insurance & payment" },
   { id: "faqs", label: "FAQs" },
 ] as const;
@@ -26,29 +31,82 @@ const FAQ_ITEMS: { title: string; description: string }[] = [
   {
     title: "How long is the first visit?",
     description:
-      "Your first visit is typically 60–90 minutes. We use the time to understand your history, run through the evaluation, and discuss next steps — no rush.",
+      "Your first visit typically lasts 1.5 to 2 hours, allowing us enough time to fully understand you, complete the evaluation, and begin treatment.",
   },
   {
     title: "Do I need a referral?",
     description:
-      "No. You can book directly. If you have relevant imaging or notes from another provider, bring them — they can help us understand your picture.",
+      "No referral is needed. You can book directly with us without one. If you have relevant imaging or notes from another provider, bring them—they can help us understand what’s going on.",
   },
   {
-    title: "What if I need to reschedule?",
+    title: "What should I wear to my first visit?",
     description:
-      "Contact us as soon as you can. We ask for at least 24 hours’ notice when possible so we can offer the slot to someone else.",
+      "Wear clothing that allows us to assess how your body moves. Shorts are recommended, and for women, a sports bra with yoga pants or shorts, or a loose-fitting top.",
   },
   {
-    title: "Will I get exercises or homework?",
+    title: "Will I receive treatment during my first visit?",
     description:
-      "Often, yes. We’ll give you clear next steps — exercises, posture cues, or habits — to work on between visits so progress continues at home.",
+      "Yes. In addition to the evaluation, we use the remaining time to begin treatment so you leave with a clearer understanding and already feeling a difference.",
   },
   {
-    title: "What happens after the first visit?",
+    title: "Do you accept insurance?",
     description:
-      "We’ll outline a plan and next steps before you leave. That might mean follow-up sessions, home support, or both — depending on what’s right for you.",
+      "We are an out-of-network provider. We offer a complimentary benefits check and can help you understand your coverage and expected cost before getting started.",
+  },
+  {
+    title: "What makes your approach different?",
+    description:
+      "We take the time to understand you fully, combining your story with objective data and delivering one-on-one care that is built entirely around you.",
+  },
+  {
+    title: "What if I’m not currently in pain?",
+    description:
+      "Many of our clients come in to better understand their body, address underlying issues, or support how they feel and function day to day.",
+  },
+  {
+    title: "Can I use my HSA or FSA?",
+    description:
+      "Yes, HSA and FSA funds can typically be used for our services.",
   },
 ];
+
+function IconCoffeeCup({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      className={className}
+      aria-hidden
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M18 8h1a3 3 0 0 1 0 6h-1" />
+      <path d="M2 8h14v9a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V8z" />
+      <line x1="6" y1="1" x2="6" y2="4" />
+      <line x1="10" y1="1" x2="10" y2="4" />
+      <line x1="14" y1="1" x2="14" y2="4" />
+    </svg>
+  );
+}
+
+function IconWaterDrop({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      className={className}
+      aria-hidden
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 2.5c-3.5 5-6 8.62-6 11.5a6 6 0 0 0 12 0c0-2.88-2.5-6.5-6-11.5z" />
+    </svg>
+  );
+}
 
 export default function FirstVisitClient() {
   useCareParallaxScrollY();
@@ -131,9 +189,15 @@ export default function FirstVisitClient() {
 
   return (
     <div className="w-full px-6 md:px-16">
-      <div className="mx-auto max-w-[1400px] mt-14 md:mt-18 lg:mt-20 flex flex-col lg:flex-row lg:gap-20 xl:gap-24 lg:items-stretch">
+      <div className="mx-auto max-w-[1400px] mt-0 lg:mt-20 flex flex-col lg:flex-row lg:gap-20 xl:gap-24 lg:items-stretch">
+        <StickySectionSubnav
+          sections={FIRST_VISIT_NAV_SECTIONS}
+          activeId={activeId}
+          onSelect={scrollTo}
+          ariaLabel="On this page"
+        />
         <nav
-          className="care-sidebar w-full lg:w-[260px] xl:w-[280px] shrink-0"
+          className="care-sidebar hidden lg:block w-full lg:w-[260px] xl:w-[280px] shrink-0"
           aria-label="On this page"
         >
           <div className="relative lg:h-full">
@@ -207,11 +271,15 @@ export default function FirstVisitClient() {
             }}
             className="care-section scroll-mt-28"
           >
-            <h2 className="cc-heading-md">What happens during your visit</h2>
+            <h2 className="cc-heading-md">
+              What happens during your first visit
+            </h2>
             <p className="care-body text-forest/90">
-              Your first visit is 60–90 minutes. We use that time to understand
-              your history, run through the evaluation, and make sure you leave
-              with clear next steps.
+              Your first visit is focused on understanding you—your symptoms,
+              your history, and how your body is functioning as a whole. We begin
+              with a conversation, then move into a detailed evaluation using
+              both hands-on assessment and objective data to guide your care
+              moving forward.
             </p>
             <div className="mt-8 mb-8 w-full max-w-none overflow-hidden rounded-xl bg-forest/[0.03]">
               <div className="relative aspect-[21/9] min-h-[220px] w-full sm:aspect-[2/1] md:min-h-[280px]">
@@ -224,57 +292,92 @@ export default function FirstVisitClient() {
                 />
               </div>
             </div>
-            <ol className="care-list text-forest/90 mt-0">
-              <li className="flex gap-4">
-                <span className="text-matcha font-medium shrink-0">1.</span>
-                <div>
-                  <span className="font-medium text-forest/95">
-                    Conversation about history and goals.
+            <ol className="care-list text-forest/90 mt-0 flex flex-col gap-4 list-none p-0 [&>li+li]:!m-0">
+              <li className="flex gap-4 items-start">
+                <span className="text-matcha font-medium shrink-0 leading-[1.6]">
+                  1.
+                </span>
+                <div className="min-w-0 flex flex-col gap-1.5">
+                  <span className="font-medium text-forest/95 block">
+                    Conversation
                   </span>
-                  <span className="text-forest/85">
-                    {" "}
-                    We’ll talk through what brought you in, your goals, and any
-                    relevant health history.
-                  </span>
+                  <p className="!m-0 text-forest/85 leading-relaxed">
+                    We start by understanding what you&apos;re experiencing, your
+                    history, and what you&apos;re hoping to get out of care.
+                  </p>
                 </div>
               </li>
-              <li className="flex gap-4">
-                <span className="text-matcha font-medium shrink-0">2.</span>
-                <div>
-                  <span className="font-medium text-forest/95">
-                    Movement assessment.
+              <li className="flex gap-4 items-start">
+                <span className="text-matcha font-medium shrink-0 leading-[1.6]">
+                  2.
+                </span>
+                <div className="min-w-0 flex flex-col gap-1.5">
+                  <span className="font-medium text-forest/95 block">
+                    Movement assessment
                   </span>
-                  <span className="text-forest/85">
-                    {" "}
-                    We’ll look at how you move — posture, gait, and relevant
-                    tests — to build a clear picture.
-                  </span>
+                  <p className="!m-0 text-forest/85 leading-relaxed">
+                    We look at how your body moves, identifying patterns,
+                    limitations, and areas that may be contributing to what
+                    you&apos;re feeling.
+                  </p>
                 </div>
               </li>
-              <li className="flex gap-4">
-                <span className="text-matcha font-medium shrink-0">3.</span>
-                <div>
-                  <span className="font-medium text-forest/95">
-                    Hands-on or guided care.
+              <li className="flex gap-4 items-start">
+                <span className="text-matcha font-medium shrink-0 leading-[1.6]">
+                  3.
+                </span>
+                <div className="min-w-0 flex flex-col gap-1.5">
+                  <span className="font-medium text-forest/95 block">
+                    Objective testing
                   </span>
-                  <span className="text-forest/85">
-                    {" "}
-                    Depending on what we find, we may include manual therapy,
-                    movement guidance, or both.
-                  </span>
+                  <p className="!m-0 text-forest/85 leading-relaxed">
+                    We gather data using advanced technologies to better
+                    understand how different aspects of your health are
+                    functioning.
+                  </p>
                 </div>
               </li>
-              <li className="flex gap-4">
-                <span className="text-matcha font-medium shrink-0">4.</span>
-                <div>
-                  <span className="font-medium text-forest/95">
-                    Clear next steps before you leave.
+              <li className="flex gap-4 items-start">
+                <span className="text-matcha font-medium shrink-0 leading-[1.6]">
+                  4.
+                </span>
+                <div className="min-w-0 flex flex-col gap-1.5">
+                  <span className="font-medium text-forest/95 block">
+                    Hands-on assessment
                   </span>
-                  <span className="text-forest/85">
-                    {" "}
-                    We’ll summarize what we’re seeing and what we recommend —
-                    follow-up sessions, home support, or both.
+                  <p className="!m-0 text-forest/85 leading-relaxed">
+                    We assess how your body feels and responds to touch, helping
+                    us identify areas of tension, restriction, or imbalance.
+                  </p>
+                </div>
+              </li>
+              <li className="flex gap-4 items-start">
+                <span className="text-matcha font-medium shrink-0 leading-[1.6]">
+                  5.
+                </span>
+                <div className="min-w-0 flex flex-col gap-1.5">
+                  <span className="font-medium text-forest/95 block">
+                    Putting it all together
                   </span>
+                  <p className="!m-0 text-forest/85 leading-relaxed">
+                    We sit down with you to walk through what the data shows and
+                    how it connects to what you&apos;ve shared, then outline a
+                    clear plan for moving forward.
+                  </p>
+                </div>
+              </li>
+              <li className="flex gap-4 items-start">
+                <span className="text-matcha font-medium shrink-0 leading-[1.6]">
+                  6.
+                </span>
+                <div className="min-w-0 flex flex-col gap-1.5">
+                  <span className="font-medium text-forest/95 block">
+                    Initial treatment
+                  </span>
+                  <p className="!m-0 text-forest/85 leading-relaxed">
+                    We use the remaining time to begin addressing what we&apos;ve
+                    found, so you leave with clarity and already feeling better.
+                  </p>
                 </div>
               </li>
             </ol>
@@ -294,33 +397,59 @@ export default function FirstVisitClient() {
           >
             <h2 className="cc-heading-md">How to prepare</h2>
             <p className="care-body text-forest/90">
-              No special preparation required. A few simple things help:
+              A few simple steps ahead of your visit can help ensure your
+              evaluation is as accurate and informative as possible.
             </p>
-            <ul className="care-list text-forest/90 mt-5">
-              <li className="flex gap-3">
-                <span className="text-matcha shrink-0" aria-hidden>
-                  —
-                </span>
-                <span>Wear comfortable clothing you can move in.</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="text-matcha shrink-0" aria-hidden>
-                  —
+            <ul className="care-list text-forest/90 mt-5 space-y-4">
+              <li className="flex gap-3 items-start">
+                <span
+                  className="mt-0.5 flex shrink-0 text-forest/65"
+                  aria-hidden
+                >
+                  <CheckCircleIcon className="h-5 w-5" strokeWidth={1.5} />
                 </span>
                 <span>
-                  Bring any relevant medical history or imaging (if you have
-                  it).
+                  Wear clothing that allows us to assess how your body moves.
                 </span>
               </li>
-              <li className="flex gap-3">
-                <span className="text-matcha shrink-0" aria-hidden>
-                  —
+              <li className="flex gap-3 items-start">
+                <span
+                  className="mt-0.5 flex shrink-0 text-forest/65"
+                  aria-hidden
+                >
+                  <IconCoffeeCup className="h-5 w-5" />
                 </span>
-                <span>Arrive a few minutes early so you’re not rushed.</span>
+                <span>
+                  Avoid eating or caffeine for 3–4 hours beforehand.
+                </span>
+              </li>
+              <li className="flex gap-3 items-start">
+                <span
+                  className="mt-0.5 flex shrink-0 text-forest/65"
+                  aria-hidden
+                >
+                  <IconWaterDrop className="h-5 w-5" />
+                </span>
+                <span>
+                  Maintain normal hydration, but avoid drinking large amounts of
+                  water right before your visit.
+                </span>
+              </li>
+              <li className="flex gap-3 items-start">
+                <span
+                  className="mt-0.5 flex shrink-0 text-forest/65"
+                  aria-hidden
+                >
+                  <DocumentTextIcon className="h-5 w-5" strokeWidth={1.5} />
+                </span>
+                <span>
+                  Bring any relevant imaging or reports, if available.
+                </span>
               </li>
             </ul>
-            <p className="care-body text-forest/80 mt-6">
-              That’s it. We’ll guide you through the rest.
+            <p className="care-body text-forest/90 mt-6">
+              We recommend arriving a few minutes early to settle in, get
+              comfortable, and complete any forms before your evaluation.
             </p>
           </section>
 
@@ -336,15 +465,34 @@ export default function FirstVisitClient() {
             }}
             className="care-section scroll-mt-28"
           >
-            <h2 className="cc-heading-md">Parking & arrival</h2>
+            <h2 className="cc-heading-md">Location & parking</h2>
             <p className="care-body text-forest/90">
-              [Placeholder: Parking is available in the building lot or street
-              parking nearby. We’ll send specific directions and access
-              instructions when you book.]
+              <a
+                href="https://maps.google.com/?q=7551+Sunset+Blvd+Suite+201+West+Hollywood"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="cc-text-btn inline"
+              >
+                <strong>7551 Sunset Blvd #201 Los Angeles, CA 90046</strong>
+              </a>
+              <strong> (West Hollywood)</strong>
             </p>
-            <p className="care-body text-forest/90 mt-5">
-              Plan to arrive about 5 minutes early. If you have trouble finding
-              us or need building access, give us a call.
+            <p className="care-label text-forest/60 mt-10 md:mt-12 !mb-0">
+              Finding us
+            </p>
+            <p className="care-body text-forest/90 !mt-3">
+              You&apos;ll find us on the corner of Sierra Bonita and Sunset Blvd,
+              around the corner from Dog E Den and across from John Kelly
+              Chocolates. Enter through the front entrance and ring suite 201 at
+              the intercom and you will be let in promptly.
+            </p>
+            <p className="care-label text-forest/60 mt-10 md:mt-12 !mb-0">
+              Parking
+            </p>
+            <p className="care-body text-forest/90 !mt-3">
+              Street parking is available, with ample parking typically found
+              along Sierra Bonita. Metered 10-hour parking is also available
+              directly in front of the building.
             </p>
           </section>
 
@@ -361,18 +509,39 @@ export default function FirstVisitClient() {
             className="care-section scroll-mt-28"
           >
             <h2 className="cc-heading-md">Insurance & payment</h2>
-            <p className="care-body text-forest/90">
-              We operate on a cash-based model and can provide documentation for
-              you to submit to your insurer if you have out-of-network benefits.
-              If you’re not sure about coverage, we offer an eligibility check —
-              we’ll look into your benefits and follow up within 24 hours.
+            <p className="care-body text-forest/90 !mb-0">
+              We are an out-of-network provider. If you&apos;d like to use your
+              insurance, we offer a complimentary benefits check and typically
+              respond within 24 hours with a clear understanding of your
+              coverage and expected cost.
             </p>
             <Link
               href="/insurance#eligibility"
-              className="mt-6 cc-text-btn"
+              className="mt-2 inline-flex cc-text-btn"
             >
               Check insurance eligibility →
             </Link>
+            <p className="care-body text-forest/90 mt-5">
+              If you choose to move forward, our billing team handles claim
+              submissions on your behalf—so you don&apos;t have to navigate
+              the process on your own.
+            </p>
+            <div className="mt-6">
+              <p className="care-body text-forest/90 !mt-0 !mx-0 !mb-1">
+                If you&apos;re paying <strong>out of pocket</strong>, our rates
+                are:
+              </p>
+              <ul className="care-list text-forest/90 mt-3 flex flex-col gap-1.5 [&>li]:!m-0">
+                <li>Care Evaluation: $225</li>
+                <li>Care Sessions: $175</li>
+                <li>Wellness Care: $125</li>
+              </ul>
+            </div>
+            <p className="mt-5 max-w-2xl text-sm leading-relaxed text-forest/65 !mb-0">
+              Care Evaluations and Care Sessions are conducted one-on-one with
+              a Doctor of Physical Therapy. Wellness Care is guided by a trained
+              Care Specialist as part of your plan of care.
+            </p>
           </section>
 
           <div
@@ -388,12 +557,11 @@ export default function FirstVisitClient() {
             className="care-section scroll-mt-28"
           >
             <h2 className="cc-heading-md">FAQs</h2>
-            <div className="mt-6 min-w-0">
+            <div className="min-w-0">
               <p className="care-body text-forest/90">
-                Quick answers on timing, preparation, and what happens after
-                your visit.
+                Common questions about your first visit.
               </p>
-              <div className="care-included-grid text-forest/90 !grid-cols-1">
+              <div className="care-included-grid text-forest/90 !grid-cols-1 mt-6 md:mt-8">
                 {FAQ_ITEMS.map((item, idx) => {
                   const isOpen = openFaqs.has(idx);
                   const buttonId = `faq-toggle-${idx}`;
@@ -406,7 +574,7 @@ export default function FirstVisitClient() {
                         onClick={() => toggleFaq(idx)}
                         aria-expanded={isOpen}
                         aria-controls={panelId}
-                        className="w-full flex items-start justify-between gap-3 text-left text-[17px] leading-relaxed text-darkgreen transition-colors group"
+                        className="w-full flex items-start justify-between gap-3 text-left text-[16px] leading-relaxed text-darkgreen transition-colors group"
                       >
                         <span className="font-medium transition-colors group-hover:text-forest/70">
                           {item.title}
@@ -429,15 +597,15 @@ export default function FirstVisitClient() {
                         role="region"
                         aria-labelledby={buttonId}
                         aria-hidden={!isOpen}
-                        className={`mt-2 grid transition-[grid-template-rows,opacity] duration-300 ease-out motion-reduce:transition-none ${
+                        className={`mt-1 grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
                           isOpen
                             ? "grid-rows-[1fr] opacity-100"
                             : "grid-rows-[0fr] opacity-0"
                         }`}
                       >
                         <div className="overflow-hidden">
-                          <div className="flex flex-col gap-2">
-                            <p className="care-body text-forest/90 leading-relaxed">
+                          <div className="flex flex-col gap-2 pb-4">
+                            <p className="text-[15px] leading-relaxed text-forest/90">
                               {item.description}
                             </p>
                           </div>

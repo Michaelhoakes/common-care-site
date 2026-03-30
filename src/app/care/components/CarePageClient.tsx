@@ -8,13 +8,14 @@ import {
   useMediaQuery,
   usePrefersReducedMotion,
 } from "../hooks/useCareSidebarProgress";
+import StickySectionSubnav from "../../components/StickySectionSubnav";
 
 /** Sidebar + scrollspy: overview first, then each care chapter (Seed-style persistent nav). */
 const CARE_NAV_SECTIONS = [
   { id: "care-approach", label: "Overview" },
   { id: "the-360-evaluation", label: "Care Evaluation" },
   { id: "the-care-sessions", label: "Care Sessions" },
-  { id: "everyday-wellness", label: "Recovery Care" },
+  { id: "everyday-wellness", label: "Wellness Care" },
 ] as const;
 
 const CARE_SECTION_IDS: readonly string[] = CARE_NAV_SECTIONS.map((s) => s.id);
@@ -41,34 +42,24 @@ type CarePhotoSlide = {
 
 const INCLUDED_ITEMS: IncludedItem[] = [
   {
-    title: "Movement + gait analysis",
+    title: "Posture analysis",
     description:
-      "We observe how your body moves and how weight travels through your stride, then translate it into actionable insights.",
+      "A clear view of how your body is aligned and moving—highlighting patterns that may be contributing to discomfort or limitation.",
   },
   {
-    title: "Postural + mobility assessment",
+    title: "Body composition",
     description:
-      "We evaluate alignment and available range so you understand constraints and opportunities before next steps.",
+      "A deeper look at muscle balance, inflammation, water balance, and visceral fat to understand how your body is built and where support may be needed.",
   },
   {
-    title: "Strength + asymmetry testing",
+    title: "Brain activity (EEG)",
     description:
-      "We check strength and side-to-side differences to understand load capacity and where targeted support is needed.",
+      "Insight into how your brain is functioning, helping us understand focus, recovery, and how your nervous system is regulating.",
   },
   {
-    title: "Body composition analysis (InBody)",
+    title: "Heart rate variability (HRV)",
     description:
-      "We track body composition to complement the clinical picture and support progress monitoring over time.",
-  },
-  {
-    title: "Recovery + stress-load context",
-    description:
-      "We consider recovery patterns and daily stress so your plan is built for long-term sustainability.",
-  },
-  {
-    title: "Goals + health history",
-    description:
-      "We align on outcomes that matter to you and map how your history informs pacing, priorities, and risk.",
+      "A real-time measure of how your body responds to stress—giving us a window into recovery, resilience, and overall capacity.",
   },
 ];
 
@@ -97,37 +88,67 @@ const CARE_EVALUATION_PHOTOS: readonly CarePhotoSlide[] = [
 
 const CARE_SESSION_SERVICES: ServiceItem[] = [
   {
-    title: "Manual therapy",
+    title: "Hands-on treatment",
     description:
-      "Hands-on treatment to improve mobility, reduce discomfort, and support how your body moves day to day.",
+      "Targeted manual therapy to address restrictions, reduce discomfort, and improve how your body moves.",
   },
   {
-    title: "Injury treatment",
+    title: "Movement and strength work",
     description:
-      "Targeted care for acute or persistent injuries, paired with clear progression so recovery is steady and measurable.",
+      "Guided exercises tailored to your body, helping you rebuild strength, control, and more efficient movement.",
+  },
+  {
+    title: "Integrated technology",
+    description:
+      "Advanced tools used throughout your sessions to support treatment, recovery, and overall function.",
+  },
+  {
+    title: "Progression and adjustment",
+    description:
+      "Your care evolves with you. Each session is adjusted based on how your body responds.",
   },
 ];
 
 const EVERYDAY_WELLNESS_SERVICES: ServiceItem[] = [
   {
+    title: "Hyperbaric oxygen therapy (HBOT)",
+    description:
+      "Increases oxygen delivery to tissues, supporting cellular repair, reducing inflammation, and improving recovery from both physical and mental stress.",
+  },
+  {
     title: "Red light therapy",
     description:
-      "Light-based recovery support used to complement tissue healing and reduce post-session soreness.",
+      "Supports mitochondrial function and reduces inflammation, helping improve tissue health, energy levels, and recovery.",
   },
   {
-    title: "Sound bed",
+    title: "Sound and vibration therapy",
     description:
-      "A restorative session designed to downshift your nervous system and support recovery through guided sound.",
+      "Uses auditory and sensory input—guided audio and gentle vibration—to help shift your nervous system out of a stressed state, supporting relaxation, focus, and improved recovery.",
   },
   {
-    title: "PEMF",
+    title: "Compression therapy",
     description:
-      "Pulsed electromagnetic field sessions to support circulation and recovery as part of your broader wellness plan.",
+      "Enhances circulation and lymphatic flow, helping reduce swelling, improve recovery, and support how your body handles daily physical load.",
   },
   {
-    title: "Compression",
+    title: "Infrared sauna",
     description:
-      "Compression-based recovery work to help with circulation, swelling management, and post-load reset.",
+      "Increases circulation and promotes heat-based stress adaptation, supporting cardiovascular health, relaxation, and detoxification pathways.",
+  },
+  {
+    title: "PEMF therapy",
+    description:
+      "Delivers low-frequency electromagnetic stimulation to support cellular signaling, reduce inflammation, and promote recovery at a tissue level.",
+  },
+  {
+    title: "Cupping therapy",
+    description:
+      "Improves local circulation and reduces muscle tension, helping restore mobility and relieve areas of restriction.",
+  },
+  {
+    title: "Percussive therapy",
+    description:
+      "Uses targeted vibration to reduce muscle stiffness, improve blood flow, and help your body relax more effectively.",
   },
 ];
 
@@ -140,7 +161,7 @@ function CareTwoColPhotoGrid({
 }) {
   return (
     <div
-      className="mt-10 md:mt-12 grid grid-cols-2 gap-3 sm:gap-4 md:gap-5 w-full"
+      className="mt-10 md:mt-12 pb-6 md:pb-8 lg:pb-10 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-5 w-full"
       role="group"
       aria-label={ariaLabel}
     >
@@ -152,7 +173,7 @@ function CareTwoColPhotoGrid({
               alt={slide.alt}
               fill
               className={slide.imageClassName ?? "object-cover object-center"}
-              sizes="(max-width: 1024px) 45vw, 560px"
+              sizes="(max-width: 639px) 100vw, (max-width: 1024px) 45vw, 560px"
               priority={i === 0}
             />
           </div>
@@ -307,10 +328,16 @@ export default function CarePageClient() {
 
   return (
     <div className="w-full px-6 md:px-16">
-      <div className="mx-auto max-w-[1400px] mt-14 md:mt-18 lg:mt-20 flex flex-col lg:flex-row lg:gap-20 xl:gap-24 lg:items-stretch">
-        {/* Sidebar: sequential vertical progress (desktop); sticky within content column */}
+      <div className="mx-auto max-w-[1400px] mt-0 lg:mt-20 flex flex-col lg:flex-row lg:gap-20 xl:gap-24 lg:items-stretch">
+        <StickySectionSubnav
+          sections={CARE_NAV_SECTIONS}
+          activeId={activeId}
+          onSelect={scrollTo}
+          ariaLabel="On this page"
+        />
+        {/* Sidebar: vertical progress + links (desktop only); mobile uses StickySectionSubnav */}
         <nav
-          className="care-sidebar w-full lg:w-[260px] xl:w-[280px] shrink-0"
+          className="care-sidebar hidden lg:block w-full lg:w-[260px] xl:w-[280px] shrink-0"
           aria-label="On this page"
         >
           <div className="relative lg:h-full">
@@ -388,20 +415,24 @@ export default function CarePageClient() {
               Our care approach
             </p>
             <h2 className="cc-heading-md max-w-4xl">
-              Care begins with understanding you as a whole. We consider how you move, your stress and load, and daily life. That context guides unhurried, one-on-one care built for long-term health.
+              Care begins with understanding you as a whole. We consider your symptoms, your story, and your goals. During your Care Evaluation, we combine your experience with objective data to shape a care plan built entirely around you and your needs.
             </h2>
             <ul className="care-list text-forest/90">
               <li className="flex gap-3">
                 <span className="text-matcha shrink-0" aria-hidden>—</span>
-                <span>Whole-person lens — movement, stress load, daily patterns</span>
+                <span>A whole-person view of how your body is functioning</span>
               </li>
               <li className="flex gap-3">
                 <span className="text-matcha shrink-0" aria-hidden>—</span>
-                <span>Unhurried one-on-one care (60–90 minutes)</span>
+                <span>One-on-one care, unrushed and focused on you</span>
               </li>
               <li className="flex gap-3">
                 <span className="text-matcha shrink-0" aria-hidden>—</span>
-                <span>Long-term orientation over quick fixes</span>
+                <span>Advanced technology, integrated into every session</span>
+              </li>
+              <li className="flex gap-3">
+                <span className="text-matcha shrink-0" aria-hidden>—</span>
+                <span>Care that goes beyond pain</span>
               </li>
             </ul>
           </section>
@@ -417,7 +448,7 @@ export default function CarePageClient() {
             <h2 className="cc-heading-md text-darkgreen">Care Evaluation</h2>
             <div className="min-w-0">
               <p className="care-body text-forest/90">
-                An in-depth look at your overall health, combining your story with objective data to truly understand what’s going on.
+                A detailed look at your health, starting with your story and supported by objective data. We bring these together to understand how your body is functioning and to shape care built specifically around you.
               </p>
               <CareTwoColPhotoGrid
                 slides={CARE_EVALUATION_PHOTOS}
@@ -465,12 +496,12 @@ export default function CarePageClient() {
                         role="region"
                         aria-labelledby={buttonId}
                         aria-hidden={!isOpen}
-                        className={`mt-2 grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
+                        className={`mt-1 grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
                           isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                         }`}
                       >
                         <div className="overflow-hidden">
-                          <div className="flex flex-col gap-2">
+                          <div className="flex flex-col gap-2 pb-4">
                             <p className="text-[15px] leading-relaxed text-forest/90">
                               {item.description}
                             </p>
@@ -518,19 +549,21 @@ export default function CarePageClient() {
               <p className="care-body text-forest/90">
                 One-on-one sessions built around you, combining hands-on care, movement, and advanced technology to support how your body heals.
               </p>
-              <div className="mt-10 w-full max-w-none overflow-hidden rounded-xl bg-forest/[0.03]">
-                <div className="relative aspect-[21/9] min-h-[220px] w-full sm:aspect-[2/1] md:min-h-[280px]">
-                  <img
-                    src="/images/Treatment-hands.JPG"
-                    alt="Hands-on treatment session at Common Care"
-                    className="absolute inset-0 h-full w-full object-cover object-center"
-                    loading="lazy"
-                    sizes="(min-width: 1400px) 1400px, 100vw"
-                  />
+              <div className="mt-10 pb-6 md:pb-8 lg:pb-10 w-full max-w-none">
+                <div className="overflow-hidden rounded-xl bg-forest/[0.03]">
+                  <div className="relative aspect-[21/9] min-h-[220px] w-full sm:aspect-[2/1] md:min-h-[280px]">
+                    <img
+                      src="/images/Treatment-hands.JPG"
+                      alt="Hands-on treatment session at Common Care"
+                      className="absolute inset-0 h-full w-full object-cover object-center"
+                      loading="lazy"
+                      sizes="(min-width: 1400px) 1400px, 100vw"
+                    />
+                  </div>
                 </div>
               </div>
               <p className="care-label text-forest/60 mt-10 md:mt-12">
-                Services
+                What happens in a session
               </p>
               <div className="care-included-grid text-forest/90 !grid-cols-1">
                 {CARE_SESSION_SERVICES.map((item, idx) => {
@@ -567,14 +600,16 @@ export default function CarePageClient() {
                         role="region"
                         aria-labelledby={buttonId}
                         aria-hidden={!isOpen}
-                        className={`mt-2 grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
+                        className={`mt-1 grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
                           isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                         }`}
                       >
                         <div className="overflow-hidden">
-                          <p className="text-[15px] leading-relaxed text-forest/90">
-                            {item.description}
-                          </p>
+                          <div className="pb-4">
+                            <p className="text-[15px] leading-relaxed text-forest/90">
+                              {item.description}
+                            </p>
+                          </div>
                         </div>
                       </div>
                       {idx < CARE_SESSION_SERVICES.length - 1 && (
@@ -590,20 +625,27 @@ export default function CarePageClient() {
 
           <div className="mt-20 pt-20 border-t border-forest/10" aria-hidden />
 
-          {/* Section 4 — Recovery Care */}
+          {/* Section 4 — Wellness Care */}
           <section
             id="everyday-wellness"
             ref={(el) => { sectionRefs.current["everyday-wellness"] = el; }}
             className="care-section care-section-animate scroll-mt-28"
           >
-            <h2 className="cc-heading-md text-darkgreen">Recovery Care</h2>
+            <h2 className="cc-heading-md text-darkgreen">Wellness Care</h2>
             <p className="care-body text-forest/90">
-              Targeted recovery sessions designed to support how your body adapts to training, stress, and daily demands so you can sustain and improve your overall health.
+              Wellness Care sessions are designed for those who aren’t necessarily in pain, but know their body could feel and function better. Using advanced technologies, we support how your body responds to stress, recovers from daily demands, and settles into a more balanced state over time.
             </p>
-            <p className="care-label text-forest/60">
-              Pillars
+            <CareTwoColPhotoGrid
+              slides={WELLNESS_SLIDES}
+              ariaLabel="Wellness Care imagery"
+            />
+            <p className="care-label text-forest/60 mt-10 md:mt-12">
+              What’s included
             </p>
-            <div className="care-included-grid text-forest/90 !grid-cols-1">
+            <p className="care-body text-forest/90 mt-3 max-w-3xl">
+              Each session is guided and personalized. Based on what your body needs that day, we may use a combination of the following:
+            </p>
+            <div className="care-included-grid text-forest/90 !grid-cols-1 mt-6 md:mt-8">
               {EVERYDAY_WELLNESS_SERVICES.map((item, idx) => {
                 const isOpen = openWellnessServices.has(idx);
                 const buttonId = `wellness-service-toggle-${idx}`;
@@ -638,14 +680,16 @@ export default function CarePageClient() {
                       role="region"
                       aria-labelledby={buttonId}
                       aria-hidden={!isOpen}
-                      className={`mt-2 grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
+                      className={`mt-1 grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
                         isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                       }`}
                     >
                       <div className="overflow-hidden">
-                        <p className="text-[15px] leading-relaxed text-forest/90">
-                          {item.description}
-                        </p>
+                        <div className="pb-4">
+                          <p className="text-[15px] leading-relaxed text-forest/90">
+                            {item.description}
+                          </p>
+                        </div>
                       </div>
                     </div>
                     {idx < EVERYDAY_WELLNESS_SERVICES.length - 1 && (
@@ -655,10 +699,6 @@ export default function CarePageClient() {
                 );
               })}
             </div>
-            <CareTwoColPhotoGrid
-              slides={WELLNESS_SLIDES}
-              ariaLabel="Recovery Care imagery"
-            />
           </section>
         </div>
       </div>

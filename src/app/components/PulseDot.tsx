@@ -4,13 +4,13 @@ type PulseDotColor = "matcha" | "marigold";
 type PulseDotSize = "sm" | "md";
 
 const sizeClasses = {
-  sm: "w-1.5 h-1.5", // 6px
-  md: "w-2 h-2",     // 8px
+  sm: "w-[7px] h-[7px]", // slightly above 6px — service row accent
+  md: "w-2 h-2", // 8px
 };
 
 const haloSizeClasses = {
-  sm: "w-3 h-3",  // 12px halo for 6px dot
-  md: "w-4 h-4",  // 16px halo for 8px dot
+  sm: "w-[13px] h-[13px]", // scaled with 7px dot
+  md: "w-4 h-4", // 16px halo for 8px dot
 };
 
 const colorClasses = {
@@ -21,7 +21,7 @@ const colorClasses = {
 interface PulseDotProps {
   /** Brand color for dot and halo */
   color?: PulseDotColor;
-  /** Dot diameter: sm = 6px, md = 8px */
+  /** Dot diameter: sm ≈7px, md = 8px */
   size?: PulseDotSize;
   /** Additional class names for the wrapper */
   className?: string;

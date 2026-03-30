@@ -24,7 +24,7 @@ export default function BookPage() {
           <div>
             <h2 className="cc-heading-minor text-darkgreen font-medium">Contact</h2>
             <p className="mt-3 text-lg opacity-90">hello@commoncare.co</p>
-            <p className="mt-1 text-lg opacity-90">(310) 555-1234</p>
+            <p className="mt-1 text-lg opacity-90">(310) 544-1001</p>
           </div>
           <div>
             <h2 className="cc-heading-minor text-darkgreen font-medium">Hours & location</h2>

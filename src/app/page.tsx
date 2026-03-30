@@ -182,20 +182,20 @@ export default function Home() {
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-6 lg:gap-x-10 lg:gap-y-12 xl:gap-x-12 xl:gap-y-14">
                   {[
                     {
-                      title: "Unhurried, focused sessions",
-                      body: "Sessions range from 1–2 hours of one-on-one time so we can actually listen, assess, and care for you fully.",
+                      title: "Unhurried, personalized sessions",
+                      body: "60–90 minutes of one-on-one time so we can truly listen, assess, and care for you fully.",
                     },
                     {
-                      title: "The full picture, not just the pain.",
-                      body: "We look beyond symptoms to how you move, sleep, and manage stress. That’s where real change begins.",
+                      title: "The full picture, not just your symptoms",
+                      body: "From muscle and joint pain to nervous system regulation and stress, we consider the full context of your health.",
                     },
                     {
-                      title: "Continuous care with one therapist.",
-                      body: "You work with the same PT each session, so your progress builds instead of starting over.",
+                      title: "Continuous care with one provider",
+                      body: "Work with the same doctor of physical therapy every visit, so your care stays consistent, personal, and aligned.",
                     },
                     {
-                      title: "Built for sustainability.",
-                      body: "The goal isn’t to keep you coming in. It’s to help you understand your body and maintain your health on your own.",
+                      title: "Care beyond the pain",
+                      body: "Care doesn't end when the pain does. Using advanced technologies, we support your health over time so you can keep feeling your best.",
                     },
                   ].map((item) => (
                     <div key={item.title} className="min-w-0">
@@ -301,7 +301,7 @@ export default function Home() {
 
       <section
         id="insurance"
-        className="home-editorial-stack-layer relative z-[7] mt-0 bg-background"
+        className="home-editorial-stack-layer relative z-[7] mt-0 bg-background max-md:after:hidden pb-10 md:pb-20"
       >
         <div className="w-full pt-12 md:pt-14 lg:pt-[80px]" aria-hidden>
           <div className="w-full border-t border-darkgreen/12" />
@@ -331,7 +331,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="home-editorial-stack-layer home-editorial-stack-layer--no-trailer relative z-[8] flex min-h-[66vh] md:min-h-[58vh] flex-col items-center justify-end pb-[4.5rem] md:pb-[5.5rem] lg:pb-[7rem]">
+      <section className="home-editorial-stack-layer home-editorial-stack-layer--no-trailer relative z-[8] flex min-h-[66vh] max-md:min-h-[min(58vh,28rem)] md:min-h-[58vh] flex-col items-center justify-end max-md:justify-center pb-[4.5rem] md:pb-[5.5rem] lg:pb-[7rem] max-md:py-10">
         <HomeParallaxBleedImage
           src="/images/staff-rev.jpg"
           alt=""

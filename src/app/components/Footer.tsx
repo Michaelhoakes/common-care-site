@@ -45,7 +45,7 @@ export default function Footer({ className = "" }: { className?: string }) {
               >
                 Email us
               </a>
-              <a className="hover:text-white" href="tel:+13105551234">(310) 555-1234</a>
+              <a className="hover:text-white" href="tel:+13105441001">(310) 544-1001</a>
               <p>
                 7551 Sunset Blvd #201
                 <br />

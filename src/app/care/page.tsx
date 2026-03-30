@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 export const metadata = {
   title: "Care — Common Care",
   description:
-    "How care unfolds here: Care Evaluation, one-on-one Care Sessions, and Recovery Care — designed for long-term health.",
+    "How care unfolds here: Care Evaluation, one-on-one Care Sessions, and Wellness Care — designed for long-term health.",
 };
 
 export default function CarePage() {
