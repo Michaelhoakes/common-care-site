@@ -253,9 +253,9 @@ export default function Home() {
               </div>
               <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-14 lg:items-stretch">
                 <figure className="m-0 flex min-h-0 min-w-0 flex-col self-stretch lg:h-full">
-                  <div className="flex h-full min-h-0 w-full flex-col rounded-lg border border-forest/25 p-4 md:p-8">
+                  <div className="flex h-full min-h-0 w-full flex-col rounded-lg border border-forest/25 p-6 md:p-10">
                     <blockquote className="m-0 shrink-0 border-0 p-0 not-italic">
-                      <p className="m-0 !mt-0 cc-heading-xs text-darkgreen">
+                      <p className="m-0 !mt-0 cc-heading-xs !text-[1.0625rem] !leading-[1.55] md:!text-[1.1875rem] md:!leading-[1.5] text-darkgreen">
                         &ldquo;This is a place where you&apos;re truly heard and cared for in
                         the midst of everything else. Common Care doesn&apos;t just treat symptoms; they
                         help you understand your body and how stress and daily life shape how
@@ -268,15 +268,15 @@ export default function Home() {
                       </p>
                     </blockquote>
                     <div className="min-h-0 flex-1" aria-hidden />
-                    <figcaption className="m-0 shrink-0 pt-3 cc-subtext leading-snug text-forest/65 not-italic opacity-100">
+                    <figcaption className="m-0 shrink-0 pt-6 md:pt-8 cc-subtext leading-snug text-forest/65 not-italic opacity-100">
                       &ndash;Natasha B.
                     </figcaption>
                   </div>
                 </figure>
                 <figure className="m-0 flex min-h-0 min-w-0 flex-col self-stretch lg:h-full">
-                  <div className="flex h-full min-h-0 w-full flex-col rounded-lg border border-forest/25 p-4 md:p-8">
+                  <div className="flex h-full min-h-0 w-full flex-col rounded-lg border border-forest/25 p-6 md:p-10">
                     <blockquote className="m-0 shrink-0 border-0 p-0 not-italic">
-                      <p className="m-0 !mt-0 cc-heading-xs text-darkgreen">
+                      <p className="m-0 !mt-0 cc-heading-xs !text-[1.0625rem] !leading-[1.55] md:!text-[1.1875rem] md:!leading-[1.5] text-darkgreen">
                         &ldquo;I came in with severe hip pain, unsure if I&apos;d even make it
                         to race day&mdash;but after working with Common Care, everything changed.
                         Their ability to identify the root cause, combined with a deeply
@@ -290,7 +290,7 @@ export default function Home() {
                       </p>
                     </blockquote>
                     <div className="min-h-0 flex-1" aria-hidden />
-                    <figcaption className="m-0 shrink-0 pt-3 cc-subtext leading-snug text-forest/65 not-italic opacity-100">
+                    <figcaption className="m-0 shrink-0 pt-6 md:pt-8 cc-subtext leading-snug text-forest/65 not-italic opacity-100">
                       &ndash; Daniel M.
                     </figcaption>
                   </div>
