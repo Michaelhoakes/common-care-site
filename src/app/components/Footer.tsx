@@ -48,15 +48,15 @@ export default function Footer({ className = "" }: { className?: string }) {
             <div className="flex flex-col gap-2 text-sm font-medium">
               <AboutNavLink
                 className="text-white/85 hover:text-white transition-none"
-                href="/about"
-              >
-                About us
-              </AboutNavLink>
-              <AboutNavLink
-                className="text-white/85 hover:text-white transition-none"
                 href="/about#care-team"
               >
                 Your care team
+              </AboutNavLink>
+              <AboutNavLink
+                className="text-white/85 hover:text-white transition-none"
+                href="/about#what-we-believe"
+              >
+                Our beliefs
               </AboutNavLink>
             </div>
           </div>

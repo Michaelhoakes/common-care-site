@@ -23,8 +23,8 @@ const ABOUT_NAV_HASHES = new Set([
 type AboutTab = "approach" | "team";
 
 const TABS: { id: AboutTab; label: string }[] = [
-  { id: "approach", label: "Who we are" },
   { id: "team", label: "Your care team" },
+  { id: "approach", label: "Our beliefs" },
 ];
 
 /** Fallback when header / tab strip can’t be measured. */
@@ -41,7 +41,7 @@ function ApproachPanel({
 }) {
   return (
     <div id={id} role="tabpanel" aria-labelledby={labelledBy} className="outline-none">
-      <h2 className="sr-only">Who we are</h2>
+      <h2 className="sr-only">Our beliefs</h2>
       <div className="w-full min-w-0 max-w-[1180px]">
         <section
           id="what-we-believe"
@@ -394,7 +394,7 @@ export default function AboutTabs() {
   const teamPanelId = `${baseId}-team-panel`;
   const tabApproachId = `${baseId}-tab-approach`;
   const tabTeamId = `${baseId}-tab-team`;
-  const [tab, setTab] = useState<AboutTab>("approach");
+  const [tab, setTab] = useState<AboutTab>("team");
   const trackRef = useRef<HTMLDivElement>(null);
   const approachBtnRef = useRef<HTMLButtonElement>(null);
   const teamBtnRef = useRef<HTMLButtonElement>(null);
@@ -442,7 +442,7 @@ export default function AboutTabs() {
     window.history.replaceState(
       null,
       "",
-      next === "team" ? `${path}#care-team` : path
+      next === "team" ? path : `${path}#what-we-believe`
     );
   }, []);
 
@@ -455,8 +455,17 @@ export default function AboutTabs() {
     } catch {
       h = window.location.hash.replace(/^#/, "");
     }
-    if (h === "care-team" || h === "team") setTab("team");
-    else setTab("approach");
+    // Default `/about` (and care-team) lands on Your care team; belief section hashes open Our beliefs.
+    if (
+      h === "what-we-believe" ||
+      h === "what-we-value" ||
+      h === "long-horizon" ||
+      h === "what-guides-us"
+    ) {
+      setTab("approach");
+    } else {
+      setTab("team");
+    }
 
     const shouldScrollTop = h === "" || ABOUT_NAV_HASHES.has(h);
     if (!shouldScrollTop) return;
@@ -559,20 +568,18 @@ export default function AboutTabs() {
     if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
     e.preventDefault();
     setTab((t) => {
-      const next =
+      const idx = TABS.findIndex((tabItem) => tabItem.id === t);
+      const nextIdx =
         e.key === "ArrowLeft"
-          ? t === "team"
-            ? "approach"
-            : t
-          : t === "approach"
-            ? "team"
-            : t;
+          ? Math.max(0, idx - 1)
+          : Math.min(TABS.length - 1, idx + 1);
+      const next = TABS[nextIdx]?.id ?? t;
       queueMicrotask(() => {
         const path = `${window.location.pathname}${window.location.search}`;
         window.history.replaceState(
           null,
           "",
-          next === "team" ? `${path}#care-team` : path
+          next === "team" ? path : `${path}#what-we-believe`
         );
       });
       return next;

@@ -33,8 +33,8 @@ const MEGA_CARE: MegaConfig = {
 
 const MEGA_ABOUT: MegaConfig = {
   leftLinks: [
-    { label: "About us", href: "/about#what-we-believe" },
     { label: "Your care team", href: "/about#care-team" },
+    { label: "Our beliefs", href: "/about#what-we-believe" },
   ],
 };
 

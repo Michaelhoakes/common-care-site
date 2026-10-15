@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useCareParallaxScrollY } from "../../hooks/useCareParallaxScrollY";
 import {
@@ -417,27 +418,17 @@ export default function CarePageClient() {
             <p className="cc-eyebrow text-darkgreen">
               Our care approach
             </p>
-            <h2 className="cc-heading-md max-w-4xl">
-              Care begins with understanding you as a whole. We consider your symptoms, your story, and your goals. During your Care Evaluation, we combine your experience with objective data to shape a care plan built entirely around you and your needs.
+            <h2 className="cc-heading-md text-darkgreen max-w-4xl">
+              Care starts with understanding the whole picture.
             </h2>
-            <ul className="care-list text-forest/90">
-              <li className="flex gap-3">
-                <span className="text-matcha shrink-0" aria-hidden>—</span>
-                <span>A whole-person view of how your body is functioning</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="text-matcha shrink-0" aria-hidden>—</span>
-                <span>One-on-one care, unrushed and focused on you</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="text-matcha shrink-0" aria-hidden>—</span>
-                <span>Advanced technology, integrated into every session</span>
-              </li>
-              <li className="flex gap-3">
-                <span className="text-matcha shrink-0" aria-hidden>—</span>
-                <span>Care that goes beyond pain</span>
-              </li>
-            </ul>
+            <div className="min-w-0 max-w-3xl space-y-5">
+              <p className="care-body text-forest/90">
+                Your symptoms are only one part of the story. We take the time to understand how your body is functioning, what may be contributing to the way you feel, and what you want to get back to—or work toward.
+              </p>
+              <p className="care-body text-forest/90">
+                Through one-on-one care, thoughtful clinical assessment, and objective data, we build a clearer picture of where you are today and a plan for what comes next. Whether you’re working through pain, returning to the things you love, or simply looking to feel and perform better, your care evolves with you.
+              </p>
+            </div>
           </section>
 
           <div className="mt-8 pt-8 md:mt-20 md:pt-20 border-t border-forest/10" aria-hidden />
@@ -448,10 +439,13 @@ export default function CarePageClient() {
             ref={(el) => { sectionRefs.current["the-360-evaluation"] = el; }}
             className="care-section care-section-animate scroll-mt-28"
           >
+            <p className="cc-eyebrow text-darkgreen">
+              Where care begins
+            </p>
             <h2 className="cc-heading-md text-darkgreen">Care Evaluation</h2>
             <div className="min-w-0">
               <p className="care-body text-forest/90">
-                A detailed look at your health, starting with your story and supported by objective data. We bring these together to understand how your body is functioning and to shape care built specifically around you.
+                Your care begins with a comprehensive evaluation. We take the time to understand your health history, concerns, and goals, then combine a thorough clinical assessment with objective data to build a clearer picture of your body. From there, we develop a personalized plan to guide your care.
               </p>
               <CareTwoColPhotoGrid
                 slides={CARE_EVALUATION_PHOTOS}
@@ -541,9 +535,12 @@ export default function CarePageClient() {
             className="care-section care-section-animate scroll-mt-28"
           >
             <div className="flex flex-col">
+              <p className="cc-eyebrow text-darkgreen">
+                Treatment &amp; rehabilitation
+              </p>
               <h2 className="cc-heading-md text-darkgreen">Care Sessions</h2>
               <p className="care-body text-forest/90">
-                One-on-one sessions built around you, combining hands-on care, movement, and advanced technology to support how your body heals.
+                Personalized, one-on-one treatment designed to address pain, restore movement, and help you return to the activities you love. Each session combines hands-on therapy, guided movement, and advanced technology based on your needs and progress.
               </p>
               <div className="mt-8 pb-6 md:mt-10 md:pb-8 lg:pb-10 w-full max-w-none">
                 <div className="overflow-hidden rounded-xl bg-forest/[0.03]">
@@ -629,9 +626,12 @@ export default function CarePageClient() {
             ref={(el) => { sectionRefs.current["everyday-wellness"] = el; }}
             className="care-section care-section-animate scroll-mt-28"
           >
+            <p className="cc-eyebrow text-darkgreen">
+              Recovery &amp; well-being
+            </p>
             <h2 className="cc-heading-md text-darkgreen">Wellness Care</h2>
             <p className="care-body text-forest/90">
-              Wellness Care sessions are designed for those who aren’t necessarily in pain, but know their body could feel and function better. Using advanced technologies, we support how your body responds to stress, recovers from daily demands, and settles into a more balanced state over time.
+              You don’t have to be in pain to benefit from better care. Wellness Care focuses on recovery, stress management, and overall well-being, using personalized combinations of advanced therapies to help you feel better, recover from everyday demands, and maintain your health over time.
             </p>
             <CareTwoColPhotoGrid
               slides={WELLNESS_SLIDES}
@@ -700,6 +700,28 @@ export default function CarePageClient() {
               })}
             </div>
           </section>
+
+          <aside
+            className="mt-10 md:mt-16 rounded-2xl bg-[var(--gradient-sage)] px-6 py-8 md:px-10 md:py-12"
+            aria-labelledby="care-start-cta-heading"
+          >
+            <h2
+              id="care-start-cta-heading"
+              className="cc-heading-md text-darkgreen !mb-0 max-w-2xl"
+            >
+              Not sure where to start?
+            </h2>
+            <p className="care-body text-forest/90 mt-4 max-w-2xl !mb-0">
+              You don&apos;t need to know exactly what your body needs before
+              coming in. We&apos;ll help you understand your options and find
+              the right place to begin.
+            </p>
+            <div className="mt-8">
+              <Link href="/book" className="cc-btn-primary px-6 py-3">
+                Book a Care Evaluation
+              </Link>
+            </div>
+          </aside>
         </div>
       </div>
     </div>
