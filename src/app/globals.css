@@ -15,6 +15,9 @@
   --color-bone: #F5F3EE;
 }
 
+/* Avoid `scroll-behavior: smooth` on html — it also animates scroll-to-top on route changes.
+   Same-page sections use SmoothHashLink or `scrollIntoView` where smooth motion is desired. */
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -582,6 +585,19 @@ h3.cc-h3-services {
     line-height: 1.55;
   }
 
+  /* Paragraph utilities often used for body copy; keep in sync with body */
+  .text-base {
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  /* Intro / subpage leads use text-lg / text-xl — align to body size on small screens */
+  main p.text-lg,
+  main p.text-xl {
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
   /* Moderate tracking: not the global h1 0.2rem, not negative em (reads too tight on phones). */
   h1,
   h2,
@@ -802,6 +818,13 @@ a {
   text-decoration: inherit;
 }
 
+/* Footer text links: underline on hover (global `a` inherit can block Tailwind hover:underline). */
+footer a[href]:not([aria-label="Common Care — Home"]):hover {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+
 strong {
   font-weight: 500;
 }
@@ -837,6 +860,32 @@ hr {
   border: 0;
   border-top: 1px solid currentColor;
   opacity: 0.15;
+}
+
+/* Address autocomplete: remove visual halo + dropdown shadow */
+.cc-address-input {
+  box-shadow: none !important;
+}
+.cc-address-input:focus {
+  box-shadow: none !important;
+  outline: none !important; /* override inputClass focus:outline-* */
+}
+
+/* Remove Google Places default dropdown shadow + halo */
+.pac-container {
+  /* Flatten Google Places dropdown so it doesn’t stack heavy shadows. */
+  box-shadow: none !important;
+  border-radius: 0.75rem !important;
+  border: 0 !important;
+  background-color: #ffffff !important;
+}
+
+/* Tame Chrome autofill yellow on this field */
+input.cc-address-input:-webkit-autofill,
+input.cc-address-input:-webkit-autofill:hover,
+input.cc-address-input:-webkit-autofill:focus {
+  box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: inherit !important;
 }
 
 code,
@@ -927,6 +976,23 @@ kbd {
   margin-top: 2rem !important; /* 32px */
 }
 
+.care-page--editorial-16 .care-body,
+.care-page--editorial-16 .care-list,
+.care-page--editorial-16 .care-list-compact {
+  font-size: 16px !important;
+  line-height: 24px !important;
+  color: var(--color-darkgreen) !important; /* match About page default text */
+}
+
+@media (max-width: 768px) {
+  .care-page--editorial-16 .care-body,
+  .care-page--editorial-16 .care-list,
+  .care-page--editorial-16 .care-list-compact {
+    font-size: 15px !important;
+    line-height: 1.55 !important;
+  }
+}
+
 .care-page .care-included-grid {
   /* Editorial separation before the "What's included" list */
   margin-top: 1.5rem; /* 24px */
@@ -944,6 +1010,24 @@ kbd {
   }
 }
 
+/* Privacy page: robust bullets (global list reset removes default markers). */
+.privacy-policy-content .privacy-bullets {
+  list-style: none !important;
+  padding-left: 0 !important;
+}
+
+.privacy-policy-content .privacy-bullets > li {
+  position: relative;
+  padding-left: 1rem;
+}
+
+.privacy-policy-content .privacy-bullets > li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: color-mix(in srgb, var(--color-forest) 70%, transparent);
+}
+
 @media (max-width: 768px) {
   .care-page .care-lead {
     font-size: 1.125rem; /* 18px */
@@ -953,12 +1037,12 @@ kbd {
   .care-page .care-body,
   .care-page .care-list,
   .care-page .care-list-compact {
-    font-size: 16px;
-    line-height: 1.58;
+    font-size: 15px;
+    line-height: 1.55;
   }
 
   .care-page .care-included-grid {
-    font-size: 16px;
+    font-size: 15px;
     line-height: 1.52;
   }
 }
@@ -1192,14 +1276,14 @@ footer.home-editorial-stack-layer::after {
 
 /* Hero: mobile uses bounded viewport height; desktop keeps fixed composition */
 .hero-full-viewport {
-  min-height: clamp(560px, 70svh, 780px);
+  min-height: clamp(600px, 74svh, 820px);
 }
 
 @media (min-width: 768px) {
   .hero-full-viewport {
-    height: 900px;
-    min-height: 900px;
-    max-height: 900px;
+    height: 960px;
+    min-height: 960px;
+    max-height: 960px;
   }
 }
 
@@ -1485,5 +1569,26 @@ footer.home-editorial-stack-layer::after {
     transform: none;
     will-change: auto;
   }
+}
+
+/* Google Places Autocomplete (book form) */
+.pac-container {
+  border-radius: 0.5rem !important;
+  border: 1px solid rgba(45, 74, 46, 0.12) !important;
+  background: #ffffff !important;
+  box-shadow: 0 8px 30px rgba(31, 52, 20, 0.12) !important;
+  overflow: hidden !important;
+}
+
+.pac-item {
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  padding: 10px 14px !important;
+  color: var(--color-forest) !important;
+}
+
+.pac-item:hover,
+.pac-item.pac-selected {
+  background: var(--color-bone) !important;
 }
 

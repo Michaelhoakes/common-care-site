@@ -128,7 +128,7 @@ export default function TechnologyClient() {
                 <p className="text-xs font-mono font-medium tracking-widest uppercase text-forest/60 mb-2">
                   What it measures
                 </p>
-                <p className="text-forest/90 text-[17px] leading-[1.65]">
+                <p className="text-forest/90 text-[15px] leading-[1.55] md:text-[17px] md:leading-[1.65]">
                   {selected.measures}
                 </p>
               </div>
@@ -137,7 +137,7 @@ export default function TechnologyClient() {
                 <p className="text-xs font-mono font-medium tracking-widest uppercase text-forest/60 mb-2">
                   Why it matters for care
                 </p>
-                <p className="text-forest/90 text-[17px] leading-[1.65]">
+                <p className="text-forest/90 text-[15px] leading-[1.55] md:text-[17px] md:leading-[1.65]">
                   {selected.whyItMatters}
                 </p>
               </div>

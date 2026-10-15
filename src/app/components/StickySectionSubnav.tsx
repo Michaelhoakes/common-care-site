@@ -85,7 +85,7 @@ export default function StickySectionSubnav({
 
   return (
     <div
-      className="lg:hidden sticky top-14 z-40 mt-20 md:mt-24 w-screen max-w-[100vw] shrink-0 bg-background ml-[calc(50%-50vw)] pt-4 -mt-px sm:top-[60px] md:top-[4.5rem]"
+      className="lg:hidden sticky top-14 z-40 mt-0 w-screen max-w-[100vw] shrink-0 bg-background ml-[calc(50%-50vw)] pt-4 -mt-px sm:top-[60px] md:top-[4.5rem]"
     >
       <div ref={trackRef} className="relative border-b border-forest/12">
         <span

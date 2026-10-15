@@ -18,9 +18,9 @@ export default function HomeHeroParallaxBackground() {
     <div ref={wrapRef} className="absolute inset-0 overflow-hidden">
       <div ref={motionRef} className="absolute -inset-[10%] min-h-0 min-w-0">
         <picture className="block h-full min-h-full w-full">
-          <source media="(max-width: 767px)" srcSet="/images/Hero-m.jpg" />
+          <source media="(max-width: 767px)" srcSet="/images/Hero-m-new.jpg" />
           <img
-            src="/images/gradient-1.png"
+            src="/images/Hero-d-new.jpg"
             alt=""
             className="h-full min-h-full w-full object-cover"
             aria-hidden

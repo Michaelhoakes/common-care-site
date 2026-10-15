@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import {
   useCallback,
   useEffect,
@@ -11,6 +10,16 @@ import {
   useState,
 } from "react";
 
+/** Hashes from mega menu / footer / shared URLs — tab sync + instant scroll to page top (no in-section jump). */
+const ABOUT_NAV_HASHES = new Set([
+  "care-team",
+  "team",
+  "what-we-believe",
+  "what-we-value",
+  "long-horizon",
+  "what-guides-us",
+]);
+
 type AboutTab = "approach" | "team";
 
 const TABS: { id: AboutTab; label: string }[] = [
@@ -18,137 +27,198 @@ const TABS: { id: AboutTab; label: string }[] = [
   { id: "team", label: "Your care team" },
 ];
 
-/** Space from viewport top to tab panel when a tab is chosen (header + sticky subnav + ~40px lift vs former 128px scroll-margin). */
-const TAB_PANEL_TOP_GUTTER_PX = 88;
+/** Fallback when header / tab strip can’t be measured. */
+const TAB_PANEL_TOP_GUTTER_FALLBACK_PX = 120;
+/** Extra space below measured chrome before panel content begins. */
+const TAB_PANEL_BELOW_STICKY_GAP_PX = 20;
 
 function ApproachPanel({
   id,
   labelledBy,
-  onShowCareTeam,
 }: {
   id: string;
   labelledBy: string;
-  onShowCareTeam: () => void;
 }) {
   return (
     <div id={id} role="tabpanel" aria-labelledby={labelledBy} className="outline-none">
       <h2 className="sr-only">Who we are</h2>
-      <div className="min-w-0 max-w-3xl">
+      <div className="w-full min-w-0 max-w-[1180px]">
         <section
           id="what-we-believe"
-          className="care-section scroll-mt-28"
+          className="care-section scroll-mt-28 border-t border-forest/10 pt-8 md:pt-10"
           aria-labelledby="about-what-we-believe"
         >
-          <h3 id="about-what-we-believe" className="cc-heading-md max-w-5xl">
-            What we believe
-          </h3>
-          <div className="mt-10 flex max-w-2xl flex-col gap-6 md:gap-8">
-            <div className="text-group text-group--flush">
-              <p className="font-medium">Care should be built around people, not systems.</p>
-              <p>
-                Too often, care is shaped by constraints—time limits, volume,
-                and reimbursement. We believe care should adapt to the
-                individual, not the other way around.
-              </p>
-            </div>
-            <div className="text-group text-group--flush">
-              <p className="font-medium">Understanding comes before treatment.</p>
-              <p>
-                Real progress starts with listening. Your story, your history,
-                and your goals matter just as much as any test or diagnosis.
-              </p>
-            </div>
-            <div className="text-group text-group--flush">
-              <p className="font-medium">Getting better is the standard.</p>
-              <p>
-                Care shouldn&apos;t just maintain or manage—it should lead
-                somewhere. We hold ourselves to the expectation that what we do
-                makes a meaningful difference.
-              </p>
-            </div>
-            <div className="text-group text-group--flush">
-              <p className="font-medium">Trust is earned through consistency.</p>
-              <p>
-                We show up prepared, present, and accountable—every session,
-                every interaction.
-              </p>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-[120px_minmax(0,1fr)] md:gap-10 lg:gap-14">
+            <p className="cc-eyebrow text-forest/55 !mb-0">01</p>
+            <div className="min-w-0 max-w-3xl">
+              <h3 id="about-what-we-believe" className="cc-heading-md max-w-5xl !mb-0">
+                What should be common...isn&apos;t.
+              </h3>
+              <div className="mt-8 flex max-w-2xl flex-col gap-6 md:gap-8">
+                <div className="text-group text-group--flush">
+                  <p>
+                    Most people have experienced care that feels rushed,
+                    fragmented, or impersonal. Where you&apos;re treated for a
+                    symptom - not understood as a whole person.
+                  </p>
+                  <p>That&apos;s not how we believe care should be.</p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
-      </div>
-
-      <div className="min-w-0 max-w-3xl">
-        <div
-          className="mt-20 md:mt-28 pt-12 md:pt-16 border-t border-forest/10"
-          aria-hidden
-        />
 
         <section
           id="what-we-value"
-          className="care-section scroll-mt-28"
+          className="care-section scroll-mt-28 mt-10 border-t border-forest/10 pt-8 md:mt-14 md:pt-10"
           aria-labelledby="about-what-we-value"
         >
-          <h3 id="about-what-we-value" className="cc-heading-md max-w-2xl">
-            What we value
-          </h3>
-          <ul className="mt-10 max-w-2xl space-y-6">
-            <li>
-              <p className="font-medium" style={{ marginBottom: 0 }}>
-                Time and attention
-              </p>
-              <p style={{ marginTop: 8 }}>
-                You&apos;re never rushed. We give care the time it actually
-                requires.
-              </p>
-            </li>
-            <li>
-              <p className="font-medium" style={{ marginBottom: 0 }}>
-                Clarity
-              </p>
-              <p style={{ marginTop: 8 }}>
-                You should understand what&apos;s going on in your body and why.
-                We explain, not just treat.
-              </p>
-            </li>
-            <li>
-              <p className="font-medium" style={{ marginBottom: 0 }}>
-                Ownership
-              </p>
-              <p style={{ marginTop: 8 }}>
-                We take responsibility for outcomes, and we equip you to take
-                ownership of your health.
-              </p>
-            </li>
-            <li>
-              <p className="font-medium" style={{ marginBottom: 0 }}>
-                Integrity
-              </p>
-              <p style={{ marginTop: 8 }}>
-                We do what&apos;s right for you, not what&apos;s easiest or most
-                convenient.
-              </p>
-            </li>
-          </ul>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-[120px_minmax(0,1fr)] md:gap-10 lg:gap-14">
+            <p className="cc-eyebrow text-forest/55 !mb-0">02</p>
+            <div className="min-w-0 max-w-3xl">
+              <h3 id="about-what-we-value" className="cc-heading-md max-w-2xl !mb-0">
+                Built around you
+              </h3>
+              <div className="mt-8 max-w-2xl space-y-6">
+                <div className="text-group text-group--flush">
+                  <p>At Common Care, everything we do is built around one idea:</p>
+                  <p className="font-medium">
+                    No two people are the same. So no two plans should be either.
+                  </p>
+                  <p>
+                    We take the time to understand you - your history, your
+                    movement, your patterns, your goals. We combine hands-on
+                    care, movement, and advanced technologies into one
+                    integrated experience.
+                  </p>
+                  <p>Not a menu of services.</p>
+                  <p>Not one-size-fits-all solutions.</p>
+                  <p>But a plan designed specifically for you.</p>
+                  <p>
+                    Because real results don&apos;t come from one thing - they
+                    come from the right combination of things, applied with
+                    intention.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-          <div className="mt-14 flex flex-col sm:flex-row sm:flex-wrap gap-4">
-            <button
-              type="button"
-              onClick={onShowCareTeam}
-              className="cc-text-btn text-left"
-            >
-              Your care team →
-            </button>
-            <Link
-              href="/first-visit"
-              className="cc-text-btn"
-            >
-              First visit →
-            </Link>
+        <section
+          className="care-section scroll-mt-28 mt-10 border-t border-forest/10 pt-8 md:mt-14 md:pt-10"
+          aria-labelledby="about-why-we-exist"
+        >
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-[120px_minmax(0,1fr)] md:gap-10 lg:gap-14">
+            <p className="cc-eyebrow text-forest/55 !mb-0">03</p>
+            <div className="min-w-0 max-w-3xl">
+              <h3 id="about-why-we-exist" className="cc-heading-md max-w-2xl !mb-0">
+                We exist to make good care common
+              </h3>
+              <div className="mt-8 max-w-2xl space-y-6">
+                <div className="text-group text-group--flush">
+                  <p>The name Common Care is intentional.</p>
+                  <p>
+                    Because the kind of care we provide - being listened to,
+                    being understood, receiving thoughtful and personalized
+                    treatment - should be common.
+                  </p>
+                  <p>But it isn&apos;t.</p>
+                  <p>So we built a place where it is.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          className="care-section scroll-mt-28 mt-10 border-t border-forest/10 pt-8 md:mt-14 md:pt-10"
+          aria-labelledby="about-what-we-believe-2"
+        >
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-[120px_minmax(0,1fr)] md:gap-10 lg:gap-14">
+            <p className="cc-eyebrow text-forest/55 !mb-0">04</p>
+            <div className="min-w-0 max-w-3xl">
+              <h3 id="about-what-we-believe-2" className="cc-heading-md max-w-2xl !mb-0">
+                Simplicity that works
+              </h3>
+              <div className="mt-8 max-w-2xl space-y-6">
+                <div className="text-group text-group--flush">
+                  <p>We believe in doing the simple things exceptionally well:</p>
+                  <ul className="care-list text-forest/90">
+                    <li>Listening before treating</li>
+                    <li>Asking better questions</li>
+                    <li>Using data to guide decisions</li>
+                    <li>Creating space for people to feel safe</li>
+                    <li>Showing up with consistency, every day</li>
+                  </ul>
+                  <p>Not because it&apos;s revolutionary - but because it works.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          className="care-section scroll-mt-28 mt-10 border-t border-forest/10 pt-8 md:mt-14 md:pt-10"
+          aria-labelledby="about-different-kind"
+        >
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-[120px_minmax(0,1fr)] md:gap-10 lg:gap-14">
+            <p className="cc-eyebrow text-forest/55 !mb-0">05</p>
+            <div className="min-w-0 max-w-3xl">
+              <h3 id="about-different-kind" className="cc-heading-md max-w-2xl !mb-0">
+                Letting our actions speak louder than words
+              </h3>
+              <div className="mt-8 max-w-2xl space-y-6">
+                <div className="text-group text-group--flush">
+                  <p>
+                    We&apos;re not here to be the loudest voice in healthcare.
+                    We&apos;re here to do the work - quietly, consistently, and
+                    exceptionally well.
+                  </p>
+                  <p>
+                    Because when care is done right, you feel it. You don&apos;t
+                    need to be convinced of it.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          className="care-section scroll-mt-28 mt-10 border-t border-forest/10 pt-8 md:mt-14 md:pt-10"
+          aria-labelledby="about-looking-forward"
+        >
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-[120px_minmax(0,1fr)] md:gap-10 lg:gap-14">
+            <p className="cc-eyebrow text-forest/55 !mb-0">06</p>
+            <div className="min-w-0 max-w-3xl">
+              <h3 id="about-looking-forward" className="cc-heading-md max-w-2xl !mb-0">
+                Looking forward
+              </h3>
+              <div className="mt-8 max-w-2xl space-y-6">
+                <div className="text-group text-group--flush">
+                  <p>We envision a future where care like this isn&apos;t rare.</p>
+                  <p>
+                    Where communities are built around health. Where people
+                    don&apos;t have to think so hard about &ldquo;being healthy&rdquo;
+                    - because their environment supports it.
+                  </p>
+                  <p>
+                    Where care feels like something you&apos;re a part of - not
+                    something you have to seek out.
+                  </p>
+                  <p className="font-medium">
+                    This is what care should feel like. And we&apos;re here to
+                    make it common.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
       </div>
 
-      <div className="mt-10 md:mt-12 w-full min-w-0 pb-[80px]">
+      <div className="mt-10 w-full min-w-0 border-t border-forest/10 pt-8 md:mt-12 md:pt-10 pb-[80px]">
         <div className="relative aspect-[16/9] w-full max-w-full overflow-hidden rounded-lg bg-forest/5 xl:max-w-[min(100%,1100px)] 2xl:max-w-[min(100%,1180px)]">
           <Image
             src="/images/Clinic-front2.jpg"
@@ -170,72 +240,138 @@ function CareTeamPanel({
   id: string;
   labelledBy: string;
 }) {
+  const credMeta =
+    "font-mono text-[13px] tracking-[0.08em] uppercase text-darkgreen/80 leading-snug";
+
   return (
     <div id={id} role="tabpanel" aria-labelledby={labelledBy} className="outline-none w-full min-w-0">
-      <div className="grid grid-cols-1 gap-24 md:gap-28">
-        <section
-          id="care-team"
-          className="care-section scroll-mt-28 grid grid-cols-1 lg:grid-cols-[minmax(0,11fr)_minmax(0,9fr)] gap-8 lg:gap-16 items-center"
-        >
-          <div className="relative w-full aspect-[16/10] overflow-hidden rounded-lg bg-forest/5">
-            <Image
-              src="/images/Michael-opt.jpg"
-              alt="Michael Oakes, DPT"
-              fill
-              className="object-cover object-[50%_60%]"
-              sizes="(max-width: 1024px) 100vw, 40vw"
-            />
-          </div>
-          <div className="min-w-0 max-w-2xl self-center">
-            <h3 className="cc-heading-xs max-w-xl">
-              Michael Oakes, DPT
+      <section
+        id="care-team"
+        className="care-section mt-14 md:mt-20 scroll-mt-44 lg:scroll-mt-28"
+      >
+        {/* Michael.jpg is 5333×4123 — layout uses intrinsic landscape ratio (no crop box). */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-x-10 xl:gap-x-14 items-start lg:items-center gap-y-8 lg:gap-y-0">
+          <header
+            id="about-team-mobile-lead"
+            className="lg:hidden min-w-0 scroll-mt-44"
+          >
+            <h3 className="cc-heading-md text-darkgreen !mt-0 !mb-1 max-w-[14ch] leading-[1.05]">
+              Michael Oakes
             </h3>
-            <div className="text-group pt-3">
-              <p className="mt-3">
-                Michael focuses on whole-person physical therapy that balances
-                precise assessment with practical follow-through. His sessions
-                are unhurried and collaborative, with a strong emphasis on
-                helping you understand why symptoms show up and what to do
-                between visits so progress continues in real life.
-              </p>
-              <p>
-                He brings a movement-first lens to care: clear testing, clear
-                explanation, and plans that are realistic enough to maintain
-                over time.
-              </p>
-            </div>
-          </div>
-        </section>
+            <p className={`${credMeta} !m-0`}>
+              Doctor of Physical Therapy · Founder
+            </p>
+          </header>
 
-        <section className="grid grid-cols-1 lg:grid-cols-[minmax(0,11fr)_minmax(0,9fr)] gap-8 lg:gap-16 items-center">
-          <div className="relative w-full aspect-[16/10] overflow-hidden rounded-lg bg-forest/5">
-            <Image
-              src="/images/Tommy-opt.jpg"
-              alt="Tommy Wolfe, DPT"
-              fill
-              className="object-cover object-center"
-              sizes="(max-width: 1024px) 100vw, 40vw"
-            />
+          <div className="min-w-0 lg:col-span-5 xl:col-span-6">
+            <div className="lg:sticky lg:top-28">
+              <div className="overflow-hidden rounded-2xl bg-forest/5 ring-1 ring-forest/[0.06]">
+                <Image
+                  src="/images/Michael.jpg"
+                  alt="Michael Oakes, DPT"
+                  width={5333}
+                  height={4123}
+                  className="w-full h-auto block"
+                  sizes="(max-width: 1024px) 100vw, 48vw"
+                />
+              </div>
+            </div>
           </div>
-          <div className="min-w-0 max-w-2xl self-center">
-            <h3 className="cc-heading-xs max-w-xl">
-              Tommy Wolfe, DPT
-            </h3>
-            <div className="text-group pt-3">
-              <p className="mt-3">
-                Tommy combines hands-on treatment with guided movement to build
-                durable confidence in how you move. He values consistency and
-                communication, helping patients move from flare-up management to
-                steady performance and day-to-day comfort.
+
+          <div className="min-w-0 lg:col-span-7 xl:col-span-6 flex flex-col">
+            <div className="hidden lg:block">
+              <h3 className="cc-heading-md text-darkgreen !mt-0 !mb-1 max-w-[14ch] leading-[1.05]">
+                Michael Oakes
+              </h3>
+              <p className={`${credMeta} !m-0`}>
+                Doctor of Physical Therapy · Founder
+              </p>
+            </div>
+            <div className="text-group text-group--flush max-w-2xl lg:max-w-none lg:mt-8">
+              <p>
+                Michael Oakes, DPT, is the founder of Common Care, a Los
+                Angeles–based physical therapy practice built on a simple
+                belief: <strong>care should feel personal</strong>.
               </p>
               <p>
-                His approach is structured but adaptable, so each plan can
-                evolve with your workload, goals, and recovery pace.
+                With over a decade of experience, he began his career in New York
+                and completed advanced training through the North American
+                Institute of Orthopedic Manual Therapy, developing a strong
+                foundation in hands-on care.
+              </p>
+              <p>
+                After seeing how often physical therapy becomes rushed,
+                impersonal, and focused on symptoms rather than the individual, he
+                founded Common Care to offer a more thoughtful approach.
+              </p>
+              <p>
+                His work centers on understanding the person in front of him
+                through conversation, hands-on assessment, and objective data,
+                helping people move beyond pain and function at a higher level.
               </p>
             </div>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
+
+      <section className="mt-20 md:mt-28 lg:mt-36">
+        {/* Tommy-opt.jpg is 5568×4036 — same grid + intrinsic ratio pattern as Michael. */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 lg:gap-x-10 xl:gap-x-14 items-start lg:items-center gap-y-8 lg:gap-y-0">
+          <header className="lg:hidden min-w-0">
+            <h3 className="cc-heading-md text-darkgreen !mt-0 !mb-1 max-w-[14ch] leading-[1.05]">
+              Tommy Wolfe
+            </h3>
+            <p className={`${credMeta} !m-0`}>Doctor of Physical Therapy</p>
+          </header>
+
+          <div className="min-w-0 lg:col-span-5 xl:col-span-6">
+            <div className="lg:sticky lg:top-28">
+              <div className="overflow-hidden rounded-2xl bg-forest/5 ring-1 ring-forest/[0.06]">
+                <Image
+                  src="/images/Tommy-opt.jpg"
+                  alt="Tommy Wolfe, DPT"
+                  width={5568}
+                  height={4036}
+                  className="w-full h-auto block"
+                  sizes="(max-width: 1024px) 100vw, 48vw"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="min-w-0 lg:col-span-7 xl:col-span-6 flex flex-col">
+            <div className="hidden lg:block">
+              <h3 className="cc-heading-md text-darkgreen !mt-0 !mb-1 max-w-[14ch] leading-[1.05]">
+                Tommy Wolfe
+              </h3>
+              <p className={`${credMeta} !m-0`}>
+                Doctor of Physical Therapy
+              </p>
+            </div>
+            <div className="text-group text-group--flush max-w-2xl lg:max-w-none lg:mt-8">
+              <p>
+                Tommy Wolfe, DPT is an integrative physical therapist, trained at
+                USC, who blends traditional rehabilitation with a broader
+                approach to movement, performance, and long-term health. As a
+                former professional squash player, he has had his share of
+                injuries and understands the struggle of climbing back up to a
+                high performance level. These experiences, as well as his drive
+                to surf until he&apos;s 90, fuel his work and curiosity.
+              </p>
+              <p>
+                Over the years Tommy has formed a distinctive style of
+                treatment, influenced by mentors both in and out of the
+                traditional PT field.
+              </p>
+              <p>
+                Tommy&apos;s focus goes beyond pain relief: it&apos;s about
+                creating autonomy, preventing future setbacks and unlocking the
+                body&apos;s potential, no matter the sport or skill level.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <div className="mt-[80px] w-screen max-w-[100vw] ml-[calc(50%-50vw)] min-w-0">
         <div className="relative w-full aspect-[21/8] overflow-hidden bg-forest/5">
@@ -248,7 +384,6 @@ function CareTeamPanel({
           />
         </div>
       </div>
-
     </div>
   );
 }
@@ -266,6 +401,7 @@ export default function AboutTabs() {
   const [indicator, setIndicator] = useState({ left: 0, width: 0 });
   const [reduceMotion, setReduceMotion] = useState(false);
   const panelStartRef = useRef<HTMLDivElement>(null);
+  const tabStickyRef = useRef<HTMLDivElement>(null);
   const scrollAfterTabChangeRef = useRef(false);
 
   useEffect(() => {
@@ -310,67 +446,80 @@ export default function AboutTabs() {
     );
   }, []);
 
-  useEffect(() => {
-    const scrollForHash = () => {
-      const reduce = window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      ).matches;
-      const behavior: ScrollBehavior = reduce ? "auto" : "smooth";
-      let attempts = 0;
-      const tryScroll = () => {
-        const raw = window.location.hash.replace(/^#/, "");
-        if (!raw) return;
-        const h = decodeURIComponent(raw);
-        if (h === "care-team" || h === "team") {
-          const el = document.getElementById("care-team");
-          if (el) {
-            el.scrollIntoView({ behavior, block: "start" });
-            return;
-          }
-        } else if (
-          h === "long-horizon" ||
-          h === "what-guides-us" ||
-          h === "what-we-believe" ||
-          h === "what-we-value"
-        ) {
-          const targetId =
-            h === "what-guides-us" || h === "what-we-value"
-              ? "what-we-value"
-              : "what-we-believe";
-          const el = document.getElementById(targetId);
-          if (el) {
-            el.scrollIntoView({ behavior, block: "start" });
-            return;
-          }
-        } else {
-          return;
-        }
-        if (attempts++ < 24) requestAnimationFrame(tryScroll);
-      };
-      requestAnimationFrame(tryScroll);
-    };
+  const applyAboutUrlHash = useCallback(() => {
+    let h = "";
+    try {
+      h = decodeURIComponent(
+        window.location.hash.replace(/^#/, "")
+      );
+    } catch {
+      h = window.location.hash.replace(/^#/, "");
+    }
+    if (h === "care-team" || h === "team") setTab("team");
+    else setTab("approach");
 
-    const apply = () => {
-      const h = window.location.hash.replace(/^#/, "");
-      if (h === "care-team" || h === "team") setTab("team");
-      else setTab("approach");
-      scrollForHash();
-    };
-    apply();
-    window.addEventListener("hashchange", apply);
-    return () => window.removeEventListener("hashchange", apply);
+    const shouldScrollTop = h === "" || ABOUT_NAV_HASHES.has(h);
+    if (!shouldScrollTop) return;
+
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    });
   }, []);
 
+  useLayoutEffect(() => {
+    applyAboutUrlHash();
+    window.addEventListener("hashchange", applyAboutUrlHash);
+    return () => window.removeEventListener("hashchange", applyAboutUrlHash);
+  }, [applyAboutUrlHash]);
+
   const scrollTabPanelToGutter = useCallback(() => {
+    const prefersCoarse =
+      typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 1023px)").matches;
+    const instantTabScroll = reduceMotion || prefersCoarse;
+
+    /** Puts `target`’s top edge `gap` px below live-measured header + About sticky tabs (not scrollIntoView — stacked sticky breaks scroll-margin). */
+    const scrollTargetTopBelowChrome = (
+      target: HTMLElement,
+      extraGapPx = 0
+    ) => {
+      const rect = target.getBoundingClientRect();
+      const sticky = tabStickyRef.current;
+      const stickyBottom = sticky?.getBoundingClientRect().bottom ?? 0;
+      const headerEl = document.querySelector("header");
+      const headerBottom = headerEl?.getBoundingClientRect().bottom ?? 0;
+      const chromeBottom = Math.max(headerBottom, stickyBottom);
+      const gap = TAB_PANEL_BELOW_STICKY_GAP_PX + extraGapPx;
+      const gutterPx =
+        chromeBottom > 0
+          ? chromeBottom + gap
+          : TAB_PANEL_TOP_GUTTER_FALLBACK_PX + extraGapPx;
+      const nextY = window.scrollY + rect.top - gutterPx;
+      window.scrollTo({
+        top: Math.max(0, nextY),
+        behavior: instantTabScroll ? "auto" : "smooth",
+      });
+    };
+
+    if (tab === "team") {
+      if (prefersCoarse) {
+        const mobileLead = document.getElementById("about-team-mobile-lead");
+        if (mobileLead && mobileLead.getBoundingClientRect().height > 0) {
+          scrollTargetTopBelowChrome(mobileLead, 6);
+          return;
+        }
+      }
+      const teamSec = document.getElementById("care-team");
+      if (teamSec) {
+        scrollTargetTopBelowChrome(teamSec, 0);
+        return;
+      }
+    }
+
     const el = panelStartRef.current;
     if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const nextY = window.scrollY + rect.top - TAB_PANEL_TOP_GUTTER_PX;
-    window.scrollTo({
-      top: Math.max(0, nextY),
-      behavior: reduceMotion ? "auto" : "smooth",
-    });
-  }, [reduceMotion]);
+    scrollTargetTopBelowChrome(el, 0);
+  }, [reduceMotion, tab]);
 
   const selectTab = useCallback(
     (next: AboutTab) => {
@@ -380,7 +529,9 @@ export default function AboutTabs() {
           return next;
         }
         queueMicrotask(() => {
-          requestAnimationFrame(() => scrollTabPanelToGutter());
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => scrollTabPanelToGutter());
+          });
         });
         return prev;
       });
@@ -392,7 +543,16 @@ export default function AboutTabs() {
   useLayoutEffect(() => {
     if (!scrollAfterTabChangeRef.current) return;
     scrollAfterTabChangeRef.current = false;
-    scrollTabPanelToGutter();
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        scrollTabPanelToGutter();
+        if (tab === "team") {
+          requestAnimationFrame(() => {
+            scrollTabPanelToGutter();
+          });
+        }
+      });
+    });
   }, [tab, scrollTabPanelToGutter]);
 
   const onKeyDown = useCallback((e: React.KeyboardEvent) => {
@@ -434,7 +594,8 @@ export default function AboutTabs() {
         </div>
 
         <div
-          className="sticky top-14 z-40 mt-20 md:mt-24 w-screen max-w-[100vw] shrink-0 bg-background ml-[calc(50%-50vw)] pt-4 -mt-px sm:top-[60px] md:top-[4.5rem] lg:top-20"
+          ref={tabStickyRef}
+          className="sticky top-14 z-40 mt-10 md:mt-24 w-screen max-w-[100vw] shrink-0 bg-background ml-[calc(50%-50vw)] pt-4 -mt-px sm:top-[60px] md:top-[4.5rem] lg:top-20"
         >
           <div ref={trackRef} className="relative border-b border-forest/12">
             <span
@@ -492,12 +653,11 @@ export default function AboutTabs() {
           </div>
         </div>
 
-        <div ref={panelStartRef} className="mt-[80px]">
+        <div ref={panelStartRef} className="mt-10 md:mt-[80px]">
           {tab === "approach" ? (
             <ApproachPanel
               id={approachPanelId}
               labelledBy={tabApproachId}
-              onShowCareTeam={() => selectTab("team")}
             />
           ) : (
             <CareTeamPanel id={teamPanelId} labelledBy={tabTeamId} />

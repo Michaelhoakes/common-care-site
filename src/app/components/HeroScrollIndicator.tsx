@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import SmoothHashLink from "./SmoothHashLink";
 
 /** Fixed at bottom of viewport; hides once user scrolls so it doesn’t overlap content. */
 export default function HeroScrollIndicator() {
@@ -17,7 +18,7 @@ export default function HeroScrollIndicator() {
   if (!visible) return null;
 
   return (
-    <a
+    <SmoothHashLink
       href="#services"
       className="hero-scroll-indicator fixed bottom-6 left-1/2 z-20 flex flex-col items-center text-white/60 hover:text-white/80 transition-colors pointer-events-auto"
       aria-label="Scroll to content"
@@ -27,6 +28,6 @@ export default function HeroScrollIndicator() {
         <path d="M2 18l4 6 4-6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
       <span className="mt-2 text-[11px] font-medium tracking-widest uppercase opacity-90">Scroll down</span>
-    </a>
+    </SmoothHashLink>
   );
 }

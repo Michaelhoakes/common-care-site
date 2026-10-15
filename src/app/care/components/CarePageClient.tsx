@@ -77,12 +77,14 @@ const WELLNESS_SLIDES: readonly CarePhotoSlide[] = [
 
 const CARE_EVALUATION_PHOTOS: readonly CarePhotoSlide[] = [
   {
-    src: "/images/exbody.jpg",
+    src: "/images/Exbody.jpg",
     alt: "InBody-style body composition readout and analysis context",
+    imageClassName:
+      "object-cover object-right scale-[1.14] origin-right motion-reduce:scale-100 motion-reduce:origin-center",
   },
   {
-    src: "/images/treatment2.jpg",
-    alt: "Hands-on clinical assessment and treatment",
+    src: "/images/Brainscan.jpg",
+    alt: "Brain activity scan interface used during care evaluation",
   },
 ];
 
@@ -161,7 +163,7 @@ function CareTwoColPhotoGrid({
 }) {
   return (
     <div
-      className="mt-10 md:mt-12 pb-6 md:pb-8 lg:pb-10 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-5 w-full"
+      className="mt-8 md:mt-12 pb-6 md:pb-8 lg:pb-10 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 md:gap-5 w-full"
       role="group"
       aria-label={ariaLabel}
     >
@@ -250,11 +252,12 @@ export default function CarePageClient() {
   }, [isDesktopNav]);
 
   const scrollSectionIntoView = useCallback(
-    (id: string) => {
+    (id: string, opts?: { instant?: boolean }) => {
       const el = document.getElementById(id);
       if (!el) return;
+      const instant = opts?.instant || prefersReducedMotion;
       el.scrollIntoView({
-        behavior: prefersReducedMotion ? "auto" : "smooth",
+        behavior: instant ? "auto" : "smooth",
         block: "start",
       });
     },
@@ -267,7 +270,7 @@ export default function CarePageClient() {
       if (!raw) return;
       const id = decodeURIComponent(raw);
       if (!CARE_SECTION_IDS.includes(id)) return;
-      requestAnimationFrame(() => scrollSectionIntoView(id));
+      requestAnimationFrame(() => scrollSectionIntoView(id, { instant: true }));
     };
     onHash();
     window.addEventListener("hashchange", onHash);
@@ -405,7 +408,7 @@ export default function CarePageClient() {
         </nav>
 
         {/* Main column: overview + all chapters (single column beside sidebar) */}
-        <div className="min-w-0 flex-1 pb-24 md:pb-32 pt-8 md:pt-10 lg:pt-0">
+        <div className="min-w-0 flex-1 pb-24 md:pb-32 pt-10 lg:pt-0">
           <section
             id="care-approach"
             ref={(el) => { sectionRefs.current["care-approach"] = el; }}
@@ -437,7 +440,7 @@ export default function CarePageClient() {
             </ul>
           </section>
 
-          <div className="mt-20 pt-20 border-t border-forest/10" aria-hidden />
+          <div className="mt-8 pt-8 md:mt-20 md:pt-20 border-t border-forest/10" aria-hidden />
 
           {/* Care Evaluation */}
           <section
@@ -454,24 +457,27 @@ export default function CarePageClient() {
                 slides={CARE_EVALUATION_PHOTOS}
                 ariaLabel="Care Evaluation imagery"
               />
-              <p className="care-label text-forest/60 mt-10 md:mt-12">
+              <p className="care-label text-forest/60 mt-8 md:mt-12">
                 What’s included
               </p>
-              <div className="care-included-grid text-forest/90 !grid-cols-1">
+              <div className="care-included-grid text-forest/90 !grid-cols-1 !gap-y-0">
                 {INCLUDED_ITEMS.map((item, idx) => {
                   const isOpen = openIncluded.has(idx);
                   const buttonId = `included-toggle-${idx}`;
                   const panelId = `included-panel-${idx}`;
 
                   return (
-                    <div key={item.title} className="relative">
+                    <div
+                      key={item.title}
+                      className="relative border-b border-forest/10 first:border-t first:border-forest/10"
+                    >
                       <button
                         id={buttonId}
                         type="button"
                         onClick={() => toggleIncluded(idx)}
                         aria-expanded={isOpen}
                         aria-controls={panelId}
-                        className="w-full flex items-start justify-between gap-3 text-left text-[16px] leading-relaxed text-darkgreen transition-colors group"
+                        className="w-full flex items-center justify-between gap-3 py-4 md:py-5 text-left text-[15px] leading-relaxed md:text-[16px] text-darkgreen transition-colors group"
                       >
                         <span className="font-medium transition-colors group-hover:text-forest/70">
                           {item.title}
@@ -496,13 +502,15 @@ export default function CarePageClient() {
                         role="region"
                         aria-labelledby={buttonId}
                         aria-hidden={!isOpen}
-                        className={`mt-1 grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
-                          isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
+                          isOpen
+                            ? "mt-0 grid-rows-[1fr] opacity-100"
+                            : "mt-0 grid-rows-[0fr] opacity-0"
                         }`}
                       >
                         <div className="overflow-hidden">
-                          <div className="flex flex-col gap-2 pb-4">
-                            <p className="text-[15px] leading-relaxed text-forest/90">
+                          <div className="flex flex-col gap-2 pb-5">
+                            <p className="!m-0 text-[15px] leading-relaxed text-forest/90">
                               {item.description}
                             </p>
                             {item.imageSrc && (
@@ -517,26 +525,14 @@ export default function CarePageClient() {
                         </div>
                       </div>
 
-                      {idx < INCLUDED_ITEMS.length - 1 && (
-                        <div
-                          aria-hidden
-                          className="h-px bg-forest/10 mt-2 mb-2"
-                        />
-                      )}
                     </div>
                   );
                 })}
               </div>
-              <a
-                href="/technology"
-                className="mt-8 cc-text-btn"
-              >
-                Explore how we measure →
-              </a>
             </div>
           </section>
 
-          <div className="mt-20 pt-20 border-t border-forest/10" aria-hidden />
+          <div className="mt-8 pt-8 md:mt-20 md:pt-20 border-t border-forest/10" aria-hidden />
 
           {/* Section 3 — Care Sessions */}
           <section
@@ -549,7 +545,7 @@ export default function CarePageClient() {
               <p className="care-body text-forest/90">
                 One-on-one sessions built around you, combining hands-on care, movement, and advanced technology to support how your body heals.
               </p>
-              <div className="mt-10 pb-6 md:pb-8 lg:pb-10 w-full max-w-none">
+              <div className="mt-8 pb-6 md:mt-10 md:pb-8 lg:pb-10 w-full max-w-none">
                 <div className="overflow-hidden rounded-xl bg-forest/[0.03]">
                   <div className="relative aspect-[21/9] min-h-[220px] w-full sm:aspect-[2/1] md:min-h-[280px]">
                     <img
@@ -562,23 +558,26 @@ export default function CarePageClient() {
                   </div>
                 </div>
               </div>
-              <p className="care-label text-forest/60 mt-10 md:mt-12">
+              <p className="care-label text-forest/60 mt-8 md:mt-12">
                 What happens in a session
               </p>
-              <div className="care-included-grid text-forest/90 !grid-cols-1">
+              <div className="care-included-grid text-forest/90 !grid-cols-1 !gap-y-0 !mt-0">
                 {CARE_SESSION_SERVICES.map((item, idx) => {
                   const isOpen = openSessionServices.has(idx);
                   const buttonId = `session-service-toggle-${idx}`;
                   const panelId = `session-service-panel-${idx}`;
                   return (
-                    <div key={item.title} className="relative">
+                    <div
+                      key={item.title}
+                      className="relative border-b border-forest/10 first:border-t first:border-forest/10"
+                    >
                       <button
                         id={buttonId}
                         type="button"
                         onClick={() => toggleSessionService(idx)}
                         aria-expanded={isOpen}
                         aria-controls={panelId}
-                        className="w-full flex items-start justify-between gap-3 text-left text-[16px] leading-relaxed text-darkgreen transition-colors group"
+                        className="w-full flex items-center justify-between gap-3 py-4 md:py-5 text-left text-[15px] leading-relaxed md:text-[16px] text-darkgreen transition-colors group"
                       >
                         <span className="font-medium transition-colors group-hover:text-forest/70">
                           {item.title}
@@ -600,21 +599,20 @@ export default function CarePageClient() {
                         role="region"
                         aria-labelledby={buttonId}
                         aria-hidden={!isOpen}
-                        className={`mt-1 grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
-                          isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
+                          isOpen
+                            ? "mt-0 grid-rows-[1fr] opacity-100"
+                            : "mt-0 grid-rows-[0fr] opacity-0"
                         }`}
                       >
                         <div className="overflow-hidden">
-                          <div className="pb-4">
-                            <p className="text-[15px] leading-relaxed text-forest/90">
+                          <div className="pb-5">
+                            <p className="!m-0 text-[15px] leading-relaxed text-forest/90">
                               {item.description}
                             </p>
                           </div>
                         </div>
                       </div>
-                      {idx < CARE_SESSION_SERVICES.length - 1 && (
-                        <div aria-hidden className="h-px bg-forest/10 mt-2 mb-2" />
-                      )}
                     </div>
                   );
                 })}
@@ -623,7 +621,7 @@ export default function CarePageClient() {
             </div>
           </section>
 
-          <div className="mt-20 pt-20 border-t border-forest/10" aria-hidden />
+          <div className="mt-8 pt-8 md:mt-20 md:pt-20 border-t border-forest/10" aria-hidden />
 
           {/* Section 4 — Wellness Care */}
           <section
@@ -639,26 +637,29 @@ export default function CarePageClient() {
               slides={WELLNESS_SLIDES}
               ariaLabel="Wellness Care imagery"
             />
-            <p className="care-label text-forest/60 mt-10 md:mt-12">
+            <p className="care-label text-forest/60 mt-8 md:mt-12">
               What’s included
             </p>
             <p className="care-body text-forest/90 mt-3 max-w-3xl">
               Each session is guided and personalized. Based on what your body needs that day, we may use a combination of the following:
             </p>
-            <div className="care-included-grid text-forest/90 !grid-cols-1 mt-6 md:mt-8">
+            <div className="care-included-grid text-forest/90 !grid-cols-1 !gap-y-0 mt-6 md:mt-8">
               {EVERYDAY_WELLNESS_SERVICES.map((item, idx) => {
                 const isOpen = openWellnessServices.has(idx);
                 const buttonId = `wellness-service-toggle-${idx}`;
                 const panelId = `wellness-service-panel-${idx}`;
                 return (
-                  <div key={item.title} className="relative">
+                  <div
+                    key={item.title}
+                    className="relative border-b border-forest/10 first:border-t first:border-forest/10"
+                  >
                     <button
                       id={buttonId}
                       type="button"
                       onClick={() => toggleWellnessService(idx)}
                       aria-expanded={isOpen}
                       aria-controls={panelId}
-                      className="w-full flex items-start justify-between gap-3 text-left text-[16px] leading-relaxed text-darkgreen transition-colors group"
+                      className="w-full flex items-center justify-between gap-3 py-4 md:py-5 text-left text-[15px] leading-relaxed md:text-[16px] text-darkgreen transition-colors group"
                     >
                       <span className="font-medium transition-colors group-hover:text-forest/70">
                         {item.title}
@@ -680,21 +681,20 @@ export default function CarePageClient() {
                       role="region"
                       aria-labelledby={buttonId}
                       aria-hidden={!isOpen}
-                      className={`mt-1 grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
-                        isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                      className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
+                        isOpen
+                          ? "mt-0 grid-rows-[1fr] opacity-100"
+                          : "mt-0 grid-rows-[0fr] opacity-0"
                       }`}
                     >
                       <div className="overflow-hidden">
-                        <div className="pb-4">
-                          <p className="text-[15px] leading-relaxed text-forest/90">
+                        <div className="pb-5">
+                          <p className="!m-0 text-[15px] leading-relaxed text-forest/90">
                             {item.description}
                           </p>
                         </div>
                       </div>
                     </div>
-                    {idx < EVERYDAY_WELLNESS_SERVICES.length - 1 && (
-                      <div aria-hidden className="h-px bg-forest/10 mt-2 mb-2" />
-                    )}
                   </div>
                 );
               })}

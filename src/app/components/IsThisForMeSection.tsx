@@ -133,7 +133,7 @@ export default function IsThisForMeSection({
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 pt-1 md:pt-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8 pt-1 md:pt-4">
               {STAGES.map((item, i) => {
                 const colDelay = STAGGER.colBase + STAGGER.colStep * i;
                 return (

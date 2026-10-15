@@ -16,6 +16,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Common Care — Physical Therapy & Wellness",
   description: "Thoughtful, one-on-one care designed for steady, sustainable health.",
+  icons: {
+    icon: "/images/Favicon.png",
+    apple: "/images/Favicon.png",
+  },
 };
 
 export default function RootLayout({

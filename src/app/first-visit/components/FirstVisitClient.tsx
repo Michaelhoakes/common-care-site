@@ -15,7 +15,7 @@ import {
 import StickySectionSubnav from "../../components/StickySectionSubnav";
 
 const FIRST_VISIT_NAV_SECTIONS = [
-  { id: "what-to-expect", label: "What happens during your first visit" },
+  { id: "what-to-expect", label: "What to expect" },
   { id: "how-to-prepare", label: "How to prepare" },
   { id: "parking-arrival", label: "Location & parking" },
   { id: "insurance-payment", label: "Insurance & payment" },
@@ -263,7 +263,7 @@ export default function FirstVisitClient() {
           </div>
         </nav>
 
-        <div className="min-w-0 flex-1 pb-24 md:pb-32 pt-8 md:pt-10 lg:pt-0">
+        <div className="min-w-0 flex-1 pb-24 md:pb-32 pt-10 lg:pt-0">
           <section
             id="what-to-expect"
             ref={(el) => {
@@ -271,9 +271,7 @@ export default function FirstVisitClient() {
             }}
             className="care-section scroll-mt-28"
           >
-            <h2 className="cc-heading-md">
-              What happens during your first visit
-            </h2>
+            <h2 className="cc-heading-md">What to expect</h2>
             <p className="care-body text-forest/90">
               Your first visit is focused on understanding you—your symptoms,
               your history, and how your body is functioning as a whole. We begin
@@ -281,7 +279,7 @@ export default function FirstVisitClient() {
               both hands-on assessment and objective data to guide your care
               moving forward.
             </p>
-            <div className="mt-8 mb-8 w-full max-w-none overflow-hidden rounded-xl bg-forest/[0.03]">
+            <div className="mt-6 mb-6 md:mt-8 md:mb-8 w-full max-w-none overflow-hidden rounded-xl bg-forest/[0.03]">
               <div className="relative aspect-[21/9] min-h-[220px] w-full sm:aspect-[2/1] md:min-h-[280px]">
                 <img
                   src="/images/consult1a.jpg"
@@ -292,30 +290,30 @@ export default function FirstVisitClient() {
                 />
               </div>
             </div>
-            <ol className="care-list text-forest/90 mt-0 flex flex-col gap-4 list-none p-0 [&>li+li]:!m-0">
+            <ol className="care-list text-darkgreen mt-0 flex flex-col gap-4 list-none p-0 [&>li+li]:!m-0">
               <li className="flex gap-4 items-start">
-                <span className="text-matcha font-medium shrink-0 leading-[1.6]">
+                <span className="text-darkgreen/80 font-medium shrink-0 leading-[1.6]">
                   1.
                 </span>
                 <div className="min-w-0 flex flex-col gap-1.5">
-                  <span className="font-medium text-forest/95 block">
+                  <span className="font-medium text-darkgreen block">
                     Conversation
                   </span>
-                  <p className="!m-0 text-forest/85 leading-relaxed">
+                  <p className="!m-0 text-darkgreen leading-relaxed">
                     We start by understanding what you&apos;re experiencing, your
                     history, and what you&apos;re hoping to get out of care.
                   </p>
                 </div>
               </li>
               <li className="flex gap-4 items-start">
-                <span className="text-matcha font-medium shrink-0 leading-[1.6]">
+                <span className="text-darkgreen/80 font-medium shrink-0 leading-[1.6]">
                   2.
                 </span>
                 <div className="min-w-0 flex flex-col gap-1.5">
-                  <span className="font-medium text-forest/95 block">
+                  <span className="font-medium text-darkgreen block">
                     Movement assessment
                   </span>
-                  <p className="!m-0 text-forest/85 leading-relaxed">
+                  <p className="!m-0 text-darkgreen leading-relaxed">
                     We look at how your body moves, identifying patterns,
                     limitations, and areas that may be contributing to what
                     you&apos;re feeling.
@@ -323,14 +321,14 @@ export default function FirstVisitClient() {
                 </div>
               </li>
               <li className="flex gap-4 items-start">
-                <span className="text-matcha font-medium shrink-0 leading-[1.6]">
+                <span className="text-darkgreen/80 font-medium shrink-0 leading-[1.6]">
                   3.
                 </span>
                 <div className="min-w-0 flex flex-col gap-1.5">
-                  <span className="font-medium text-forest/95 block">
+                  <span className="font-medium text-darkgreen block">
                     Objective testing
                   </span>
-                  <p className="!m-0 text-forest/85 leading-relaxed">
+                  <p className="!m-0 text-darkgreen leading-relaxed">
                     We gather data using advanced technologies to better
                     understand how different aspects of your health are
                     functioning.
@@ -338,28 +336,28 @@ export default function FirstVisitClient() {
                 </div>
               </li>
               <li className="flex gap-4 items-start">
-                <span className="text-matcha font-medium shrink-0 leading-[1.6]">
+                <span className="text-darkgreen/80 font-medium shrink-0 leading-[1.6]">
                   4.
                 </span>
                 <div className="min-w-0 flex flex-col gap-1.5">
-                  <span className="font-medium text-forest/95 block">
+                  <span className="font-medium text-darkgreen block">
                     Hands-on assessment
                   </span>
-                  <p className="!m-0 text-forest/85 leading-relaxed">
+                  <p className="!m-0 text-darkgreen leading-relaxed">
                     We assess how your body feels and responds to touch, helping
                     us identify areas of tension, restriction, or imbalance.
                   </p>
                 </div>
               </li>
               <li className="flex gap-4 items-start">
-                <span className="text-matcha font-medium shrink-0 leading-[1.6]">
+                <span className="text-darkgreen/80 font-medium shrink-0 leading-[1.6]">
                   5.
                 </span>
                 <div className="min-w-0 flex flex-col gap-1.5">
-                  <span className="font-medium text-forest/95 block">
+                  <span className="font-medium text-darkgreen block">
                     Putting it all together
                   </span>
-                  <p className="!m-0 text-forest/85 leading-relaxed">
+                  <p className="!m-0 text-darkgreen leading-relaxed">
                     We sit down with you to walk through what the data shows and
                     how it connects to what you&apos;ve shared, then outline a
                     clear plan for moving forward.
@@ -367,14 +365,14 @@ export default function FirstVisitClient() {
                 </div>
               </li>
               <li className="flex gap-4 items-start">
-                <span className="text-matcha font-medium shrink-0 leading-[1.6]">
+                <span className="text-darkgreen/80 font-medium shrink-0 leading-[1.6]">
                   6.
                 </span>
                 <div className="min-w-0 flex flex-col gap-1.5">
-                  <span className="font-medium text-forest/95 block">
+                  <span className="font-medium text-darkgreen block">
                     Initial treatment
                   </span>
-                  <p className="!m-0 text-forest/85 leading-relaxed">
+                  <p className="!m-0 text-darkgreen leading-relaxed">
                     We use the remaining time to begin addressing what we&apos;ve
                     found, so you leave with clarity and already feeling better.
                   </p>
@@ -384,7 +382,7 @@ export default function FirstVisitClient() {
           </section>
 
           <div
-            className="mt-20 pt-20 border-t border-forest/10"
+            className="mt-8 pt-8 md:mt-20 md:pt-20 border-t border-forest/10"
             aria-hidden
           />
 
@@ -400,7 +398,10 @@ export default function FirstVisitClient() {
               A few simple steps ahead of your visit can help ensure your
               evaluation is as accurate and informative as possible.
             </p>
-            <ul className="care-list text-forest/90 mt-5 space-y-4">
+            <p className="care-label text-forest/60 mt-8 md:mt-12 !mb-0">
+              YOUR CHECKLIST
+            </p>
+            <ul className="care-list text-forest/90 !mt-3 space-y-4">
               <li className="flex gap-3 items-start">
                 <span
                   className="mt-0.5 flex shrink-0 text-forest/65"
@@ -454,7 +455,7 @@ export default function FirstVisitClient() {
           </section>
 
           <div
-            className="mt-20 pt-20 border-t border-forest/10"
+            className="mt-8 pt-8 md:mt-20 md:pt-20 border-t border-forest/10"
             aria-hidden
           />
 
@@ -468,7 +469,7 @@ export default function FirstVisitClient() {
             <h2 className="cc-heading-md">Location & parking</h2>
             <p className="care-body text-forest/90">
               <a
-                href="https://maps.google.com/?q=7551+Sunset+Blvd+Suite+201+West+Hollywood"
+                href="https://maps.app.goo.gl/GnkF4oiAT6Tt7ADu7"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="cc-text-btn inline"
@@ -477,7 +478,7 @@ export default function FirstVisitClient() {
               </a>
               <strong> (West Hollywood)</strong>
             </p>
-            <p className="care-label text-forest/60 mt-10 md:mt-12 !mb-0">
+            <p className="care-label text-forest/60 mt-8 md:mt-12 !mb-0">
               Finding us
             </p>
             <p className="care-body text-forest/90 !mt-3">
@@ -486,7 +487,7 @@ export default function FirstVisitClient() {
               Chocolates. Enter through the front entrance and ring suite 201 at
               the intercom and you will be let in promptly.
             </p>
-            <p className="care-label text-forest/60 mt-10 md:mt-12 !mb-0">
+            <p className="care-label text-forest/60 mt-8 md:mt-12 !mb-0">
               Parking
             </p>
             <p className="care-body text-forest/90 !mt-3">
@@ -497,7 +498,7 @@ export default function FirstVisitClient() {
           </section>
 
           <div
-            className="mt-20 pt-20 border-t border-forest/10"
+            className="mt-8 pt-8 md:mt-20 md:pt-20 border-t border-forest/10"
             aria-hidden
           />
 
@@ -545,7 +546,7 @@ export default function FirstVisitClient() {
           </section>
 
           <div
-            className="mt-20 pt-20 border-t border-forest/10"
+            className="mt-8 pt-8 md:mt-20 md:pt-20 border-t border-forest/10"
             aria-hidden
           />
 
@@ -561,20 +562,23 @@ export default function FirstVisitClient() {
               <p className="care-body text-forest/90">
                 Common questions about your first visit.
               </p>
-              <div className="care-included-grid text-forest/90 !grid-cols-1 mt-6 md:mt-8">
+              <div className="care-included-grid text-forest/90 !grid-cols-1 !gap-y-0 mt-6 md:mt-8">
                 {FAQ_ITEMS.map((item, idx) => {
                   const isOpen = openFaqs.has(idx);
                   const buttonId = `faq-toggle-${idx}`;
                   const panelId = `faq-panel-${idx}`;
                   return (
-                    <div key={item.title} className="relative">
+                    <div
+                      key={item.title}
+                      className="relative border-b border-forest/10 first:border-t first:border-forest/10"
+                    >
                       <button
                         id={buttonId}
                         type="button"
                         onClick={() => toggleFaq(idx)}
                         aria-expanded={isOpen}
                         aria-controls={panelId}
-                        className="w-full flex items-start justify-between gap-3 text-left text-[16px] leading-relaxed text-darkgreen transition-colors group"
+                        className="w-full flex items-center justify-between gap-3 py-4 md:py-5 text-left text-[15px] leading-relaxed md:text-[16px] text-darkgreen transition-colors group"
                       >
                         <span className="font-medium transition-colors group-hover:text-forest/70">
                           {item.title}
@@ -597,27 +601,20 @@ export default function FirstVisitClient() {
                         role="region"
                         aria-labelledby={buttonId}
                         aria-hidden={!isOpen}
-                        className={`mt-1 grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
+                        className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
                           isOpen
-                            ? "grid-rows-[1fr] opacity-100"
-                            : "grid-rows-[0fr] opacity-0"
+                            ? "mt-0 grid-rows-[1fr] opacity-100"
+                            : "mt-0 grid-rows-[0fr] opacity-0"
                         }`}
                       >
                         <div className="overflow-hidden">
-                          <div className="flex flex-col gap-2 pb-4">
-                            <p className="text-[15px] leading-relaxed text-forest/90">
+                          <div className="flex flex-col gap-2 pb-5">
+                            <p className="!m-0 text-[15px] leading-relaxed text-forest/90">
                               {item.description}
                             </p>
                           </div>
                         </div>
                       </div>
-
-                      {idx < FAQ_ITEMS.length - 1 && (
-                        <div
-                          aria-hidden
-                          className="h-px bg-forest/10 mt-2 mb-2"
-                        />
-                      )}
                     </div>
                   );
                 })}

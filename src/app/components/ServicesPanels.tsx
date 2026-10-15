@@ -170,7 +170,7 @@ function ServiceTextPanel({
           aria-labelledby={triggerId}
           className="services-panel-detail-reveal flex flex-col gap-4"
         >
-          <p className="max-w-md cc-body-18 text-[18px] leading-[26px]">
+          <p className="max-w-md cc-body-18">
             {s.desc}
           </p>
           <Link

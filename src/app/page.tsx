@@ -1,4 +1,5 @@
 import Link from "next/link";
+import SmoothHashLink from "./components/SmoothHashLink";
 import ServicesPanels from "./components/ServicesPanels";
 import Header from "./components/Header";
 import ScrollReveal from "./components/ScrollReveal";
@@ -22,41 +23,41 @@ export default function Home() {
           {/* Mobile: flex-based vertical distribution for consistent spacing across devices */}
           <div className="md:hidden z-10 h-full min-h-full px-6 pointer-events-none">
             <div
-              className="mx-auto flex h-full min-h-full w-full max-w-[1400px] flex-col pt-40 pointer-events-none"
+              className="mx-auto flex h-full min-h-full w-full max-w-[1400px] flex-col pt-48 pointer-events-none"
               style={{
                 paddingBottom:
-                  "max(8rem, calc(env(safe-area-inset-bottom, 0px) + 2.5rem))",
+                  "max(9.25rem, calc(env(safe-area-inset-bottom, 0px) + 2.25rem))",
               }}
             >
               <div className="flex flex-col gap-12">
-                <div className="pointer-events-auto ml-auto max-w-[22rem] text-left">
+                <div className="pointer-events-auto -mt-4 ml-auto max-w-[22rem] text-left">
                   <HeroSubheadRuleLine />
                   <h5 className="hero-text-float-subhead text-white/80 m-0">
                     One-on-one physical therapy and wellness in Los Angeles—built around you.
                   </h5>
                 </div>
-                <div className="pointer-events-auto max-w-[min(48rem,100%)] hero-text-float-headline">
-                <h1 className="cc-heading-xl text-white m-0">
+                <div className="pointer-events-auto mt-6 max-w-[min(48rem,100%)] hero-text-float-headline">
+                <h1 className="cc-heading-xl text-white m-0 pt-4">
                     Exceptional care
                     <br />
                     made common
                   </h1>
                 </div>
               </div>
-              <div className="pointer-events-auto mt-10 hero-text-float-cta">
+              <div className="pointer-events-auto mt-8 hero-text-float-cta">
                 <div className="flex flex-wrap gap-2 md:gap-3">
                   <a
                     href="/book"
-                    className="cc-hero-btn cc-hero-btn-primary"
+                    className="cc-hero-btn cc-hero-btn-primary px-4 py-2.5 text-[15px]"
                   >
                     Book an evaluation
                   </a>
-                  <a
+                  <SmoothHashLink
                     href="#insurance"
-                    className="cc-hero-btn cc-hero-btn-inverse"
+                    className="cc-hero-btn cc-hero-btn-inverse px-4 py-2.5 text-[15px]"
                   >
                     Check insurance
-                  </a>
+                  </SmoothHashLink>
                 </div>
               </div>
             </div>
@@ -72,7 +73,7 @@ export default function Home() {
                 </h5>
               </div>
 
-              <div className="pointer-events-auto absolute bottom-0 left-0 pb-40 md:pb-44 max-w-[min(48rem,100%)] md:max-w-[52rem] lg:max-w-[56rem] hero-text-float-headline">
+              <div className="pointer-events-auto absolute bottom-0 left-0 pb-48 md:pb-56 max-w-[min(48rem,100%)] md:max-w-[52rem] lg:max-w-[56rem] hero-text-float-headline">
                 <h1 className="cc-heading-xl text-white">
                   Exceptional care
                   <br />
@@ -85,12 +86,12 @@ export default function Home() {
                   >
                     Book an evaluation
                   </a>
-                  <a
+                  <SmoothHashLink
                     href="#insurance"
                     className="cc-hero-btn cc-hero-btn-inverse"
                   >
                     Check insurance
-                  </a>
+                  </SmoothHashLink>
                 </div>
               </div>
             </div>
@@ -134,12 +135,13 @@ export default function Home() {
           alt=""
           wrapperClassName="relative w-full h-[120px] md:h-[500px]"
           imgClassName="h-full w-full object-cover object-[right_70%]"
-          motionInsetClassName="-inset-[7%]"
+          motionInsetClassName="-inset-[10%]"
           options={{
             parallaxFactor: 0.048,
             maxOffsetPx: 40,
             lerp: 0.11,
-            scale: 0.93,
+            /** Must be ≥1 so translateY parallax never pulls scaled content smaller than the clip (0.93 caused white gaps). */
+            scale: 1.07,
           }}
         />
       </section>
@@ -166,7 +168,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="mt-8 py-6 md:py-0 lg:hidden">
+            <div className="mt-8 py-2 md:py-0 lg:hidden">
               <div className="w-full overflow-hidden rounded-sm bg-white/5">
                 <img
                   src="/images/Treatment-hands.JPG"
@@ -179,7 +181,7 @@ export default function Home() {
 
             <div className="mt-6 lg:mt-24 xl:mt-32 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_520px] lg:gap-x-14 lg:items-end">
               <div className="flex flex-col min-w-0">
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-6 lg:gap-x-10 lg:gap-y-12 xl:gap-x-12 xl:gap-y-14">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:gap-x-10 lg:gap-y-12 xl:gap-x-12 xl:gap-y-14">
                   {[
                     {
                       title: "Unhurried, personalized sessions",
@@ -209,7 +211,7 @@ export default function Home() {
                   ))}
                 </div>
 
-                <div className="mt-12 md:mt-14 lg:hidden">
+                <div className="mt-0 md:mt-14 lg:hidden">
                   <Link href="/care" className="cc-btn-secondary-white px-6 py-3 text-[17px]">
                     Care overview
                   </Link>
@@ -255,8 +257,8 @@ export default function Home() {
                     <blockquote className="m-0 shrink-0 border-0 p-0 not-italic">
                       <p className="m-0 !mt-0 cc-heading-xs text-darkgreen">
                         &ldquo;This is a place where you&apos;re truly heard and cared for in
-                        the midst of everything else. Mike doesn&apos;t just treat symptoms; he
-                        helps you understand your body and how stress and daily life shape how
+                        the midst of everything else. Common Care doesn&apos;t just treat symptoms; they
+                        help you understand your body and how stress and daily life shape how
                         you feel. Even if you don&apos;t have anything specific that feels
                         &ldquo;off,&rdquo;{" "}
                         <span className="font-semibold">
@@ -276,8 +278,8 @@ export default function Home() {
                     <blockquote className="m-0 shrink-0 border-0 p-0 not-italic">
                       <p className="m-0 !mt-0 cc-heading-xs text-darkgreen">
                         &ldquo;I came in with severe hip pain, unsure if I&apos;d even make it
-                        to race day&mdash;but after working with Mike, everything changed.
-                        His ability to identify the root cause, combined with a deeply
+                        to race day&mdash;but after working with Common Care, everything changed.
+                        Their ability to identify the root cause, combined with a deeply
                         personalized approach, got me back to running stronger than ever in
                         just weeks.{" "}
                         <span className="font-semibold">
