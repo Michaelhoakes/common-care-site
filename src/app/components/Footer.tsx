@@ -97,26 +97,36 @@ export default function Footer({ className = "" }: { className?: string }) {
 
       <div className="mt-10 w-full border-t border-white/15 md:mt-16">
         <div className="w-full px-6 pt-8 md:px-16 md:pt-6">
-          <div className="mx-auto flex w-full max-w-[1400px] flex-wrap items-center gap-2 text-xs text-white/60">
-            <span>© {new Date().getFullYear()} Common Care</span>
-            <span aria-hidden className="text-white/50">
-              ·
-            </span>
-            <Link
-              href="/privacy"
-              className="text-white/60 hover:text-white/80 transition-none"
+          <div className="mx-auto flex w-full max-w-[1400px] flex-wrap items-center gap-x-6 gap-y-3 text-xs text-white/60">
+            <div className="flex min-w-0 flex-wrap items-center gap-2">
+              <span>© {new Date().getFullYear()} Common Care</span>
+              <span aria-hidden className="text-white/50">
+                ·
+              </span>
+              <Link
+                href="/privacy"
+                className="text-white/60 hover:text-white/80 transition-none"
+              >
+                Privacy Policy
+              </Link>
+              <span aria-hidden className="text-white/50">
+                ·
+              </span>
+              <Link
+                href="/terms"
+                className="text-white/60 hover:text-white/80 transition-none"
+              >
+                Terms of Service
+              </Link>
+            </div>
+            <a
+              href="https://www.instagram.com/thecommoncare/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-auto shrink-0 text-white/60 hover:text-white/80 transition-none"
             >
-              Privacy Policy
-            </Link>
-            <span aria-hidden className="text-white/50">
-              ·
-            </span>
-            <Link
-              href="/terms"
-              className="text-white/60 hover:text-white/80 transition-none"
-            >
-              Terms of Service
-            </Link>
+              Instagram
+            </a>
           </div>
         </div>
       </div>
